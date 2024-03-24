@@ -14,57 +14,57 @@ maxvalue 1000000
 nocache
 nocycle;
 
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Costa Rica");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Argentina");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Bolivia");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Canadá");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Colombia");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Cuba");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Ecuador");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Guatemala");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Haití");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Jamaica");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Nicaragua");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Paraguay");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Surinam");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Uruguay");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Belice");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Brasil");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Chile");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("República Dominicana");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("El Salvador");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Guyana");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Honduras");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("México");
-insert into Country(name)
+insert into Country(nameCountryv)
 values ("Panamá");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Perú");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Estados Unidos");
-insert into Country(name)
+insert into Country(nameCountry)
 values ("Venezuela");
 ---Costa Rica
 insert into City(id_country, nameCity) values (0, "San José");

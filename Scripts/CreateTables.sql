@@ -9,25 +9,39 @@ using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
-CREATE TABLE card (
-    id_card                 NUMBER(7),
-    card_number             NUMBER(10) CONSTRAINT card_number_nn NOT NULL,
-    expiration              DATE CONSTRAINT expiration_nn NOT NULL,
-    ccv                     NUMBER(5) CONSTRAINT ccv_nn NOT NULL,
-    owner_name              VARCHAR2(20) CONSTRAINT owner_name_nn NOT NULL
+CREATE TABLE country (
+	id_country              NUMBER(7),
+	nameCountry             VARCHAR2(20) CONSTRAINT nameCountry_nn NOT NULL
 );
-alter table card
+alter table country
 add
-constraint pk_card primary key (id_card)
+constraint pk_country primary key (id_country)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
+CREATE TABLE city (
+	id_city                 NUMBER(7),
+	id_country              NUMBER(7),
+    name_city               VARCHAR2(50) CONSTRAINT city_nn NOT NULL
+);
+
+alter table city
+add
+constraint pk_city primary key (id_city)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+
+alter table city
+add
+constraint fk_city_country foreign key (id_country) references Country(id_country);
+/******************************************************************************/
 CREATE TABLE Person (
-  	id_person               NUMBER(7),
-   	first_name              VARCHAR2(20) CONSTRAINT first_name_nn NOT NULL,
-	last_name               VARCHAR2(20) CONSTRAINT last_name_nn NOT NULL,
-	date_birth              DATE CONSTRAINT date_birth_nn NOT NULL
+  	id_person                   NUMBER(7),
+   	first_name                  VARCHAR2(20) CONSTRAINT first_name_nn NOT NULL,
+	last_name                   VARCHAR2(20) CONSTRAINT last_name_nn NOT NULL,
+	date_birth                  DATE         CONSTRAINT date_birth_nn NOT NULL
 );
 alter table Person
 add
@@ -35,34 +49,10 @@ constraint pk_person primary key (id_person)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
-
-/*CREATE TABLE systemUser (
-	id_systemUser           NUMBER(7),
-	username                VARCHAR2(20) CONSTRAINT username_nn NOT NULL,
-	identification          VARCHAR2(20) CONSTRAINT identification_nn NOT NULL,
-	phoneNumber             NUMBER(7) CONSTRAINT phoneNumber_nn NOT NULL,
-	email                   VARCHAR2(20) CONSTRAINT email_nn NOT NULL,
-	pswrd?
-);
-
-alter table systemUser
-add
-constraint pk_systemUser primary key (id_systemUser)
-using index
-tablespace su_ind pctfree 20
-storage (initial 10k next 10k pctincrease 0);
-
-alter table systemUser
-add
-constraint fk_systemUser_person foreign key (id_systemUser) references Person(id_person);
-*/
-
-
-/*******************************************************************************/
-
+/******************************************************************************/
 CREATE TABLE nationalityPerson (
-	id_person NUMBER(7)     CONSTRAINT id_person_nn NOT NULL,
-	id_nationality NUMBER(7) CONSTRAINT id_nationality_nn NOT NULL,
+	id_person                   NUMBER(7)    CONSTRAINT id_person_nn NOT NULL,
+	id_nationality              NUMBER(7)    CONSTRAINT id_nationality_nn NOT NULL
 );
 
 alter table nationalityPerson
@@ -79,39 +69,44 @@ constraint pk_nationalityPerson primary key (id_person, id_nationality)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
-
-/*******************************************************************************/
-
-CREATE TABLE platform (
-	id_platform             NUMBER(7),
-	name_platform           VARCHAR2(20) CONSTRAINT name_platform_nn NOT NULL
+/******************************************************************************/
+/*CREATE TABLE systemUser (
+	id_systemUser               NUMBER(7),
+	username                    VARCHAR2(20) CONSTRAINT username_nn NOT NULL,
+	identification              VARCHAR2(20) CONSTRAINT identification_nn NOT NULL,
+	phoneNumber                 NUMBER(7)    CONSTRAINT phoneNumber_nn NOT NULL,
+	email                       VARCHAR2(20) CONSTRAINT email_nn NOT NULL,
+	pswrd?
 );
-alter table platform
+
+alter table systemUser
 add
-constraint pk_platform primary key (id_platform)
+constraint pk_systemUser primary key (id_systemUser)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
-
+alter table systemUser
+add
+constraint fk_systemUser_person foreign key (id_systemUser) references Person(id_person);
+*/
 
 CREATE TABLE end_user (
-	id_user                 NUMBER(7)
+	id_user                     NUMBER(7)
 );
 alter table end_user
 add
-constraint pk_end_user primary key (id_user)
+constraint pk_endUser primary key (id_user)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
 alter table end_user
 add
-constraint fk_end_user foreign key (id_user) references systemUser(id_systemUser);
-
+constraint fk_endUser_systemUser foreign key (id_user) references systemUser(id_systemUser);
 
 CREATE TABLE administrator (
-	id_administrator        NUMBER(7)
+	id_administrator            NUMBER(7)
 );
 alter table administrator
 add
@@ -124,73 +119,12 @@ alter table administrator
 add
 constraint fk_administrator_systemUser foreign key (id_administrator) references systemUser(id_systemUser);
 
-
-CREATE TABLE catalog (
-	id_catalog              NUMBER(7),
-	genre                   VARCHAR2(20) CONSTRAINT genre_nn NOT NULL
-);
-
-alter table catalog
-add
-constraint pk_catalog primary key (id_catalog)
-using index
-tablespace su_ind pctfree 20
-storage (initial 10k next 10k pctincrease 0);
-
-
-CREATE TABLE country (
-	id_country              NUMBER(7),
-	nameCountry             VARCHAR2(20) CONSTRAINT nameCountry_nn NOT NULL
-);
-alter table country
-add
-constraint pk_country primary key (id_country)
-using index
-tablespace su_ind pctfree 20
-storage (initial 10k next 10k pctincrease 0);
-
-CREATE TABLE city (
-	id_city                 NUMBER(7),
-	name_city               VARCHAR2(50) CONSTRAINT city_nn NOT NULL,
-	id_country              NUMBER(7),
-);
-
-alter table city
-add
-constraint fk_city_country foreign key (id_country) references Country(id_country);
-
-alter table city
-add
-constraint pk_city primary key (id_city)
-using index
-tablespace su_ind pctfree 20
-storage (initial 10k next 10k pctincrease 0);
-
-
-CREATE TABLE payment (
-	id_payment              NUMBER(7),
-	id_user                 NUMBER(7),
-);
-
-alter table payment
-add
-constraint pk_payment primary key (id_payment)
-using index
-tablespace su_ind pctfree 20
-storage (initial 10k next 10k pctincrease 0);
-
-alter table payment
-add
-constraint fk_payment_user foreign key (id_user) references end_user(id_user);
-
-/*******************************************/
-
 CREATE TABLE participant (
-	id_participant          NUMBER(7),
-	id_country              NUMBER(7),
-	biography               VARCHAR2(100) CONSTRAINT biography_nn NOT NULL,	
-	height                  NUMBER(7) CONSTRAINT height_nn NOT NULL,
-	trivia                  VARCHAR2(100) CONSTRAINT trivia_nn NOT NULL,
+	id_participant              NUMBER(7),
+	id_country                  NUMBER(7),
+	biography                   VARCHAR2(100) CONSTRAINT biography_nn NOT NULL,	
+	height                      NUMBER(7)     CONSTRAINT height_nn NOT NULL,
+	trivia                      VARCHAR2(100) CONSTRAINT trivia_nn NOT NULL,
 	photo BLOB,  
 	FOREIGN KEY (id_country) REFERENCES Country(id_country),
 	FOREIGN KEY (id_participant) REFERENCES Person(id_person)
@@ -204,29 +138,83 @@ tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE typeOfParticipant (
-	id_type                 NUMBER(7) PRIMARY KEY,	
-	nickname                VARCHAR2(100) CONSTRAINT nickname_Participant_nn NOT NULL,
+	id_type                     NUMBER(7),	
+	nickname                    VARCHAR2(100) CONSTRAINT nickname_Participant_nn NOT NULL,
 	FOREIGN KEY (id_type) REFERENCES participant(id_participant)
 );
 
 alter table typeOfParticipant
 add
-constraint pk_typeOfParticipant primary key (id_typeOfParticipant)
+constraint pk_typeOfParticipant primary key (id_type)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+/******************************************************************************/
+create table Relative (
+    id_participant              number(7),
+    id_relative                 number(7),
+    kindship                    varchar2(30) CONSTRAINT relative_kindship_nn NOT NULL
+);
+alter table Relative
+add
+constraint pk_relative primary key (id_participant, id_relative)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
+alter table Relative
+add
+constraint fk_relative_participant foreign key (id_participant) references paticipant(id_paticipant);
+
+alter table Relative
+add
+constraint fk_relative_participant2 foreign key (id_relative) references paticipant(id_paticipant);
+/******************************************************************************/
+CREATE TABLE payment (
+	id_payment                  NUMBER(7),
+	id_user                     NUMBER(7)
+);
+
+alter table payment
+add
+constraint pk_payment primary key (id_payment)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+
+alter table payment
+add
+constraint fk_payment_user foreign key (id_user) references end_user(id_user);
+
+CREATE TABLE card (
+    id_card                     NUMBER(7),
+    cardNumber                  NUMBER(10)      CONSTRAINT card_number_nn NOT NULL,
+    expiration                  DATE            CONSTRAINT expiration_nn NOT NULL,
+    ccv                         NUMBER(5)       CONSTRAINT ccv_nn NOT NULL,
+    ownerName                   VARCHAR2(20)    CONSTRAINT owner_name_nn NOT NULL
+);
+alter table card
+add
+constraint pk_card primary key (id_card)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+
+alter table card
+add
+constraint fk_card_payment foreign key (id_card) references payment(id_payment);
+/******************************************************************************/
 CREATE TABLE product (
-	id_product              NUMBER(7),
-	link                    VARCHAR2(100) CONSTRAINT link_nn NOT NULL,	
-	price                   NUMBER(7) CONSTRAINT price_nn NOT NULL,
-	releaseYear             DATE CONSTRAINT releaseYear_nn NOT NULL,
-	title                   VARCHAR2(100) CONSTRAINT title_nn NOT NULL,
-	duration                NUMBER(7) CONSTRAINT duration_nn NOT NULL,
-	trailer                 VARCHAR2(100),
-	synopsis                VARCHAR2(100) CONSTRAINT synopsis_nn NOT NULL,
-	season                  NUMBER(7),
-	episode                 NUMBER(7),
+	id_product                  NUMBER(7),
+	link                        VARCHAR2(100) CONSTRAINT link_nn NOT NULL,	
+	price                       NUMBER(7)     CONSTRAINT price_nn NOT NULL,
+	releaseYear                 DATE          CONSTRAINT releaseYear_nn NOT NULL,
+	title                       VARCHAR2(100) CONSTRAINT title_nn NOT NULL,
+	duration                    NUMBER(7)     CONSTRAINT duration_nn NOT NULL,
+	trailer                     VARCHAR2(100),
+	synopsis                    VARCHAR2(100) CONSTRAINT synopsis_nn NOT NULL,
+	season                      NUMBER(7),
+	episode                     NUMBER(7),
 	photo BLOB
 );
 
@@ -249,10 +237,65 @@ constraint pk_typeOfProduct primary key (id_type)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
+/******************************************************************************/
+CREATE TABLE ParticipantXProduct (
+    id_partXprodu               number(7),
+	id_participant              NUMBER(7),	
+	id_product                  NUMBER(7),
+    rol                         varchar2(25)
+);
 
+alter table ParticipantXProduct
+add
+constraint fk_ParticipantXProduct_participant foreign key (id_participant) references participant(id_participant);
+
+alter table ParticipantXProduct
+add
+constraint fk_ParticipantXProduct_product foreign key (id_product) references product(id_product);
+
+alter table ParticipantXProduct
+add
+constraint pk_ParticipantXProduct primary key (id_partXprodu)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+
+
+CREATE TABLE Wishlist (
+	id_user                     NUMBER(7),	
+	id_product                  NUMBER(7)
+);
+
+alter table Wishlist
+add
+constraint fk_Wishlist_user foreign key (id_user) references end_user(id_user);
+
+alter table Wishlist
+add
+constraint fk_Wishlist_product foreign key (id_product) references product(id_product);
+
+alter table Wishlist
+add
+constraint pk_Wishlist primary key (id_product, id_user)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+/******************************************************************************/
+CREATE TABLE catalog (
+	id_catalog                  NUMBER(7),
+	genre                       VARCHAR2(20) CONSTRAINT genre_nn NOT NULL
+);
+
+alter table catalog
+add
+constraint pk_catalog primary key (id_catalog)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+/******************************************************************************/
 CREATE TABLE CatalogxProduct (
-	id_catalog              NUMBER(7),	
-	id_product              NUMBER(7),
+	id_catalog                  NUMBER(7),	
+	id_product                  NUMBER(7),
 	FOREIGN KEY (id_catalog) REFERENCES catalog(id_catalog),
 	FOREIGN KEY (id_product) REFERENCES product(id_product)
 );
@@ -265,8 +308,8 @@ tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE CatalogXAdministrator (
-	id_catalog              NUMBER(7),	
-	id_administrator        NUMBER(7),
+	id_catalog                  NUMBER(7),	
+	id_administrator            NUMBER(7),
 	FOREIGN KEY (id_catalog) REFERENCES catalog(id_catalog),
 	FOREIGN KEY (id_administrator) REFERENCES administrator(id_administrator)
 );
@@ -278,12 +321,68 @@ using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
----stars?
+CREATE TABLE CatalogXUser (
+	id_catalog                  NUMBER(7),	
+	id_user                     NUMBER(7),
+	history                     date constraint catXuser_history_nn not null,
+    isStreamed                  boolean constraint catXuser_isStreamed_nn not null
+);
+
+alter table CatalogXUser
+add
+constraint fk_CatalogXUser_catalog foreign key (id_catalog) references catalog(id_catalog);
+
+alter table CatalogXUser
+add
+constraint fk_CatalogXUser_user foreign key (id_user) references end_user(id_user);
+
+alter table CatalogXUser
+add
+constraint pk_CatalogXUser primary key (id_catalog, id_user)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+/******************************************************************************/
+CREATE TABLE platform (
+	id_platform                 NUMBER(7),
+	namePlatform                VARCHAR2(20) CONSTRAINT platform_namePlatform_nn NOT NULL
+);
+alter table platform
+add
+constraint pk_platform primary key (id_platform)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+
+create table ProductXPlatform (
+    id_product                  number(7),
+    id_platform                 number(7)
+);
+
+alter table ProductXPlatform
+add
+constraint fk_ProductXPlatform_product foreign key (id_product) references product(id_product);
+
+alter table ProductXPlatform
+add
+constraint fk_ProductXPlatform_platform foreign key (id_platform) references platform(id_platform);
+
+alter table ProductXPlatform
+add
+constraint pk_ProductXPlatform primary key (id_product, id_platform)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+/******************************************************************************/
 CREATE TABLE review (
 	id_review               NUMBER(7),	
-	id_product              NUMBER(7),	
-	FOREIGN KEY (id_product) REFERENCES product(id_product)
+	id_product              NUMBER(7),
+    stars                   number(2, 1)
 );
+
+alter table review
+add
+constraint fk_review_product foreign key (id_product) references product(id_product);
 
 alter table review
 add
@@ -291,13 +390,21 @@ constraint pk_review primary key (id_review)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
-
+/*******************************************/
 CREATE TABLE commentary (
 	id_commentary           NUMBER(7),	
-	description             VARCHAR2(100) CONSTRAINT description_nn NOT NULL,
 	id_product              NUMBER(7),
-	FOREIGN KEY (id_product) REFERENCES product(id_product)
+    id_user                 number(7),
+    description             VARCHAR2(100) CONSTRAINT description_nn NOT NULL
 );
+
+alter table commentary
+add
+constraint fk_commentary_product foreign key (id_product) references product(id_product);
+
+alter table commentary
+add
+constraint fk_commentary_user foreign key (id_user) references end_user(id_user);
 
 alter table commentary
 add
@@ -305,3 +412,4 @@ constraint pk_commentary primary key (id_commentary)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
+/******************************************************************************/

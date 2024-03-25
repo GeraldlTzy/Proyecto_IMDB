@@ -24,7 +24,7 @@ tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE Person (
-  	id_person               NUMBER(7) PRIMARY KEY,
+  	id_person               NUMBER(7),
    	first_name              VARCHAR2(20) CONSTRAINT first_name_nn NOT NULL,
 	last_name               VARCHAR2(20) CONSTRAINT last_name_nn NOT NULL,
 	date_birth              DATE CONSTRAINT date_birth_nn NOT NULL

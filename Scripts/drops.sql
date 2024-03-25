@@ -23,4 +23,5 @@ drop table systemuser;
 drop table participant;
 drop table person;
 drop table country;
-drop table nationality*/
+drop table nationality;
+drop table sex;*/

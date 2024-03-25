@@ -63,8 +63,6 @@ constraint fk_systemUser_person foreign key (id_systemUser) references Person(id
 CREATE TABLE nationalityPerson (
 	id_person NUMBER(7)     CONSTRAINT id_person_nn NOT NULL,
 	id_nationality NUMBER(7) CONSTRAINT id_nationality_nn NOT NULL,
-	FOREIGN KEY (id_person) REFERENCES Person(id_person),
-    	FOREIGN KEY (id_nationality) REFERENCES Nationality(id_nationality)
 );
 
 alter table nationalityPerson

@@ -153,7 +153,6 @@ CREATE TABLE city (
 	id_city                 NUMBER(7),
 	name_city               VARCHAR2(50) CONSTRAINT city_nn NOT NULL,
 	id_country              NUMBER(7),
-	FOREIGN KEY (id_country) REFERENCES country(id_country)	
 );
 
 alter table city

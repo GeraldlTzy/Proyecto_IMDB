@@ -1,3 +1,15 @@
+CREATE TABLE Sex (
+	id_sex			NUMBER(7),
+	name			VARCHAR(6) 
+);
+ALTER TABLE sex
+ADD
+CONSTRAINT pk_sex PRIMARY KEY (id_sex)
+USING index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+
+
 CREATE TABLE Nationality (
     id_nationality              NUMBER(7),
     name                        VARCHAR2(20) CONSTRAINT name_nn NOT NULL
@@ -37,8 +49,12 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE Person (
   	id_person                   NUMBER(7),
    	first_name                  VARCHAR2(20) CONSTRAINT first_name_nn NOT NULL,
-	last_name                   VARCHAR2(20) CONSTRAINT last_name_nn NOT NULL,
+	second_name                 VARCHAR2(20) CONSTRAINT second_name_nn NOT NULL,
+	first_surname               VARCHAR2(20) CONSTRAINT first_surname_nn NOT NULL,
+	second_surname              VARCHAR2(20) CONSTRAINT second_surname_nn NOT NULL,
 	date_birth                  DATE         CONSTRAINT date_birth_nn NOT NULL
+	id_sex
+	CONSTRAINT fk_Person_sex FOREIGN KEY (id_sex) REFERENCES Sex(id_sex)
 );
 alter table Person
 add
@@ -159,7 +175,7 @@ storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE card (
     id_card                     NUMBER(7),
-    cardNumber                  NUMBER(10)      CONSTRAINT card_number_nn NOT NULL,
+    cardNumber                  NUMBER(20)      CONSTRAINT card_number_nn NOT NULL,
     expiration                  DATE            CONSTRAINT expiration_nn NOT NULL,
     ccv                         NUMBER(5)       CONSTRAINT ccv_nn NOT NULL,
     ownerName                   VARCHAR2(20)    CONSTRAINT owner_name_nn NOT NULL,

@@ -1,6 +1,6 @@
 CREATE TABLE Sex (
 	id_sex			NUMBER(7),
-	name			VARCHAR(6) 
+	sex_name		VARCHAR(6) 
 );
 ALTER TABLE sex
 ADD
@@ -292,13 +292,15 @@ using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 
-CREATE TABLE CatalogXUser (
+CREATE TABLE CatalogXUser (last name
 	id_catalog                  NUMBER(7),	
 	id_user                     NUMBER(7),
 	history                     date constraint catXuser_history_nn not null,
+	id_product		    NUMBER(7),
     --isStreamed                  BOOLEAN,
     constraint fk_CatalogXUser_catalog foreign key (id_catalog) references catalog(id_catalog),
-    constraint fk_CatalogXUser_user foreign key (id_user) references end_user(id_user)
+    constraint fk_CatalogXUser_user foreign key (id_user) references end_user(id_user),
+    constraint fk_CatalogXUser_product foreign key (id_product) references Product(id_product)
 );
 
 alter table CatalogXUser

@@ -1,4 +1,4 @@
-select p.title, count(1) as total_compras
+select p.title, count(c.id_product) as total_compras
 from CatalogXUser c
 inner join Product p
 on c.id_product = p.id_product

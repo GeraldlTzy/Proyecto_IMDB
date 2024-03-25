@@ -49,11 +49,11 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE Person (
   	id_person                   NUMBER(7),
    	first_name                  VARCHAR2(20) CONSTRAINT first_name_nn NOT NULL,
-	second_name                 VARCHAR2(20) CONSTRAINT second_name_nn NOT NULL,
+	second_name                 VARCHAR2(20) 
 	first_surname               VARCHAR2(20) CONSTRAINT first_surname_nn NOT NULL,
-	second_surname              VARCHAR2(20) CONSTRAINT second_surname_nn NOT NULL,
-	date_birth                  DATE         CONSTRAINT date_birth_nn NOT NULL
-	id_sex
+	second_surname              VARCHAR2(20)
+	date_birth                  DATE         CONSTRAINT date_birth_nn NOT NULL,
+	id_sex			    NUMBER(7),
 	CONSTRAINT fk_Person_sex FOREIGN KEY (id_sex) REFERENCES Sex(id_sex)
 );
 alter table Person

@@ -36,3 +36,6 @@ CREATE USER su
     grant create view to su;
     grant create any index to su;
     grant unlimited tablespace to su;
+    GRANT CREATE SEQUENCE TO su;
+    GRANT ALTER ANY SEQUENCE TO su;
+    GRANT CREATE PROCEDURE TO su;

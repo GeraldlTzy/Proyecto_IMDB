@@ -35,7 +35,7 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE city (
 	id_city                     NUMBER(7),
 	id_country                  NUMBER(7),
-    name_city                   VARCHAR2(50) CONSTRAINT city_nn NOT NULL,
+    nameCity                   VARCHAR2(50) CONSTRAINT nameCity_nn NOT NULL,
     constraint fk_city_country foreign key (id_country) references Country(id_country)
 );
 

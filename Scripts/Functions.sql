@@ -1,5 +1,4 @@
 /******************************************************************************/
----DROP PROCEDURE insertNationality;
 /*
  *Description: Insert sex
  *Input: p_name, name of the sex
@@ -39,6 +38,8 @@ BEGIN
     COMMIT;
 END insertPerson;
 
+
+
 CREATE PROCEDURE insertParticipant(
     p_sex IN NUMBER,
     p_first_name IN VARCHAR2,
@@ -46,12 +47,11 @@ CREATE PROCEDURE insertParticipant(
     p_first_surname IN VARCHAR2,
     p_second_surname IN VARCHAR2,
     p_date_birth IN DATE,
-    
     p_country IN NUMBER,
     p_biography IN VARCHAR2,
     p_height IN NUMBER,
     p_trivia IN VARCHAR2,
-    photo IN BLOB
+    p_photo IN BLOB
 ) AS
 BEGIN
     INSERT INTO Person (id_person, id_sex, first_name, second_name, first_surname,

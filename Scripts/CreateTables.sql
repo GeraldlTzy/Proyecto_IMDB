@@ -12,7 +12,7 @@ storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE Nationality (
     id_nationality              NUMBER(7),
-    name                        VARCHAR2(20) CONSTRAINT name_nn NOT NULL
+    name                        VARCHAR2(50) CONSTRAINT name_nn NOT NULL
 );
 alter table Nationality
 add
@@ -23,7 +23,7 @@ storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE country (
 	id_country                  NUMBER(7),
-	nameCountry                 VARCHAR2(20) CONSTRAINT nameCountry_nn NOT NULL
+	nameCountry                 VARCHAR2(50) CONSTRAINT nameCountry_nn NOT NULL
 );
 alter table country
 add
@@ -119,9 +119,9 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE participant (
 	id_participant              NUMBER(7),
 	id_country                  NUMBER(7),
-	biography                   VARCHAR2(100) CONSTRAINT biography_nn NOT NULL,	
+	biography                   VARCHAR2(500) CONSTRAINT biography_nn NOT NULL,	
 	height                      NUMBER(7)     CONSTRAINT height_nn NOT NULL,
-	trivia                      VARCHAR2(100) CONSTRAINT trivia_nn NOT NULL,
+	trivia                      VARCHAR2(500) CONSTRAINT trivia_nn NOT NULL,
 	photo BLOB,  
 	CONSTRAINT fk_part_country FOREIGN KEY (id_country) REFERENCES Country(id_country),
 	CONSTRAINT fk_part_person FOREIGN KEY (id_participant) REFERENCES Person(id_person)
@@ -190,13 +190,13 @@ storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
 CREATE TABLE product (
 	id_product                  NUMBER(7),
-	link                        VARCHAR2(100) CONSTRAINT link_nn NOT NULL,	
+	link                        VARCHAR2(500) CONSTRAINT link_nn NOT NULL,	
 	price                       NUMBER(7)     CONSTRAINT price_nn NOT NULL,
 	releaseYear                 DATE          CONSTRAINT releaseYear_nn NOT NULL,
-	title                       VARCHAR2(100) CONSTRAINT title_nn NOT NULL,
+	title                       VARCHAR2(200) CONSTRAINT title_nn NOT NULL,
 	duration                    NUMBER(7)     CONSTRAINT duration_nn NOT NULL,
-	trailer                     VARCHAR2(100),
-	synopsis                    VARCHAR2(100) CONSTRAINT synopsis_nn NOT NULL,
+	trailer                     VARCHAR2(500),
+	synopsis                    VARCHAR2(500) CONSTRAINT synopsis_nn NOT NULL,
 	season                      NUMBER(7),
 	episode                     NUMBER(7),
 	photo BLOB
@@ -334,31 +334,31 @@ using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
-CREATE TABLE review (
-	id_review               NUMBER(7),	
+CREATE TABLE review (	
 	id_product              NUMBER(7),
+    id_user                 number(7),
     stars                   number(2, 1),
-    constraint fk_review_product foreign key (id_product) references product(id_product)
+    constraint fk_review_product foreign key (id_product) references product(id_product),
+    constraint fk_review_user foreign key (id_user) references end_user(id_user)
 );
 alter table review
 add
-constraint pk_review primary key (id_review)
+constraint pk_review primary key (id_product, id_user)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 /*******************************************/
 CREATE TABLE commentary (
-	id_commentary           NUMBER(7),	
 	id_product              NUMBER(7),
     id_user                 number(7),
-    description             VARCHAR2(100) CONSTRAINT description_nn NOT NULL,
+    description             VARCHAR2(500) CONSTRAINT description_nn NOT NULL,
     constraint fk_commentary_product foreign key (id_product) references product(id_product),
     constraint fk_commentary_user foreign key (id_user) references end_user(id_user)
 );
 
 alter table commentary
 add
-constraint pk_commentary primary key (id_commentary)
+constraint pk_commentary primary key (id_product, id_user)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);

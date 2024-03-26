@@ -1,4 +1,6 @@
-insert into Country(id_country, nameCountry) values (s_country.currval, 'Costa Rica');
+/****************************Inserts Countrys**********************************/
+/*******************************America****************************************/
+insert into Country(id_country, nameCountry) values (s_country.nextval, 'Costa Rica');
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Argentina');
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Bolivia');
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Canadá');
@@ -25,7 +27,7 @@ insert into Country(id_country, nameCountry) values (s_country.nextval, 'Perú')
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Estados Unidos');
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Venezuela');
 
-/*Europe*/
+/**************************************Europe**********************************/
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Albania');
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Austria');
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Bosnia y Herzogovina');
@@ -69,15 +71,16 @@ insert into Country(id_country, nameCountry) values (s_country.nextval, 'Inglate
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Gales');
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Escocia');
 insert into Country(id_country, nameCountry) values (s_country.nextval, 'Serbia');
+/*******************************Insert provinces*******************************/
+/******************************************************************************/
 ---Costa Rica
-insert into City(id_city, id_country, nameCity) values (s_city.currval, 0, 'San José');
+insert into City(id_city, id_country, nameCity) values (s_city.nextval, 0, 'San José');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 0, 'Limón');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 0, 'Cartago');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 0, 'Puntarenas');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 0, 'Heredia');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 0, 'Alajuela');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 0, 'Guanacaste');
-/**************************************/
 ---Argentina
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 1, 'Buenos Aires');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 1, 'Chubut');
@@ -227,7 +230,7 @@ insert into City(id_city, id_country, nameCity) values (s_city.nextval, 7, 'Pet�
 ---Haití
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 8, 'Artibonite');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 8, 'Centro');
-insert into City(id_city, id_country, nameCity) values (s_city.nextval, 8, 'Grand'Anse');
+insert into City(id_city, id_country, nameCity) values (s_city.nextval, 8, 'Grand Anse');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 8, 'Nippes');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 8, 'Norte');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 8, 'Nordeste');
@@ -362,7 +365,7 @@ insert into City(id_city, id_country, nameCity) values (s_city.nextval, 16, 'Ata
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 16, 'Bio Bio');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 16, 'Coquimbo');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 16, 'Los Ríos');
-insert into City(id_city, id_country, nameCity) values (s_city.nextval, 16, 'General Libertador Bernardo O'Higgins');
+insert into City(id_city, id_country, nameCity) values (s_city.nextval, 16, 'General Libertador Bernardo O´Higgins');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 16, 'Los Lagos');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 16, 'Magallanes y de la Antártica Chilena');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 16, 'Maule');

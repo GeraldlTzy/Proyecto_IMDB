@@ -1,5 +1,18 @@
 /******************************************************************************/
 ---DROP PROCEDURE insertNationality;
+/*
+ *Description: Insert sex
+ *Input: p_name, name of the sex
+ *Output: void
+ */
+  
+CREATE PROCEDURE insertSex (
+    p_name IN VARCHAR2
+) AS
+BEGIN
+    INSERT INTO sex(id_sex, sex_name)
+    values(s_sex.nextval, p_name);
+END insertSex;
 
 CREATE PROCEDURE insertNationality(
     p_name IN VARCHAR2

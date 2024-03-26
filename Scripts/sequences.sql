@@ -1,4 +1,4 @@
-/*Creation of sequences for all tables*/
+/***********************Creation of sequences for all tables*******************/
 CREATE SEQUENCE s_sex
 START WITH 0
 INCREMENT BY 1

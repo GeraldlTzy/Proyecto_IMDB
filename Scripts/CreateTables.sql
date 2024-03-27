@@ -82,7 +82,7 @@ CREATE TABLE systemUser (
 	identification              VARCHAR2(20) CONSTRAINT identification_nn NOT NULL,
 	phoneNumber                 NUMBER(7)    CONSTRAINT phoneNumber_nn NOT NULL,
 	email                       VARCHAR2(20) CONSTRAINT email_nn NOT NULL,
----	pswrd?
+	pswd  		            VARCHAR2(20) CONSTRAINT systemuser_password_nn NOT NULL,
     constraint fk_systemUser_person foreign key (id_systemUser) references Person(id_person)
 );
 

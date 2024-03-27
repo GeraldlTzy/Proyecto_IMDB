@@ -1112,7 +1112,7 @@ insert into City(id_city, id_country, nameCity) values (s_city.nextval, 59, 'Fle
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 59, 'Frisia');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 59, 'Güeldres');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 59, 'Groninga');
-insert into City(id_city, id_country, nameCity) values (s_city.nextval, 59 'Holanda Meridional');
+insert into City(id_city, id_country, nameCity) values (s_city.nextval, 59, 'Holanda Meridional');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 59, 'Holanda Septentrional');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 59, 'Limburgo');
 insert into City(id_city, id_country, nameCity) values (s_city.nextval, 59, 'Overijssel');

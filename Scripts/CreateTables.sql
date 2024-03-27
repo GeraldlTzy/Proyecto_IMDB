@@ -135,13 +135,25 @@ storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE typeOfParticipant (
 	id_type                     NUMBER(7),	
-	nickname                    VARCHAR2(100) CONSTRAINT nickname_Participant_nn NOT NULL,
-	CONSTRAINT fk_typePart_part FOREIGN KEY (id_type) REFERENCES participant(id_participant)
+	nickname                    VARCHAR2(100) CONSTRAINT nickname_Participant_nn NOT NULL
 );
 
 alter table typeOfParticipant
 add
 constraint pk_typeOfParticipant primary key (id_type)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
+
+CREATE TABLE typeXParticipant (
+    id_type                     NUMBER(7),
+    id_participant              NUMBER(7),
+    CONSTRAINT fk_typeXPart_type FOREIGN KEY (id_type) REFERENCES typeOfParticipant(id_type),
+    CONSTRAINT fk_typeXPart_part FOREIGN KEY (id_participant) REFERENCES Participant(id_participant)
+);
+alter table typeXParticipant
+add
+constraint pk_typeXParticipant primary key (id_type, id_participant)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
@@ -188,6 +200,17 @@ using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
+CREATE TABLE typeOfProduct (
+	id_type                 NUMBER(7),	
+	nickname                VARCHAR2(100) CONSTRAINT nickname_nn NOT NULL
+);
+
+alter table typeOfProduct
+add
+constraint pk_typeOfProduct primary key (id_type)
+using index
+tablespace su_ind pctfree 20
+storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE product (
 	id_product                  NUMBER(7),
 	id_type                     NUMBER(7),
@@ -207,18 +230,6 @@ CREATE TABLE product (
 alter table product
 add
 constraint pk_product primary key (id_product)
-using index
-tablespace su_ind pctfree 20
-storage (initial 10k next 10k pctincrease 0);
-
-CREATE TABLE typeOfProduct (
-	id_type                 NUMBER(7),	
-	nickname                VARCHAR2(100) CONSTRAINT nickname_nn NOT NULL
-);
-
-alter table typeOfProduct
-add
-constraint pk_typeOfProduct primary key (id_type)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);

@@ -75,7 +75,6 @@ BEGIN
     COMMIT;
 END;*/
 
-
 CREATE PROCEDURE insertSystemUser(
     /*Person atributes*/
     p_sex IN NUMBER,
@@ -86,11 +85,10 @@ CREATE PROCEDURE insertSystemUser(
     p_date_birth IN DATE,
     /*SystemUser atributes*/
     p_username IN VARCHAR2,
-    p_identification IN NUMBER,
+    p_identification IN VARCHAR2,
     p_phoneNumber IN NUMBER,
-    p_emai IN VARCHAR2,
-    p_password IN VARCHAR2
-    
+    p_email IN VARCHAR2,
+    p_pswd IN VARCHAR2
 ) AS
 BEGIN
     INSERT INTO Person (id_person, id_sex, first_name, second_name, first_surname,
@@ -99,9 +97,9 @@ BEGIN
     p_second_surname, p_date_birth);
     
     INSERT INTO systemUser (id_systemUser, username, identification, phoneNumber,
-    email, password)
+    email, pswd)
     VALUES (s_person.currval, p_username, p_identification, p_phoneNumber, p_email,
-    p_password);
+    p_pswd);
     
     COMMIT;
 END insertSystemUser;
@@ -116,9 +114,9 @@ CREATE PROCEDURE insertUser(
     p_date_birth IN DATE,
     /*SystemUser atributes*/
     p_username IN VARCHAR2,
-    p_identification IN NUMBER,
+    p_identification IN VARCHAR2,
     p_phoneNumber IN NUMBER,
-    p_emai IN VARCHAR2,
+    p_email IN VARCHAR2,
     p_password IN VARCHAR2
     /*end_user atributes*/
     ---Only id
@@ -130,7 +128,7 @@ BEGIN
     p_second_surname, p_date_birth);
     
     INSERT INTO systemUser (id_systemUser, username, identification, phoneNumber,
-    email, password)
+    email, pswd)
     VALUES (s_person.currval, p_username, p_identification, p_phoneNumber, p_email,
     p_password);
     
@@ -150,9 +148,9 @@ CREATE PROCEDURE insertAdministrator(
     p_date_birth IN DATE,
     /*SystemUser atributes*/
     p_username IN VARCHAR2,
-    p_identification IN NUMBER,
+    p_identification IN VARCHAR2,
     p_phoneNumber IN NUMBER,
-    p_emai IN VARCHAR2,
+    p_email IN VARCHAR2,
     p_password IN VARCHAR2
     /*administrator atributes*/
     ---Only id
@@ -164,7 +162,7 @@ BEGIN
     p_second_surname, p_date_birth);
     
     INSERT INTO systemUser (id_systemUser, username, identification, phoneNumber,
-    email, password)
+    email, pswd)
     VALUES (s_person.currval, p_username, p_identification, p_phoneNumber, p_email,
     p_password);
     
@@ -186,7 +184,7 @@ BEGIN
     INSERT INTO payment (id_payment, id_user)
     VALUES (s_payment.nextval, p_id_user);
     
-    INSERT INTO payment (id_card, cardNumber, expiration, ccv, ownerName)
+    INSERT INTO card (id_card, cardNumber, expiration, ccv, ownerName)
     VALUES (s_payment.currval, p_cardNumber, p_expiration, p_ccv, p_ownerName);
     
     COMMIT;

@@ -114,10 +114,11 @@ CREATE PROCEDURE insertUser(
     pDatebirth IN DATE,
     /*SystemUser atributes*/
     pUsername IN VARCHAR2,
-    pIdentification IN VARCHAR2,
+    pIdentification IN NUMBER,
     pPhoneNumber IN NUMBER,
     pEmail IN VARCHAR2,
-    pPswd IN VARCHAR2
+    pPswd IN VARCHAR2,
+    typeOfID IN NUMBER
     /*end_user atributes*/
     ---Only id
 ) AS
@@ -127,16 +128,44 @@ BEGIN
     VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
     pSecondSurname, pDatebirth);
     
-    INSERT INTO systemUser (idSystemUser, username, identification, phoneNumber,
+    INSERT INTO systemUser (idSystemUser, username, phoneNumber,
     email, pswd)
-    VALUES (s_person.currval, pUsername, pIdentification, pPhoneNumber, pEmail,
+    VALUES (s_person.currval, pUsername, pPhoneNumber, pEmail,
     pPswd);
+
+    INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
+    VALUES (s.person.currval, typeOfId, pIdentification)
     
     INSERT INTO end_user (idUser)
     VALUES (s_person.currval);
     
     COMMIT;
 END insertUser;
+
+CREATE PROCEDURE insertProduct(
+    pIdType in NUMBER,
+    pLink in VARCHAR2,
+    pPhoto in BLOB,
+    pPrice in NUMBER,
+    pSynopsis IN VARCHAR2,
+    pTrailer IN VARCHAR2,
+    pDuration IN NUMBER,
+    pTitle IN VARCHAR2,
+    pReleaseYear IN NUMBER,
+    pLink IN VARCHAR
+  ) AS
+  BEGIN 
+    INSERT INTO Photo(idPhoto,image,idProduct)
+    VALUES (s_hoto.nextval,pPhoto,s_Product.nextval)
+
+    INSERT INTO Binnacle(idBinnacle, dateBinnacle, price,idProduct)
+    VALUES (s_binnacle.nextval,SYSDATE,pPrice,s_Product.currval)
+
+    INSERT INTO Product(idProduct, link,releaseYear,title,duration,trailer,synopsis,idType)
+    VALUES (s_product.currval,pLink,pReleaseYear,pTitle,pDuration,pTrailer,pSynopsis,pIdType)
+
+    COMMIT;
+  END
 
 CREATE PROCEDURE insertAdministrator(
     /*Person atributes*/
@@ -148,10 +177,12 @@ CREATE PROCEDURE insertAdministrator(
     pDatebirth IN DATE,
     /*SystemUser atributes*/
     pUsername IN VARCHAR2,
-    pIdentification IN VARCHAR2,
+    pIdentification IN NUMBER,
     pPhoneNumber IN NUMBER,
     pEmail IN VARCHAR2,
-    pPswd IN VARCHAR2
+    pPswd IN VARCHAR2,
+    typeOfId IN NUMBER,
+    
     /*Administrator atributes*/
     ---Only id
 ) AS
@@ -165,6 +196,9 @@ BEGIN
     email, pswd)
     VALUES (s_person.currval, pUsername, pIdentification, pPhoneNumber, pEmail,
     pPswd);
+
+    INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
+    VALUES (s.person.currval, typeOfId, pIdentification)
     
     INSERT INTO administrator (idAdministrator)
     VALUES (s_person.currval);

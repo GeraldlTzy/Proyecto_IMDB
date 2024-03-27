@@ -190,7 +190,8 @@ storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
 CREATE TABLE product (
 	id_product                  NUMBER(7),
-	link                        VARCHAR2(500) CONSTRAINT link_nn NOT NULL,	
+	id_type                     NUMBER(7),
+    link                        VARCHAR2(500) CONSTRAINT link_nn NOT NULL,	
 	price                       NUMBER(7)     CONSTRAINT price_nn NOT NULL,
 	releaseYear                 DATE          CONSTRAINT releaseYear_nn NOT NULL,
 	title                       VARCHAR2(200) CONSTRAINT title_nn NOT NULL,
@@ -199,7 +200,8 @@ CREATE TABLE product (
 	synopsis                    VARCHAR2(500) CONSTRAINT synopsis_nn NOT NULL,
 	season                      NUMBER(7),
 	episode                     NUMBER(7),
-	photo BLOB
+	photo                       BLOB,
+    CONSTRAINT fk_product_type FOREIGN KEY (id_type) REFERENCES typeOfProduct(id_type)
 );
 
 alter table product
@@ -211,8 +213,7 @@ storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE typeOfProduct (
 	id_type                 NUMBER(7),	
-	nickname                VARCHAR2(100) CONSTRAINT nickname_nn NOT NULL,
-	CONSTRAINT fk_typeProd_prod FOREIGN KEY (id_type) REFERENCES product(id_product)
+	nickname                VARCHAR2(100) CONSTRAINT nickname_nn NOT NULL
 );
 
 alter table typeOfProduct

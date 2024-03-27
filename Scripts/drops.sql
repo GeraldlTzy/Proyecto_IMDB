@@ -1,4 +1,5 @@
 delete from nationality;
+drop table typexparticipant;
 drop table city;
 drop table typeofparticipant;
 drop table typeofproduct;
@@ -26,8 +27,9 @@ drop table person;
 drop table country;
 drop table nationality;
 drop table sex;
+drop table typeofproduct;
 
-/*drop sequence s_sex;
+drop sequence s_sex;
 drop sequence s_catalog;
 drop sequence s_city;
 drop sequence s_commentary;
@@ -38,7 +40,7 @@ drop sequence s_payment;
 drop sequence s_person;
 drop sequence s_platform;
 drop sequence s_product;
-drop sequence s_review;*/
+drop sequence s_review;
 
 DROP PROCEDURE insertNationality;
 drop procedure insertSex;

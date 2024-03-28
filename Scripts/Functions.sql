@@ -53,14 +53,12 @@ CREATE PROCEDURE insertParticipant(
 ) AS
 BEGIN
     INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-    secondSurname, datebirth)
+    secondSurname, datebirth, photo)
     VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-    pSecondSurname, pDatebirth);
+    pSecondSurname, pDatebirth, pPhoto);
     
-    INSERT INTO Participant (idParticipant, idCountry, biography, height, trivia,
-    photo)
-    values(s_person.currval, pCountry, pBiography, pHeight, pTrivia,
-    pPhoto);
+    INSERT INTO Participant (idParticipant, idCountry, biography, height, trivia)
+    values(s_person.currval, pCountry, pBiography, pHeight, pTrivia);
     
     COMMIT;
 END insertParticipant;
@@ -83,6 +81,7 @@ CREATE PROCEDURE insertSystemUser(
     pFirstSurname IN VARCHAR2,
     pSecondSurname IN VARCHAR2,
     pDatebirth IN DATE,
+    pPhoto IN BLOB,
     /*SystemUser atributes*/
     pUsername IN VARCHAR2,
     pIdentification IN VARCHAR2,
@@ -92,9 +91,9 @@ CREATE PROCEDURE insertSystemUser(
 ) AS
 BEGIN
     INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-    secondSurname, datebirth)
+    secondSurname, datebirth, photo)
     VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-    pSecondSurname, pDatebirth);
+    pSecondSurname, pDatebirth, pPhoto);
     
     INSERT INTO systemUser (idSystemUser, username, identification, phoneNumber,
     email, pswd)
@@ -112,6 +111,7 @@ CREATE PROCEDURE insertUser(
     pFirstSurname IN VARCHAR2,
     pSecondSurname IN VARCHAR2,
     pDatebirth IN DATE,
+    pPhoto IN BLOB,
     /*SystemUser atributes*/
     pUsername IN VARCHAR2,
     pIdentification IN NUMBER,
@@ -124,20 +124,20 @@ CREATE PROCEDURE insertUser(
 ) AS
 BEGIN
     INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-    secondSurname, datebirth)
+    secondSurname, datebirth, photo)
     VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-    pSecondSurname, pDatebirth);
+    pSecondSurname, pDatebirth, pPhoto);
     
     INSERT INTO systemUser (idSystemUser, username, phoneNumber,
     email, pswd)
     VALUES (s_person.currval, pUsername, pPhoneNumber, pEmail,
     pPswd);
 
-    INSERT INTO IdentXSystem(idIdent,idSystemUser)
-    VALUES (s_identification.nextval,s_person.currval)
-
     INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
-    VALUES (s_identificatvion.nextval, typeOfId, pIdentification)
+    VALUES (s_identification.nextval, typeOfId, pIdentification);
+    
+    INSERT INTO IdentXSystem(idIdent,idSystemUser)
+    VALUES (s_identification.currval,s_person.currval);
     
     INSERT INTO end_user (idUser)
     VALUES (s_person.currval);
@@ -158,17 +158,17 @@ CREATE PROCEDURE insertProduct(
     pLink IN VARCHAR
   ) AS
   BEGIN 
+    INSERT INTO Product(idProduct, link,releaseYear,title,duration,trailer,synopsis,idType)
+    VALUES (s_product.currval,pLink,pReleaseYear,pTitle,pDuration,pTrailer,pSynopsis,pIdType);
+    
     INSERT INTO Photo(idPhoto,image,idProduct)
-    VALUES (s_hoto.nextval,pPhoto,s_Product.nextval)
+    VALUES (s_hoto.nextval,pPhoto,s_Product.nextval);
 
     INSERT INTO Binnacle(idBinnacle, dateBinnacle, price,idProduct)
-    VALUES (s_binnacle.nextval,SYSDATE,pPrice,s_Product.currval)
-
-    INSERT INTO Product(idProduct, link,releaseYear,title,duration,trailer,synopsis,idType)
-    VALUES (s_product.currval,pLink,pReleaseYear,pTitle,pDuration,pTrailer,pSynopsis,pIdType)
+    VALUES (s_binnacle.nextval,SYSDATE,pPrice,s_Product.currval);
 
     COMMIT;
-  END
+  END insertProduct;
 
 CREATE PROCEDURE insertAdministrator(
     /*Person atributes*/
@@ -178,6 +178,7 @@ CREATE PROCEDURE insertAdministrator(
     pFirstSurname IN VARCHAR2,
     pSecondSurname IN VARCHAR2,
     pDatebirth IN DATE,
+    pPhoto IN DATE,
     /*SystemUser atributes*/
     pUsername IN VARCHAR2,
     pIdentification IN NUMBER,
@@ -191,20 +192,20 @@ CREATE PROCEDURE insertAdministrator(
 ) AS
 BEGIN
     INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-    secondSurname, datebirth)
+    secondSurname, datebirth, photo)
     VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-    pSecondSurname, pDatebirth);
+    pSecondSurname, pDatebirth, pPhoto);
     
     INSERT INTO systemUser (idSystemUser, username, identification, phoneNumber,
     email, pswd)
     VALUES (s_person.currval, pUsername, pIdentification, pPhoneNumber, pEmail,
     pPswd);
 
-    INSERT INTO IdentXSystem(idIdent,idSystemUser)
-    VALUES (s_identification.nextval,s_person.currval)
-
     INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
-    VALUES (s_identificatvion.nextval, typeOfId, pIdentification)
+    VALUES (s_identification.nextval, typeOfId, pIdentification)
+    
+    INSERT INTO IdentXSystem(idIdent,idSystemUser)
+    VALUES (s_identification.currval,s_person.currval)
     
     INSERT INTO administrator (idAdministrator)
     VALUES (s_person.currval);

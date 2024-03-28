@@ -200,8 +200,11 @@ BEGIN
     VALUES (s_person.currval, pUsername, pIdentification, pPhoneNumber, pEmail,
     pPswd);
 
+    INSERT INTO IdentXSystem(idIdent,idSystemUser)
+    VALUES (s_identification.nextval,s_person.currval)
+
     INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
-    VALUES (s.person.currval, typeOfId, pIdentification)
+    VALUES (s_identificatvion.nextval, typeOfId, pIdentification)
     
     INSERT INTO administrator (idAdministrator)
     VALUES (s_person.currval);

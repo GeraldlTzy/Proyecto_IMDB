@@ -51,7 +51,7 @@ INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date
 VALUES (s_Person.nextval(),'Antonio',NULL,'Castañeda',NULL,TO_DATE('30/04/1956','DD/MM/YYYY'),1);
 
 INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date_birth,idSex)
-VALUES (s_Person.nextval(),'Rosalía','Talavera','Robledo',TO_DATE('09/06/1989','DD/MM/YYYY'),2);
+VALUES (s_Person.nextval(),'Rosalía',NULL,'Talavera','Robledo',TO_DATE('09/06/1989','DD/MM/YYYY'),2);
 
 INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date_birth,idSex)
 VALUES (s_Person.nextval(),'Tomás',NULL,'Hurtado',NULL,TO_DATE('01/07/2008','DD/MM/YYYY'),1);
@@ -63,7 +63,7 @@ INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date
 VALUES (s_Person.nextval(),'Álvaro','Julián','Nadal',NULL,TO_DATE('08/09/1993','DD/MM/YYYY'),1);
 
 INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date_birth,idSex)
-VALUES (s_Person.nextval(),'Tamara','Lucía','Arana',TO_DATE('01/01/1990','DD/MM/YYYY'),NULL);
+VALUES (s_Person.nextval(),'Tamara','Lucía','Arana',NULL,TO_DATE('01/01/1990','DD/MM/YYYY'),NULL);
 
 INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date_birth,idSex)
 VALUES (s_Person.nextval(),'Juan','Fernando','Fernandez','López',TO_DATE('08/02/1977','DD/MM/YYYY'),1);
@@ -72,7 +72,7 @@ INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date
 VALUES (s_Person.nextval(),'José','Manuel','Orozco','Fraga',TO_DATE('01/04/1958','DD/MM/YYYY'),1);
 
 INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date_birth,idSex)
-VALUES (s_Person.nextval(),'Eva','María','Cuenca',TO_DATE('14/07/2000','DD/MM/YYYY'),2);
+VALUES (s_Person.nextval(),'Eva','María','Cuenca',NUL,TO_DATE('14/07/2000','DD/MM/YYYY'),2);
 
 INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date_birth,idSex)
 VALUES (s_Person.nextval(),'Emilia','Ana','Dieguez','Fuentes',TO_DATE('22/09/1967','DD/MM/YYYY'));

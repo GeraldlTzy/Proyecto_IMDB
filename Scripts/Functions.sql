@@ -159,13 +159,13 @@ CREATE PROCEDURE insertProduct(
   ) AS
   BEGIN 
     INSERT INTO Product(idProduct, link,releaseYear,title,duration,trailer,synopsis,idType)
-    VALUES (s_product.currval,pLink,pReleaseYear,pTitle,pDuration,pTrailer,pSynopsis,pIdType);
+    VALUES (s_product.nextval,pLink,pReleaseYear,pTitle,pDuration,pTrailer,pSynopsis,pIdType);
     
     INSERT INTO Photo(idPhoto,image,idProduct)
-    VALUES (s_hoto.nextval,pPhoto,s_Product.nextval);
+    VALUES (s_photo.nextval,pPhoto,s_product.currval);
 
     INSERT INTO Binnacle(idBinnacle, dateBinnacle, price,idProduct)
-    VALUES (s_binnacle.nextval,SYSDATE,pPrice,s_Product.currval);
+    VALUES (s_binnacle.nextval,SYSDATE,pPrice,s_product.currval);
 
     COMMIT;
   END insertProduct;

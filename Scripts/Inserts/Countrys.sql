@@ -25,17 +25,6 @@ insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Panamá'
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Perú');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Estados Unidos');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Venezuela');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Antigua y Barbuda');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Bahamas');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Barbados');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Costa Rica');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Dominica');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Granada');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'San Cristóbal y Nieves');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'San Vicente y las Granadinas');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Santa Lucía');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Trinidad y Tobago');
-
 
 /**************************************Europe**********************************/
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Albania');
@@ -48,7 +37,7 @@ insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Grecia')
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Hungría');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Irlanda');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Letonia');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Lituania');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Litunia');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Macedonia del Norte');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Mónaco');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Noruega');
@@ -81,6 +70,19 @@ insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Inglater
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Gales');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Escocia');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Serbia');
+/******************************America news************************************/
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Costa Rica');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Antigua y Barbuda');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Bahamas');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Barbados');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Costa Rica');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Dominica');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Granada');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'San Cristóbal y Nieves');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'San Vicente y las Granadinas');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Santa Lucía');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Trinidad y Tobago');
+/******************************Europa news*************************************/
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Turquía');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Bielorrusia');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Chipre');
@@ -88,7 +90,7 @@ insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Georgia'
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Moldavia');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Ucrania');
 
-/**************************************Asia**********************************/
+/**************************************Asia************************************/
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Afganistán');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Arabia Saudita');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Armenia');
@@ -133,7 +135,7 @@ insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Uzbekist
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Vietnam');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Yemen');
 
-/**************************************Oceania**********************************/
+/**************************************Oceania*********************************/
 
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Australia');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Fiyi');
@@ -150,8 +152,7 @@ insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Tonga');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Tuvalu');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Vanuatu');
 
-/************************************Africa***************************************************/
-
+/************************************Africa************************************/
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Angola');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Argelia');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Benín');
@@ -206,8 +207,6 @@ insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Uganda')
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Yibuti');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Zambia');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Zimbabue');
-
-
 /*******************************Insert provinces*******************************/
 /******************************************************************************/
 ---Costa Rica

@@ -1,72 +1,69 @@
 --This script should be executed before inserting any data
 --Sexes
-INSERT INTO Sex(id_sex,sex_name)
-VALUES (1, 'Masculino');
+INSERT INTO Sex(idsex,sexname)
+VALUES (1, 'Male');
 
-INSERT INTO Sex(id_sex,sex_name)
-VALUES (2, 'Femenino');
-
-
---Types of ID
-Insert INTO TypeOfIdentification(idTypeOfIdentification,nameTypeIdent)
-VALUES (1, 'Cédula')
-
-Insert INTO TypeOfIdentification(idTypeOfIdentification,nameTypeIdent)
-VALUES (2, 'Pasaporte')
-
-Insert INTO TypeOfIdentification(idTypeOfIdentification,nameTypeIdent)
-VALUES (3, 'Licencia de conducir')
+INSERT INTO Sex(idsex,sexname)
+VALUES (2, 'Female');
 
 
---Platforms
-Insert INTO Platform(idPlatform,namePlatform)
-VALUES (1, 'Netflix')
+Insert INTO TypeOfIdentification(IDTYPEIDENT,nameTypeIdent)
+VALUES (1, 'ID Card');
+
+Insert INTO TypeOfIdentification(IDTYPEIDENT,nameTypeIdent)
+VALUES (2, 'Passport');
+
+Insert INTO TypeOfIdentification(IDTYPEIDENT,nameTypeIdent)
+VALUES (3, 'Driving License');
+
 
 Insert INTO Platform(idPlatform,namePlatform)
-VALUES (2, 'Amazon Prime Video')
+VALUES (1, 'Netflix');
 
 Insert INTO Platform(idPlatform,namePlatform)
-VALUES (3, 'HBO Max')
+VALUES (2, 'Amazon Prime Video');
 
 Insert INTO Platform(idPlatform,namePlatform)
-VALUES (4, 'Disney+')
+VALUES (3, 'HBO Max');
 
 Insert INTO Platform(idPlatform,namePlatform)
-VALUES (5, 'Hulu')
+VALUES (4, 'Disney+');
 
 Insert INTO Platform(idPlatform,namePlatform)
-VALUES (6, 'Sling TV')
+VALUES (5, 'Hulu');
 
 Insert INTO Platform(idPlatform,namePlatform)
-VALUES (7, 'Crunchyroll') 	
+VALUES (6, 'Sling TV');
+
+Insert INTO Platform(idPlatform,namePlatform)
+VALUES (7, 'Crunchyroll');
 
 
---Types of Product
-Insert INTO TypeOfProduct(idType,nickname)
-VALUES (1,"Película")
 
 Insert INTO TypeOfProduct(idType,nickname)
-VALUES (2,"Serie")
+VALUES (1,'Movie');
 
 Insert INTO TypeOfProduct(idType,nickname)
-VALUES (3,"Documental")
+VALUES (2,'Serie');
 
---Types of Participant
+Insert INTO TypeOfProduct(idType,nickname)
+VALUES (3,'Documentary');
 
-Insert INTO TypeOfParticipant(idType,nickname)
-VALUES (1,"Actor")
 
-Insert INTO TypeOfParticipant(idType,nickname)
-VALUES (2,"Director")
+Insert INTO TypeOfParticipant(idType,nametype)
+VALUES (1,'Actor');
 
-Insert INTO TypeOfParticipant(idType,nickname)
-VALUES (3,"Productor")
+Insert INTO TypeOfParticipant(idType,nametype)
+VALUES (2,'Director');
 
-Insert INTO TypeOfParticipant(idType,nickname)
-VALUES (4,"Guionista")
+Insert INTO TypeOfParticipant(idType,nametype)
+VALUES (3,'Producer');
 
-Insert INTO TypeOfParticipant(idType,nickname)
-VALUES (5,"Compositor")
+Insert INTO TypeOfParticipant(idType,nametype)
+VALUES (4,'Screenwriter');
 
-Insert INTO TypeOfParticipant(idType,nickname)
-VALUES (6,"Editor")
+Insert INTO TypeOfParticipant(idType,nametype)
+VALUES (5,'Composer');
+
+Insert INTO TypeOfParticipant(idType,nametype)
+VALUES (6,'Editor');

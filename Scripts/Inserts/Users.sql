@@ -6,14 +6,6 @@ VALUES (2, 'Female');
 
 --------------------------Creation of users-------------------------------------
 
-CREATE SEQUENCE s_Person
-START WITH 0
-INCREMENT BY 1
-MINVALUE 0
-MAXVALUE 100000
-NOCACHE
-NOCYCLE;
-
 INSERT INTO Person(idPerson,firstName,secondName,firstSurname,secondSurname,date_birth,idSex)
 VALUES (s_Person.currval(),'Jose','David','Serrano',null,TO_DATE('08/03/2005','DD/MM/YYYY'),1);
 

@@ -1,20 +1,20 @@
 --This script should be executed before inserting any data
 --Sexes
 INSERT INTO Sex(idsex,sexname)
-VALUES (1, 'Male');
+VALUES (1, 'Masculino');
 
 INSERT INTO Sex(idsex,sexname)
-VALUES (2, 'Female');
+VALUES (2, 'Femenino');
 
 
 Insert INTO TypeOfIdentification(IDTYPEIDENT,nameTypeIdent)
-VALUES (1, 'ID Card');
+VALUES (1, Cédula');
 
 Insert INTO TypeOfIdentification(IDTYPEIDENT,nameTypeIdent)
-VALUES (2, 'Passport');
+VALUES (2, 'Pasaporte');
 
 Insert INTO TypeOfIdentification(IDTYPEIDENT,nameTypeIdent)
-VALUES (3, 'Driving License');
+VALUES (3, 'Licencia de Conducir');
 
 
 Insert INTO Platform(idPlatform,namePlatform)
@@ -41,13 +41,13 @@ VALUES (7, 'Crunchyroll');
 
 
 Insert INTO TypeOfProduct(idType,nickname)
-VALUES (1,'Movie');
+VALUES (1,'Película');
 
 Insert INTO TypeOfProduct(idType,nickname)
 VALUES (2,'Serie');
 
 Insert INTO TypeOfProduct(idType,nickname)
-VALUES (3,'Documentary');
+VALUES (3,'Documental');
 
 
 Insert INTO TypeOfParticipant(idType,nametype)
@@ -57,13 +57,13 @@ Insert INTO TypeOfParticipant(idType,nametype)
 VALUES (2,'Director');
 
 Insert INTO TypeOfParticipant(idType,nametype)
-VALUES (3,'Producer');
+VALUES (3,'Productor');
 
 Insert INTO TypeOfParticipant(idType,nametype)
-VALUES (4,'Screenwriter');
+VALUES (4,'Guionista');
 
 Insert INTO TypeOfParticipant(idType,nametype)
-VALUES (5,'Composer');
+VALUES (5,'Compositor');
 
 Insert INTO TypeOfParticipant(idType,nametype)
 VALUES (6,'Editor');

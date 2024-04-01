@@ -13,7 +13,7 @@ storage (initial 10k next 10k pctincrease 0);
 /************************Atributes for person**********************************/
 CREATE TABLE Sex (
 	idSex			            NUMBER(7),
-	sexName		                VARCHAR(6) 
+	sexName		                VARCHAR(10) 
 );
 ALTER TABLE sex
 ADD

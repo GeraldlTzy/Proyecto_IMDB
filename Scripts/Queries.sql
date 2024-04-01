@@ -52,3 +52,16 @@ INNER JOIN CatalogXUser cxu
 ON u.id_user = cxu.id_user
 INNER JOIN Product p
 ON cxp.id_product = p.id_product
+--Rank by vistas, necesita interfaz para llevar cuenta de vistas, y de paso quiero validar si esta cuenta se maneja a nivel de BD o interfaz, porque si es BD hay que editar tabla
+--Rank by rating D
+SELECT idProduct, title, link, duration, trailer, releaseYear, avg_rating
+FROM (
+    SELECT p.idProduct, p.title, AVG(r.stars) as avg_rating,
+           RANK() OVER (ORDER BY AVG(r.stars) DESC) AS ranking
+    FROM Product p
+    INNER JOIN Review r ON p.idProduct = r.idProduct
+    GROUP BY p.idProduct, p.title
+)
+WHERE ranking <= :N;
+
+

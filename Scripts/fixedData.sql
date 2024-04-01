@@ -8,7 +8,7 @@ VALUES (2, 'Femenino');
 
 
 Insert INTO TypeOfIdentification(IDTYPEIDENT,nameTypeIdent)
-VALUES (1, Cédula');
+VALUES (1, 'Cédula');
 
 Insert INTO TypeOfIdentification(IDTYPEIDENT,nameTypeIdent)
 VALUES (2, 'Pasaporte');

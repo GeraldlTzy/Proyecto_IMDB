@@ -1,4 +1,3 @@
-
 /**************************Atributes for systemUser****************************/
 CREATE TABLE TypeOfIdentification(
     idTypeIdent                 NUMBER(7),
@@ -37,7 +36,7 @@ storage (initial 10k next 10k pctincrease 0);
 ---City has a reference to the country
 CREATE TABLE country (
 	idCountry                   NUMBER(7),
-	nameCountry                 VARCHAR2(50) CONSTRAINT nameCountry_nn NOT NULL
+	nameCountry                 VARCHAR2(100) CONSTRAINT nameCountry_nn NOT NULL
 );
 alter table country
 add
@@ -49,7 +48,7 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE city (
 	idCity                      NUMBER(7),
 	idCountry                   NUMBER(7),
-    nameCity                    VARCHAR2(50) CONSTRAINT nameCity_nn NOT NULL,
+    nameCity                    VARCHAR2(100) CONSTRAINT nameCity_nn NOT NULL,
     constraint fk_city_country foreign key (idCountry) 
     references Country(idCountry)
 );

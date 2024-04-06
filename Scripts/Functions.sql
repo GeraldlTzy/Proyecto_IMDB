@@ -108,19 +108,42 @@ BEGIN
     VALUES(s_type, p_nickname);
     COMMIT;
 END;*/
-CREATE OR REPLACE PACKAGE end_userPkg IS
-    PROCEDURE insertUser(pSex NUMBER, pFirstName VARCHAR2, pSecondName VARCHAR2,
-    pFirstSurname VARCHAR2, pSecondSurname VARCHAR2, pDatebirth DATE,
-    pPhoto BLOB, pUsername VARCHAR2, pIdentification NUMBER,
-    pPhoneNumber NUMBER, pEmail VARCHAR2, pPswd VARCHAR2);
-    /*end_user atributes*/
-    ---Only id)
-END end_userPkg;
-/
-CREATE OR REPLACE PACKAGE BODY end_userPkg AS
-   PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+
+
+CREATE OR REPLACE PACKAGE pkgEnd_user IS
+    /**************************************************************************/
+    PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
-    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
+    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2);
+    PROCEDURE deleteUser(pIdUser IN NUMBER);
+    PROCEDURE updateUser(pIdUser IN NUMBER);
+    /**********************Actions User for Product****************************/
+    PROCEDURE buyProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pIdPayment IN NUMBER);
+    PROCEDURE commentProduct(pIdUser IN NUMBER, pIdProduct, pDescription IN VARCHAR);
+    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct, pStars IN NUMBER);
+    PROCEDURE insertFavorite(pIdUser IN NUMBER, pIdProduct);
+    /**************************************************************************/
+    PROCEDURE deleteComment(pIdComment IN NUMBER);
+    PROCEDURE deleteReview (pIdReview IN NUMBER);
+    PROCEDURE deleteFavorite(pIdProduct IN NUMBER);
+    /**************************************************************************/
+    PROCEDURE insertCard(pIdUser IN NUMBER, pCardNumber IN NUMBER, 
+    pExpiration IN NUMBER, pCvv IN NUMBER, pOwnerName IN VARCHAR2);
+    PROCEDURE removeCard(pIdUser IN NUMBER, pIdCard IN NUMBER);
+    /**************************************************************************/
+    
+    
+    
+    ---PROCEDURE updatePswd();
+    
+    
+END pkgEnd_user;
+
+CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
+    PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
+    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
     pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, typeOfID IN NUMBER)
     IS
     BEGIN
@@ -134,7 +157,7 @@ CREATE OR REPLACE PACKAGE BODY end_userPkg AS
         VALUES (s_person.currval, pUsername, pPhoneNumber, pEmail,
         pPswd);
     
-        INSERT INTO Identification (idIdentification,idTypeIdent,identNumber)
+        INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
         VALUES (s_identification.nextval, typeOfId, pIdentification);
         
         INSERT INTO IdentXSystem(idIdent,idSystemUser)
@@ -145,10 +168,103 @@ CREATE OR REPLACE PACKAGE BODY end_userPkg AS
         
         COMMIT;
     END;
+    
     /*Terminar*/ 
-END end_userPkg;
-
-/
+    PROCEDURE deleteUser(pIdUser IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM commentary 
+        WHERE idUser = pIdUser;
+        
+        DELETE FROM review     
+        WHERE idUser = pIdUser;
+        
+        DELETE FROM wishlist   
+        WHERE idUser = pIdUser;
+        
+        DELETE FROM purchase   
+        WHERE idUser = pIdUser;        
+        
+        DELETE FROM card 
+        WHERE idCard IN 
+        (SELECT idPayment FROM payment WHERE idUser = pIdUser);
+        
+        DELETE FROM payment
+        WHERE idUser = pIdUser;
+        
+        DELETE FROM end_user
+        WHERE idUser = pIdUser;
+        
+        DELETE FROM IdentXSystem
+        WHERE idSystemUser = pIdUser;
+        
+        DELETE FROM systemUser
+        WHERE idSystemUser = pIdUser;
+        
+        DELETE FROM nationalityPerson
+        WHERE idPerson = pIdUser;
+        
+        DELETE FROM Person
+        WHERE idPerson = pIdUser;
+        
+        COMMIT;
+    END;
+    /*********************User x Product***************************************/
+    /*Procedure for buy a product*/
+    PROCEDURE buyProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pIdPayment IN NUMBER)
+    IS
+    BEGIN
+        INSERT INTO Purchase(idUser, idProduct, idPayment, history)
+        VALUES (pIdUser, pIdProduct, pIdPayment, SYSDATE);
+    END;
+    
+    PROCEDURE commentProduct(pIdUser IN NUMBER, pIdProduct, pComment IN VARCHAR)
+    IS
+    BEGIN
+        INSERT INTO Commentary (idProduct, idUser, description)
+        VALUES (pIdProduct, pIdUser, pDescription);
+    END;
+    
+    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct, pStars IN NUMBER)
+    IS
+    BEGIN
+        INSERT INTO Review(idProduct, idUser, stars)
+        VALUES (pIdProduct, pIdUser, pStars);
+    END;
+    
+    PROCEDURE insertFavorite(pIdUser IN NUMBER, pIdProduct)
+    IS
+    BEGIN
+        INSERT INTO Wishlist(idProduct, idUser)
+        VALUES (pIdUser, pIdProduct);
+    END;
+    /**Delete procedures**/
+    /**************************************************************************/
+    PROCEDURE insertCard(pIdUser IN NUMBER, pCardNumber IN NUMBER, 
+    pExpiration IN NUMBER, pCvv IN NUMBER, pOwnerName IN VARCHAR2)
+    IS
+    BEGIN
+        INSERT INTO Payment(idPayment, idUser)
+        VALUES (s_payment.nextval, pIdUser);
+        
+        INSERT INTO Card(idCard, cardNumber, expiration, cvv, ownerName)
+        VALUES (s_payment.currval, pCardNumber, pExpiration, pCvv, pOwnerName);
+    END;
+    
+    PROCEDURE removeCard(pIdUser IN NUMBER, pIdCard IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM Card
+        WHERE idCard = pIdCard;
+        DELETE FROM Payment
+        WHERE idPayment = pIdCard;
+    END;
+    /**************************************************************************/
+    
+    
+    
+    
+END pkgEnd_user;
 
 
 

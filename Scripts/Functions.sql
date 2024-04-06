@@ -143,7 +143,7 @@ END pkgEnd_user;
 CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
-    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
+    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
     pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER)
     IS
     BEGIN

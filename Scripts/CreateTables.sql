@@ -105,7 +105,7 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE systemUser (
 	idSystemUser                NUMBER(7),
 	username                    VARCHAR2(20) CONSTRAINT username_nn NOT NULL,
-	phoneNumber                 NUMBER(7)    CONSTRAINT phoneNumber_nn NOT NULL,
+	phoneNumber                 NUMBER(15)    CONSTRAINT phoneNumber_nn NOT NULL,
 	email                       VARCHAR2(20) CONSTRAINT email_nn NOT NULL,
 	pswd  		                VARCHAR2(20) CONSTRAINT systemuser_password_nn NOT NULL,
     constraint fk_systemUser_person foreign key (idSystemUser) references Person(idPerson)

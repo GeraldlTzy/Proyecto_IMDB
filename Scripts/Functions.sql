@@ -5,63 +5,69 @@
  *Output: void
  */
   
-CREATE PROCEDURE insertSex (
+CREATE OR REPLACE PACKAGE sex IS
+    PROCEDURE addSex(pName VARCHAR2);
+END;
+
+CREATE OR REPLACE PACKAGE BODY sex AS
+    PROCEDURE addSex (
     pName IN VARCHAR2
-) AS
-BEGIN
-    INSERT INTO sex(idSex, sexName)
-    values(s_sex.nextval, pName);
-END insertSex;
+    ) IS
+    BEGIN
+        INSERT INTO sex(idSex, sexName)
+        values(s_sex.nextval, pName);
+    END addSex;    
+    /*Remove*/
+    /*Update*/
+END sex;
 
-CREATE PROCEDURE insertNationality(
+
+CREATE OR REPLACE PACKAGE nationality IS
+    PROCEDURE addNationality (pName VARCHAR2);
+
+END nationality;
+
+CREATE OR REPLACE PACKAGE BODY nationality AS
+    
+    PROCEDURE addNationality(
     pName IN VARCHAR2
-) AS
-BEGIN
-    INSERT INTO nationality (idNationality, name)
-    VALUES (s_nationality.nextval, pName);
-    COMMIT;
-END insertNationality;
+    ) IS
+    BEGIN
+        INSERT INTO nationality (idNationality, name)
+        VALUES (s_nationality.nextval, pName);
+        COMMIT;
+    END;
 
-CREATE PROCEDURE insertPerson(
-    pSex IN NUMBER,
-    pFirstName IN VARCHAR2,
-    pSecondName IN VARCHAR2,
-    pFirstSurname IN VARCHAR2,
-    pSecondSurname IN VARCHAR2,
-    pDatebirth IN DATE
-) AS
-BEGIN
-    INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-    secondSurname, datebirth)
-    VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-    pSecondSurname, pDatebirth);
-    COMMIT;
-END insertPerson;
+    /*Remove*/
+    /*Update*/
+END nationality;
 
-CREATE PROCEDURE insertParticipant(
-    pSex IN NUMBER,
-    pFirstName IN VARCHAR2,
-    pSecondName IN VARCHAR2,
-    pFirstSurname IN VARCHAR2,
-    pSecondSurname IN VARCHAR2,
-    pDateBirth IN DATE,
-    pCountry IN NUMBER,
-    pBiography IN VARCHAR2,
-    pHeight IN NUMBER,
-    pTrivia IN VARCHAR2,
-    pPhoto IN BLOB
-) AS
-BEGIN
-    INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-    secondSurname, datebirth, photo)
-    VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-    pSecondSurname, pDatebirth, pPhoto);
-    
-    INSERT INTO Participant (idParticipant, idCountry, biography, height, trivia)
-    values(s_person.currval, pCountry, pBiography, pHeight, pTrivia);
-    
-    COMMIT;
-END insertParticipant;
+
+CREATE OR REPLACE PACKAGE participant IS
+    PROCEDURE addParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
+    pCountry IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
+    pTrivia IN VARCHAR2, pPhoto IN BLOB);
+END participant;
+
+CREATE OR REPLACE PACKAGE BODY participant AS
+    PROCEDURE addParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
+    pCountry IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
+    pTrivia IN VARCHAR2, pPhoto IN BLOB)
+    IS
+    BEGIN
+        INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
+        secondSurname, datebirth, photo)
+        VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
+        pSecondSurname, pDatebirth, pPhoto);
+        
+        INSERT INTO Participant (idParticipant, idCountry, biography, height, trivia)
+        values(s_person.currval, pCountry, pBiography, pHeight, pTrivia);
+        
+        COMMIT;
+    END;
+END participant;
 
 
 /*CREATE PROCEDURE insertTypeOfParticipant(
@@ -72,146 +78,120 @@ BEGIN
     VALUES(s_type, p_nickname);
     COMMIT;
 END;*/
-
-CREATE PROCEDURE insertSystemUser(
-    /*Person atributes*/
-    pSex IN NUMBER,
-    pFirstName IN VARCHAR2,
-    pSecondName IN VARCHAR2,
-    pFirstSurname IN VARCHAR2,
-    pSecondSurname IN VARCHAR2,
-    pDatebirth IN DATE,
-    pPhoto IN BLOB,
-    /*SystemUser atributes*/
-    pUsername IN VARCHAR2,
-    pIdentification IN VARCHAR2,
-    pPhoneNumber IN NUMBER,
-    pEmail IN VARCHAR2,
-    pPswd IN VARCHAR2
-) AS
-BEGIN
-    INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-    secondSurname, datebirth, photo)
-    VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-    pSecondSurname, pDatebirth, pPhoto);
-    
-    INSERT INTO systemUser (idSystemUser, username, identification, phoneNumber,
-    email, pswd)
-    VALUES (s_person.currval, pUsername, pIdentification, pPhoneNumber, pEmail,
-    pPswd);
-    
-    COMMIT;
-END insertSystemUser;
-
-CREATE PROCEDURE insertUser(
-    /*Person atributes*/
-    pSex IN NUMBER,
-    pFirstName IN VARCHAR2,
-    pSecondName IN VARCHAR2,
-    pFirstSurname IN VARCHAR2,
-    pSecondSurname IN VARCHAR2,
-    pDatebirth IN DATE,
-    pPhoto IN BLOB,
-    /*SystemUser atributes*/
-    pUsername IN VARCHAR2,
-    pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER,
-    pEmail IN VARCHAR2,
-    pPswd IN VARCHAR2,
-    typeOfID IN NUMBER
+CREATE OR REPLACE PACKAGE end_user IS
+    PROCEDURE addUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
+    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2);
     /*end_user atributes*/
-    ---Only id
-) AS
-BEGIN
-    INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-    secondSurname, datebirth, photo)
-    VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-    pSecondSurname, pDatebirth, pPhoto);
-    
-    INSERT INTO systemUser (idSystemUser, username, phoneNumber,
-    email, pswd)
-    VALUES (s_person.currval, pUsername, pPhoneNumber, pEmail,
-    pPswd);
+    ---Only id)
+END end_user;
 
-    INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
-    VALUES (s_identification.nextval, typeOfId, pIdentification);
+CREATE OR REPLACE PACKAGE BODY end_user AS
+   PROCEDURE addUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
+    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, typeOfID IN NUMBER)
+    IS
+    BEGIN
+        INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
+        secondSurname, datebirth, photo)
+        VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
+        pSecondSurname, pDatebirth, pPhoto);
+        
+        INSERT INTO systemUser (idSystemUser, username, phoneNumber,
+        email, pswd)
+        VALUES (s_person.currval, pUsername, pPhoneNumber, pEmail,
+        pPswd);
     
-    INSERT INTO IdentXSystem(idIdent,idSystemUser)
-    VALUES (s_identification.currval,s_person.currval);
+        INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
+        VALUES (s_identification.nextval, typeOfId, pIdentification);
+        
+        INSERT INTO IdentXSystem(idIdent,idSystemUser)
+        VALUES (s_identification.currval,s_person.currval);
+        
+        INSERT INTO end_user (idUser)
+        VALUES (s_person.currval);
+        
+        COMMIT;
+    END;
+    /*Terminar*/ 
+END end_user;
+
+
+
+
+
+
+CREATE OR REPLACE PACKAGE administrator IS
+    PROCEDURE addAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
+    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2);
+    /*end_user atributes*/
+    ---Only id)
+END administrator;
+
+CREATE OR REPLACE PACKAGE BODY administrator AS
+   PROCEDURE addAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
+    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, typeOfID IN NUMBER)
+    IS
+    BEGIN
+        INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
+        secondSurname, datebirth, photo)
+        VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
+        pSecondSurname, pDatebirth, pPhoto);
+        
+        INSERT INTO systemUser (idSystemUser, username, identification, phoneNumber,
+        email, pswd)
+        VALUES (s_person.currval, pUsername, pIdentification, pPhoneNumber, pEmail,
+        pPswd);
     
-    INSERT INTO end_user (idUser)
-    VALUES (s_person.currval);
+        INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
+        VALUES (s_identification.nextval, typeOfId, pIdentification);
+        
+        INSERT INTO IdentXSystem(idIdent,idSystemUser)
+        VALUES (s_identification.currval,s_person.currval);
+        
+        INSERT INTO administrator (idAdministrator)
+        VALUES (s_person.currval);
+        
+        COMMIT;
+    END;
+    /*Terminar*/ 
+END administrator;
+
+CREATE OR REPLACE PACKAGE product IS 
+    PROCEDURE addProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
+    pPrice in NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pDuration IN NUMBER,
+    pTitle IN VARCHAR2, pReleaseYear IN NUMBER, pLink IN VARCHAR);
+
+END product;
+
+
+
+CREATE OR REPLACE PACKAGE BODY product AS 
+    PROCEDURE addProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
+    pPrice in NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pDuration IN NUMBER,
+    pTitle IN VARCHAR2, pReleaseYear IN NUMBER, pLink IN VARCHAR) 
+    IS
+    BEGIN     
+        INSERT INTO Product(idProduct, link,releaseYear,title,duration,trailer,synopsis,idType)
+        VALUES (s_product.nextval,pLink,pReleaseYear,pTitle,pDuration,pTrailer,pSynopsis,pIdType);
     
+        INSERT INTO Photo(idPhoto,image,idProduct)
+        VALUES (s_photo.nextval,pPhoto,s_product.currval);
+
+        INSERT INTO Binnacle(idBinnacle, dateBinnacle, price,idProduct)
+        VALUES (s_binnacle.nextval,SYSDATE,pPrice,s_product.currval);
+
     COMMIT;
-END insertUser;
+    END;
+END product;
 
-CREATE PROCEDURE insertProduct(
-    pIdType in NUMBER,
-    pLink in VARCHAR2,
-    pPhoto in BLOB,
-    pPrice in NUMBER,
-    pSynopsis IN VARCHAR2,
-    pTrailer IN VARCHAR2,
-    pDuration IN NUMBER,
-    pTitle IN VARCHAR2,
-    pReleaseYear IN NUMBER,
-    pLink IN VARCHAR
-  ) AS
-  BEGIN 
-    INSERT INTO Product(idProduct, link,releaseYear,title,duration,trailer,synopsis,idType)
-    VALUES (s_product.nextval,pLink,pReleaseYear,pTitle,pDuration,pTrailer,pSynopsis,pIdType);
-    
-    INSERT INTO Photo(idPhoto,image,idProduct)
-    VALUES (s_photo.nextval,pPhoto,s_product.currval);
 
-    INSERT INTO Binnacle(idBinnacle, dateBinnacle, price,idProduct)
-    VALUES (s_binnacle.nextval,SYSDATE,pPrice,s_product.currval);
-
-    COMMIT;
-  END insertProduct;
-
-CREATE PROCEDURE insertAdministrator(
-    /*Person atributes*/
-    pSex IN NUMBER,
-    pFirstName IN VARCHAR2,
-    pSecondName IN VARCHAR2,
-    pFirstSurname IN VARCHAR2,
-    pSecondSurname IN VARCHAR2,
-    pDatebirth IN DATE,
-    pPhoto IN DATE,
-    /*SystemUser atributes*/
-    pUsername IN VARCHAR2,
-    pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER,
-    pEmail IN VARCHAR2,
-    pPswd IN VARCHAR2,
-    typeOfId IN NUMBER,
-    
-    /*Administrator atributes*/
-    ---Only id
-) AS
-BEGIN
-    INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-    secondSurname, datebirth, photo)
-    VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-    pSecondSurname, pDatebirth, pPhoto);
-    
-    INSERT INTO systemUser (idSystemUser, username, identification, phoneNumber,
-    email, pswd)
-    VALUES (s_person.currval, pUsername, pIdentification, pPhoneNumber, pEmail,
-    pPswd);
-
-    INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
-    VALUES (s_identification.nextval, typeOfId, pIdentification)
-    
-    INSERT INTO IdentXSystem(idIdent,idSystemUser)
-    VALUES (s_identification.currval,s_person.currval)
-    
-    INSERT INTO administrator (idAdministrator)
-    VALUES (s_person.currval);
-    
-    COMMIT;
-END insertAdministrator;
 
 /******************************************************************************/
 CREATE PROCEDURE insertCard(

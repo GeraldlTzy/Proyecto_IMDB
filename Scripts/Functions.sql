@@ -8,6 +8,7 @@
 CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertSex(pName IN VARCHAR2);
     PROCEDURE insertNationality (pName IN VARCHAR2);
+    PROCEDURE insertNationalityPerson (pIdNationality IN NUMBER, pIdPerson IN NUMBER);
     PROCEDURE insertTypeIdent (pName IN VARCHAR2);
     PROCEDURE insertCountry (pName IN VARCHAR2);
     PROCEDURE insertCity (pIdCountry IN NUMBER, pName IN VARCHAR2);
@@ -15,6 +16,8 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertCatalog (pGenre IN VARCHAR2);
     PROCEDURE insertTypeProduct(pName IN VARCHAR2);
     PROCEDURE insertPlatform(pName IN VARCHAR2);
+    
+    /*Añadir procedimientos para borrar y editar*/
 END pkgBasic;
 
 CREATE OR REPLACE PACKAGE BODY pkgBasic AS
@@ -34,6 +37,14 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         VALUES (s_nationality.nextval, pName);
         COMMIT;
     END;
+    PROCEDURE insertNationalityPerson (pIdNationality IN NUMBER, pIdPerson IN NUMBER)
+    IS
+    BEGIN
+        INSERT INTO NationalityPerson (idNationality, idPerson)
+        VALUES (pIdNationality, pIdPerson);
+        COMMIT;
+    END;
+    
     PROCEDURE insertTypeIdent (pName IN VARCHAR2)
     IS
     BEGIN
@@ -301,17 +312,17 @@ END pkgEnd_user;
 CREATE OR REPLACE PACKAGE administrator IS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
-    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2);
-    /*end_user atributes*/
-    ---Only id)
+    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
+    PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER);
+    --PROCEDURE editCatalog(pIdAdmin IN NUMBER, pIdCatalog IN NUMBER);
 END administrator;
 
 CREATE OR REPLACE PACKAGE BODY administrator AS
-   PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
-    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, typeOfID IN NUMBER)
+    pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER)
     IS
     BEGIN
         INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
@@ -319,19 +330,39 @@ CREATE OR REPLACE PACKAGE BODY administrator AS
         VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
         pSecondSurname, pDatebirth, pPhoto);
         
-        INSERT INTO systemUser (idSystemUser, username, identification, phoneNumber,
+        INSERT INTO systemUser (idSystemUser, username, phoneNumber,
         email, pswd)
-        VALUES (s_person.currval, pUsername, pIdentification, pPhoneNumber, pEmail,
+        VALUES (s_person.currval, pUsername, pPhoneNumber, pEmail,
         pPswd);
     
-        INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
-        VALUES (s_identification.nextval, typeOfId, pIdentification);
+        INSERT INTO Identification (idIdentification, idTypeIdent, identNumber)
+        VALUES (s_identification.nextval, pIdTypeIdent, pIdentification);
         
         INSERT INTO IdentXSystem(idIdent,idSystemUser)
         VALUES (s_identification.currval,s_person.currval);
         
         INSERT INTO administrator (idAdministrator)
         VALUES (s_person.currval);
+        
+        COMMIT;
+    END;
+    PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM CatalogXAdministrator
+        WHERE idAdministrator = pIdAdmin;
+        
+        DELETE FROM IdentXSystem
+        WHERE idSystemUser = pIdAdmin;
+        
+        DELETE FROM systemUser
+        WHERE idSystemUser = pIdAdmin;
+        
+        DELETE FROM nationalityPerson
+        WHERE idPerson = pIdAdmin;
+        
+        DELETE FROM Person
+        WHERE idPerson = pIdAdmin;
         
         COMMIT;
     END;

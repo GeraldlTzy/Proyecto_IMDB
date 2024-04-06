@@ -6,30 +6,30 @@
  */
   
 CREATE OR REPLACE PACKAGE sex IS
-    PROCEDURE addSex(pName VARCHAR2);
+    PROCEDURE insertSex(pName VARCHAR2);
 END;
 
 CREATE OR REPLACE PACKAGE BODY sex AS
-    PROCEDURE addSex (
+    PROCEDURE insertSex (
     pName IN VARCHAR2
     ) IS
     BEGIN
         INSERT INTO sex(idSex, sexName)
         values(s_sex.nextval, pName);
-    END addSex;    
+    END;    
     /*Remove*/
     /*Update*/
 END sex;
 
 
 CREATE OR REPLACE PACKAGE nationality IS
-    PROCEDURE addNationality (pName VARCHAR2);
+    PROCEDURE insertNationality (pName VARCHAR2);
 
 END nationality;
 
 CREATE OR REPLACE PACKAGE BODY nationality AS
     
-    PROCEDURE addNationality(
+    PROCEDURE insertNationality(
     pName IN VARCHAR2
     ) IS
     BEGIN
@@ -44,14 +44,14 @@ END nationality;
 
 
 CREATE OR REPLACE PACKAGE participant IS
-    PROCEDURE addParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
     pCountry IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
     pTrivia IN VARCHAR2, pPhoto IN BLOB);
 END participant;
 
 CREATE OR REPLACE PACKAGE BODY participant AS
-    PROCEDURE addParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
     pCountry IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
     pTrivia IN VARCHAR2, pPhoto IN BLOB)
@@ -79,7 +79,7 @@ BEGIN
     COMMIT;
 END;*/
 CREATE OR REPLACE PACKAGE end_user IS
-    PROCEDURE addUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
     pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2);
@@ -88,7 +88,7 @@ CREATE OR REPLACE PACKAGE end_user IS
 END end_user;
 
 CREATE OR REPLACE PACKAGE BODY end_user AS
-   PROCEDURE addUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+   PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
     pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, typeOfID IN NUMBER)
@@ -124,7 +124,7 @@ END end_user;
 
 
 CREATE OR REPLACE PACKAGE administrator IS
-    PROCEDURE addAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
     pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2);
@@ -133,7 +133,7 @@ CREATE OR REPLACE PACKAGE administrator IS
 END administrator;
 
 CREATE OR REPLACE PACKAGE BODY administrator AS
-   PROCEDURE addAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+   PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
     pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, typeOfID IN NUMBER)
@@ -164,7 +164,7 @@ CREATE OR REPLACE PACKAGE BODY administrator AS
 END administrator;
 
 CREATE OR REPLACE PACKAGE product IS 
-    PROCEDURE addProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
+    PROCEDURE insertProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
     pPrice in NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pDuration IN NUMBER,
     pTitle IN VARCHAR2, pReleaseYear IN NUMBER, pLink IN VARCHAR);
 
@@ -173,7 +173,7 @@ END product;
 
 
 CREATE OR REPLACE PACKAGE BODY product AS 
-    PROCEDURE addProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
+    PROCEDURE insertProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
     pPrice in NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pDuration IN NUMBER,
     pTitle IN VARCHAR2, pReleaseYear IN NUMBER, pLink IN VARCHAR) 
     IS

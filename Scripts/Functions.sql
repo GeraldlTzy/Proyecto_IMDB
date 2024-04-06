@@ -144,7 +144,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN VARCHAR2,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, typeOfID IN NUMBER)
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER)
     IS
     BEGIN
         INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
@@ -157,8 +157,8 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         VALUES (s_person.currval, pUsername, pPhoneNumber, pEmail,
         pPswd);
     
-        INSERT INTO Identification (idIdentification,idTypeOfIdentification,identNumber)
-        VALUES (s_identification.nextval, typeOfId, pIdentification);
+        INSERT INTO Identification (idIdentification, idTypeIdent, identNumber)
+        VALUES (s_identification.nextval, pIdTypeIdent, pIdentification);
         
         INSERT INTO IdentXSystem(idIdent,idSystemUser)
         VALUES (s_identification.currval,s_person.currval);

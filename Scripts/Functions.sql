@@ -47,14 +47,18 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
 END pkgBasic;
 
 
-CREATE OR REPLACE PACKAGE participant IS
+CREATE OR REPLACE PACKAGE participantPkg IS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
-    pCountry IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
+    pCountry IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER,
     pTrivia IN VARCHAR2, pPhoto IN BLOB);
-END participant;
+    PROCEDURE deleteParticipant(pIdParticipant NUMBER);
+    PROCEDURE insertRelative(pIdParticipant IN NUMBER, pIdRelative IN NUMBER, pIdKinship IN NUMBER);
+    
+END participantPkg;
+/
 
-CREATE OR REPLACE PACKAGE BODY participant AS
+CREATE OR REPLACE PACKAGE BODY participantPkg AS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
     pCountry IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
@@ -71,7 +75,32 @@ CREATE OR REPLACE PACKAGE BODY participant AS
         
         COMMIT;
     END;
-END participant;
+
+PROCEDURE  insertRelative(pIdParticipant IN NUMBER, pIdRelative IN NUMBER, pIdKinship IN NUMBER) 
+IS
+BEGIN
+
+    INSERT INTO ParticipantXRelative(idParticipant,idParticipant2,idRelative)
+    VALUES (pIdParticipant,pIdRelative,pIdKinship);
+    COMMIT;
+END;
+
+PROCEDURE deleteParticipant(pIdParticipant NUMBER)
+IS
+BEGIN
+    
+    DELETE FROM ParticipantXRelative
+    WHERE idParticipant = pIdParticipant;
+    
+    DELETE FROM ParticipantXProduct
+    WHERE idParticipant = pIdParticipant;
+    
+    DELETE FROM Participant
+    WHERE idParticipant = pIdParticipant;
+END;
+
+
+END participantPkg;
 
 
 

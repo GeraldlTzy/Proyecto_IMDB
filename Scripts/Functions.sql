@@ -4,10 +4,17 @@
  *Input: p_name, name of the sex
  *Output: void
  */
+/******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertSex(pName IN VARCHAR2);
     PROCEDURE insertNationality (pName IN VARCHAR2);
     PROCEDURE insertTypeIdent (pName IN VARCHAR2);
+    PROCEDURE insertCountry (pName IN VARCHAR2);
+    PROCEDURE insertCity (pIdCountry IN NUMBER, pName IN VARCHAR2);
+    PROCEDURE insertTypeParticipant(pNameType IN VARCHAR2);
+    PROCEDURE insertCatalog (pGenre IN VARCHAR2);
+    PROCEDURE insertTypeProduct(pName IN VARCHAR2);
+    PROCEDURE insertPlatform(pName IN VARCHAR2);
 END pkgBasic;
 
 CREATE OR REPLACE PACKAGE BODY pkgBasic AS
@@ -34,19 +41,53 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         VALUES (s_identification.nextval, pName);
         COMMIT;
     END;
-    /*CREATE PROCEDURE insertTypeOfParticipant(
-    p_nickname IN VARCHAR2
-    ) AS
+    PROCEDURE insertCountry (pName IN VARCHAR2)
+    IS
     BEGIN
-        INSERT INTO typeOfParticipant (id_type, nickname)
-        VALUES(s_type, p_nickname);
+        INSERT INTO country(idCountry, nameCountry)
+        VALUES (s_country.nextval, pName);
         COMMIT;
-    END;*/
+    END;
+    
+    PROCEDURE insertCity (pIdCountry IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        INSERT INTO city(idCity, idCountry, nameCity)
+        VALUES (s_city.nextval, pIdCountry, pName);
+        COMMIT;
+    END;
+    PROCEDURE insertTypeParticipant(pNameType IN VARCHAR2)
+    IS
+    BEGIN
+        INSERT INTO typeOfParticipant (idType, nameType)
+        VALUES(s_typeofparticipant.nextval, pNameType);
+        COMMIT;
+    END;
+    PROCEDURE insertCatalog(pGenre IN VARCHAR2)
+    IS
+    BEGIN
+        INSERT INTO catalog (idCatalog, genre)
+        VALUES(s_catalog.nextval, pGenre);
+        COMMIT;
+    END;
+    PROCEDURE insertTypeProduct(pName IN VARCHAR2)
+    IS
+    BEGIN
+        INSERT INTO typeOfProduct(idType, nickname)
+        VALUES (s_typeofproduct.nextval, pName);
+        COMMIT;
+    END;
+    PROCEDURE insertPlatform(pName IN VARCHAR2)
+    IS
+    BEGIN
+        INSERT INTO Platform (idPlatform, namePlatform)
+        VALUES (s_platform.nextval, pName);
+        COMMIT;
+    END;
     /*Remove*/
     /*Update*/
 END pkgBasic;
-
-
+/******************************************************************************/
 CREATE OR REPLACE PACKAGE participantPkg IS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
@@ -56,7 +97,6 @@ CREATE OR REPLACE PACKAGE participantPkg IS
     PROCEDURE insertRelative(pIdParticipant IN NUMBER, pIdRelative IN NUMBER, pIdKinship IN NUMBER);
     
 END participantPkg;
-/
 
 CREATE OR REPLACE PACKAGE BODY participantPkg AS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
@@ -76,35 +116,31 @@ CREATE OR REPLACE PACKAGE BODY participantPkg AS
         COMMIT;
     END;
 
-PROCEDURE  insertRelative(pIdParticipant IN NUMBER, pIdRelative IN NUMBER, pIdKinship IN NUMBER) 
-IS
-BEGIN
-
-    INSERT INTO ParticipantXRelative(idParticipant,idParticipant2,idRelative)
-    VALUES (pIdParticipant,pIdRelative,pIdKinship);
-    COMMIT;
-END;
-
-PROCEDURE deleteParticipant(pIdParticipant NUMBER)
-IS
-BEGIN
+    PROCEDURE  insertRelative(pIdParticipant IN NUMBER, pIdRelative IN NUMBER, pIdKinship IN NUMBER) 
+    IS
+    BEGIN
     
-    DELETE FROM ParticipantXRelative
-    WHERE idParticipant = pIdParticipant;
+        INSERT INTO ParticipantXRelative(idParticipant,idParticipant2,idRelative)
+        VALUES (pIdParticipant,pIdRelative,pIdKinship);
+        COMMIT;
+    END;
     
-    DELETE FROM ParticipantXProduct
-    WHERE idParticipant = pIdParticipant;
-    
-    DELETE FROM Participant
-    WHERE idParticipant = pIdParticipant;
-END;
-
+    PROCEDURE deleteParticipant(pIdParticipant NUMBER)
+    IS
+    BEGIN
+        
+        DELETE FROM ParticipantXRelative
+        WHERE idParticipant = pIdParticipant;
+        
+        DELETE FROM ParticipantXProduct
+        WHERE idParticipant = pIdParticipant;
+        
+        DELETE FROM Participant
+        WHERE idParticipant = pIdParticipant;
+    END;
 
 END participantPkg;
-
-
-
-drop package pkgEnd_user;
+/******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgEnd_user IS
     /**************************************************************************/
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
@@ -128,11 +164,7 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     PROCEDURE removeCard(pIdUser IN NUMBER, pIdCard IN NUMBER);
     /**************************************************************************/
     
-    
-    
     ---PROCEDURE updatePswd();
-    
-    
 END pkgEnd_user;
 
 CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
@@ -211,6 +243,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     BEGIN
         INSERT INTO Purchase(idUser, idProduct, idPayment, history)
         VALUES (pIdUser, pIdProduct, pIdPayment, SYSDATE);
+        COMMIT;
     END;
     
     PROCEDURE commentProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pDescription IN VARCHAR)
@@ -218,6 +251,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     BEGIN
         INSERT INTO Commentary (idProduct, idUser, description)
         VALUES (pIdProduct, pIdUser, pDescription);
+        COMMIT;
     END;
     
     PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN NUMBER)
@@ -225,6 +259,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     BEGIN
         INSERT INTO Review(idProduct, idUser, stars)
         VALUES (pIdProduct, pIdUser, pStars);
+        COMMIT;
     END;
     
     PROCEDURE insertFavorite(pIdUser IN NUMBER, pIdProduct IN NUMBER)
@@ -232,6 +267,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     BEGIN
         INSERT INTO Wishlist(idProduct, idUser)
         VALUES (pIdUser, pIdProduct);
+        COMMIT;
     END;
     /**Delete procedures**/
     /**************************************************************************/
@@ -244,6 +280,8 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         
         INSERT INTO Card(idCard, cardNumber, expiration, ccv, ownerName)
         VALUES (s_payment.currval, pCardNumber, pExpiration, pCcv, pOwnerName);
+        
+        COMMIT;
     END;
     
     PROCEDURE removeCard(pIdUser IN NUMBER, pIdCard IN NUMBER)
@@ -253,15 +291,13 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         WHERE idCard = pIdCard;
         DELETE FROM Payment
         WHERE idPayment = pIdCard;
+        
+        COMMIT;
     END;
-    /**************************************************************************/
-    
-    
-    
+    /**************************************************************************/    
     
 END pkgEnd_user;
-
-
+/******************************************************************************/
 CREATE OR REPLACE PACKAGE administrator IS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
@@ -301,15 +337,13 @@ CREATE OR REPLACE PACKAGE BODY administrator AS
     END;
     /*Terminar*/ 
 END administrator;
-
+/******************************************************************************/
 CREATE OR REPLACE PACKAGE product IS 
     PROCEDURE insertProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
     pPrice in NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pDuration IN NUMBER,
     pTitle IN VARCHAR2, pReleaseYear IN NUMBER, pLink IN VARCHAR);
 
 END product;
-
-
 
 CREATE OR REPLACE PACKAGE BODY product AS 
     PROCEDURE insertProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
@@ -329,17 +363,3 @@ CREATE OR REPLACE PACKAGE BODY product AS
     COMMIT;
     END;
 END product;
-
-
-
-
-
-
-/*CREATE PROCEDURE (
-
-) AS
-BEGIN
-    INSERT INTO ()
-    VALUES ();
-    COMMIT;
-END;*/

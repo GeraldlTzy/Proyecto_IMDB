@@ -172,11 +172,11 @@ storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
 CREATE TABLE participant (
 	idParticipant               NUMBER(7),
-	idCountry                   NUMBER(7),
+	idCity                      NUMBER(7),
 	biography                   VARCHAR2(500) CONSTRAINT biography_nn NOT NULL,	
 	height                      NUMBER(7)     CONSTRAINT height_nn NOT NULL,
 	trivia                      VARCHAR2(500) CONSTRAINT trivia_nn NOT NULL,
-	CONSTRAINT fk_part_country FOREIGN KEY (idCountry) REFERENCES Country(idCountry),
+	CONSTRAINT fk_part_city FOREIGN KEY (idCity) REFERENCES City(idCity),
 	CONSTRAINT fk_part_person FOREIGN KEY (idParticipant) REFERENCES Person(idPerson)
 );
 alter table participant

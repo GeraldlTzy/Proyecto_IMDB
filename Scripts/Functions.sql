@@ -5,6 +5,7 @@
  *Output: void
  */
 /******************************************************************************/
+
 CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertSex(pName IN VARCHAR2);
     PROCEDURE insertNationality (pName IN VARCHAR2);
@@ -121,8 +122,8 @@ CREATE OR REPLACE PACKAGE BODY participantPkg AS
         VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
         pSecondSurname, pDatebirth, pPhoto);
         
-        INSERT INTO Participant (idParticipant, idCountry, biography, height, trivia)
-        values(s_person.currval, pCountry, pBiography, pHeight, pTrivia);
+        INSERT INTO Participant (idParticipant, idCity, biography, height, trivia)
+        values(s_person.currval, pCity, pBiography, pHeight, pTrivia);
         
         COMMIT;
     END;
@@ -160,15 +161,18 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
     PROCEDURE deleteUser(pIdUser IN NUMBER);
     --PROCEDURE updateUser(pIdUser IN NUMBER);
+    /***********************Actions User for Nationality***********************/
+    ---PROCEDURE addNationality(pName IN VARCHAR2);
+    ---PROCEDURE removeNationality(pName IN VARCHAR2);
     /**********************Actions User for Product****************************/
     PROCEDURE buyProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pIdPayment IN NUMBER);
     PROCEDURE commentProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pDescription IN VARCHAR);
     PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN NUMBER);
     PROCEDURE insertFavorite(pIdUser IN NUMBER, pIdProduct IN NUMBER);
     /**************************************************************************/
-   /* PROCEDURE deleteComment(pIdComment IN NUMBER);
-    PROCEDURE deleteReview (pIdReview IN NUMBER);
-    PROCEDURE deleteFavorite(pIdProduct IN NUMBER);*/
+    PROCEDURE deleteComment(pIdUser IN NUMBER, pIdProduct IN NUMBER);
+    PROCEDURE deleteReview (pIdUser IN NUMBER, pIdProduct IN NUMBER);
+    PROCEDURE deleteFavorite(pIdUser IN NUMBER, pIdProduct IN NUMBER);
     /**************************************************************************/
     PROCEDURE insertCard(pIdUser IN NUMBER, pCardNumber IN NUMBER, 
     pExpiration IN DATE, pCcv IN NUMBER, pOwnerName IN VARCHAR2);
@@ -281,6 +285,27 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         COMMIT;
     END;
     /**Delete procedures**/
+    PROCEDURE deleteComment(pIdUser IN NUMBER, pIdProduct IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM commentary
+        WHERE idUser = pIdUser AND idProduct = pIdProduct;
+        COMMIT;
+    END;
+    PROCEDURE deleteReview (pIdUser IN NUMBER, pIdProduct IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM review
+        WHERE idUser = pIdUser AND idProduct = pIdProduct;
+        COMMIT;
+    END;
+    PROCEDURE deleteFavorite(pIdUser IN NUMBER, pIdProduct IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM wishlist
+        WHERE idUser = pIdUser AND idProduct = pIdProduct;
+        COMMIT;
+    END;
     /**************************************************************************/
     PROCEDURE insertCard(pIdUser IN NUMBER, pCardNumber IN NUMBER, 
     pExpiration IN DATE, pCcv IN NUMBER, pOwnerName IN VARCHAR2)

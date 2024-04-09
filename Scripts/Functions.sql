@@ -98,6 +98,42 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     END;
     /*Remove*/
     /*Update*/
+    FUNCTION getSystemUserInfo(pUsername IN VARCHAR2, pPswd IN VARCHAR2)
+    RETURN SYS_REFCURSOR
+    IS
+        vSystemUserCursor SYS_REFCURSOR;
+        vId NUMBER(7) := NULL;
+        vUserType NUMBER(1) := NULL;
+    BEGIN
+        /*Search reference in table administrator*/
+        SELECT ad.idAdministrator, 2
+        INTO vId, vUserType
+        FROM SystemUser sy
+        LEFT JOIN Administrator ad/*Por alguna razón esto retorna NULL y un INNER JOIN no*/
+        ON ad.idAdministrator = sy.idSystemUser 
+        WHERE sy.username = pUsername
+        AND sy.pswd = pPswd;
+        /*Search reference in table end_user*/
+        IF vId IS NULL THEN
+            SELECT us.idUser, 1
+            INTO vId, vUserType
+            FROM End_user us, SystemUser sy
+            WHERE us.idUser = sy.idSystemUser 
+            AND sy.username = pUsername
+            AND sy.pswd = pPswd;
+        END IF;
+        
+        OPEN vSystemUserCursor FOR
+            SELECT *
+            FROM Person pe, SystemUser su
+            WHERE su.idSystemUser = vId
+            AND pe.idPerson = vId;
+        RETURN vSystemUserCursor;
+        
+    EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RETURN NULL;
+    END;
 END pkgBasic;
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE participantPkg IS

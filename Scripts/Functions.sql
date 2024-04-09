@@ -106,10 +106,11 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         vUserType NUMBER(1) := NULL;
     BEGIN
         /*Search reference in table administrator*/
+        /*Por alguna razón esto retorna NULL y un INNER JOIN no*/
         SELECT ad.idAdministrator, 2
         INTO vId, vUserType
         FROM SystemUser sy
-        LEFT JOIN Administrator ad/*Por alguna razón esto retorna NULL y un INNER JOIN no*/
+        LEFT JOIN Administrator ad
         ON ad.idAdministrator = sy.idSystemUser 
         WHERE sy.username = pUsername
         AND sy.pswd = pPswd;
@@ -124,7 +125,8 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         END IF;
         
         OPEN vSystemUserCursor FOR
-            SELECT *
+            SELECT vUserType, pe.idPerson, pe.firstName, pe.firstSurname, pe.datebirth,
+            pe.photo, su.username, su.phoneNumber, su.email, su.pswd
             FROM Person pe, SystemUser su
             WHERE su.idSystemUser = vId
             AND pe.idPerson = vId;

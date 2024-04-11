@@ -196,7 +196,8 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER, 
+    pIdNationality IN NUMBER);
     PROCEDURE deleteUser(pIdUser IN NUMBER);
     --PROCEDURE updateUser(pIdUser IN NUMBER);
     /***********************Actions User for Nationality***********************/
@@ -224,7 +225,8 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER)
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
+    pIdNationality IN NUMBER)
     IS
     BEGIN
         INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
@@ -245,6 +247,9 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         
         INSERT INTO end_user (idUser)
         VALUES (s_person.currval);
+
+        INSERT INTO nationalityPerson(idPerson,idNationality)
+        VALUES (s_person.currval, pIdNationality);
         
         COMMIT;
     END;

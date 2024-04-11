@@ -144,7 +144,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     RETURN NUMBER IS existentUsers NUMBER(5);
     BEGIN
     
-        SELECT count(username)
+        SELECT count(username) AS usernamesCount
         INTO existentUsers
         FROM systemuser
         WHERE username = newUsername;
@@ -155,7 +155,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     RETURN NUMBER IS existentEmails NUMBER(5);
     BEGIN
         
-        SELECT count(email)
+        SELECT count(email) AS emailCount
         INTO existentEmails
         FROM systemuser
         WHERE email = newEmail;

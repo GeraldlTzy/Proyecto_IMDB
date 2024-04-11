@@ -17,6 +17,10 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertCatalog (pGenre IN VARCHAR2);
     PROCEDURE insertTypeProduct(pName IN VARCHAR2);
     PROCEDURE insertPlatform(pName IN VARCHAR2);
+    FUNCTION getSystemUserInfo(pUsername IN VARCHAR2, pPswd IN VARCHAR2);
+    FUNCTION existsUsername(newUsername IN VARCHAR2);
+    FUNCTION existsEmail(newEmail IN VARCHAR2);
+
     
     /*Añadir procedimientos para borrar y editar*/
 END pkgBasic;
@@ -135,6 +139,28 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     EXCEPTION
             WHEN NO_DATA_FOUND THEN
                 RETURN NULL;
+    END;
+    CREATE OR REPLACE FUNCTION existsUsername(newUsername IN VARCHAR2)
+    RETURN NUMBER IS existentUsers NUMBER(5);
+    BEGIN
+    
+        SELECT count(username)
+        INTO existentUsers
+        FROM systemuser
+        WHERE username = newUsername;
+    
+    RETURN existentUsers;
+    END;
+    CREATE OR REPLACE FUNCTION existsEmail(newEmail IN VARCHAR2)
+    RETURN NUMBER IS existentEmails NUMBER(5);
+    BEGIN
+        
+        SELECT count(email)
+        INTO existentEmails
+        FROM systemuser
+        WHERE email = newEmail;
+    
+    RETURN existentEmails;
     END;
 END pkgBasic;
 /******************************************************************************/

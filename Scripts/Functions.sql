@@ -9,7 +9,7 @@
 CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertPerson(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE, pPhoto IN BLOB,
-    pOutId OUT NUMBER);
+    pIdNationality IN NUMBER, pOutId OUT NUMBER);
     PROCEDURE insertSystemUser(pIdPerson IN NUMBER, pUsername IN VARCHAR2, pPhoneNumber IN NUMBER,
     pIdentification IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
     
@@ -34,12 +34,15 @@ END pkgBasic;
 CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     PROCEDURE insertPerson(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE, pPhoto IN BLOB,
-    pOutId OUT NUMBER)
+    pIdNationality IN NUMBER, pOutId OUT NUMBER)
     IS BEGIN
         INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
         secondSurname, datebirth, photo)
         VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
         pSecondSurname, pDatebirth, pPhoto);
+        
+        INSERT INTO nationalityPerson(idPerson,idNationality)
+        VALUES (s_person.currval, pIdNationality);
         
         pOutId := s_person.currval;
         
@@ -218,7 +221,7 @@ CREATE OR REPLACE PACKAGE BODY participantPkg AS
         pOutId NUMBER(7);
     BEGIN
          pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
-        pDatebirth, pPhoto, pOutId);
+        pDatebirth, pPhoto, pIdNationality, pOutId);
         
         INSERT INTO Participant (idParticipant, idCity, biography, height, trivia)
         values(pOutId, pCity, pBiography, pHeight, pTrivia);
@@ -291,7 +294,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         pOutId NUMBER(7);
     BEGIN
         pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
-        pDatebirth, pPhoto, pOutId);
+        pDatebirth, pPhoto, pIdNationality, pOutId);
         
         pkgBasic.insertSystemUser(pOutId, pUsername, pPhoneNumber, pIdentification,
         pEmail, pPswd, pIdTypeIdent);
@@ -448,16 +451,13 @@ CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
         pOutId NUMBER(7);
     BEGIN
         pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
-        pDatebirth, pPhoto, pOutId);
+        pDatebirth, pPhoto, pIdNationality, pOutId);
         
         pkgBasic.insertSystemUser(pOutId, pUsername, pPhoneNumber, pIdentification,
         pEmail, pPswd, pIdTypeIdent);
         
         INSERT INTO administrator (idAdministrator)
         VALUES (pOutId);
-
-        /*INSERT INTO nationalityPerson(idPerson,idNationality)
-        VALUES (s_person.currval, pIdNationality);*/
         
         COMMIT;
     END;

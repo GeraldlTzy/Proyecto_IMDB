@@ -7,6 +7,12 @@
 /******************************************************************************/
 
 CREATE OR REPLACE PACKAGE pkgBasic AS
+    PROCEDURE insertPerson(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE, pPhoto IN BLOB,
+    pOutId OUT NUMBER);
+    PROCEDURE insertSystemUser(pIdPerson IN NUMBER, pUsername IN VARCHAR2, pPhoneNumber IN NUMBER,
+    pIdentification IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
+    
     PROCEDURE insertSex(pName IN VARCHAR2);
     PROCEDURE insertNationality (pName IN VARCHAR2);
     PROCEDURE insertNationalityPerson (pIdNationality IN NUMBER, pIdPerson IN NUMBER);
@@ -17,15 +23,44 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertCatalog (pGenre IN VARCHAR2);
     PROCEDURE insertTypeProduct(pName IN VARCHAR2);
     PROCEDURE insertPlatform(pName IN VARCHAR2);
-    FUNCTION getSystemUserInfo(pUsername IN VARCHAR2, pPswd IN VARCHAR2);
-    FUNCTION existsUsername(newUsername IN VARCHAR2);
-    FUNCTION existsEmail(newEmail IN VARCHAR2);
+    FUNCTION getSystemUserInfo(pUsername IN VARCHAR2, pPswd IN VARCHAR2) RETURN SYS_REFCURSOR;
+    FUNCTION existsUsername(newUsername IN VARCHAR2) RETURN NUMBER;
+    FUNCTION existsEmail(newEmail IN VARCHAR2) RETURN NUMBER;
 
     
     /*Añadir procedimientos para borrar y editar*/
 END pkgBasic;
 
 CREATE OR REPLACE PACKAGE BODY pkgBasic AS
+    PROCEDURE insertPerson(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE, pPhoto IN BLOB,
+    pOutId OUT NUMBER)
+    IS BEGIN
+        INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
+        secondSurname, datebirth, photo)
+        VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
+        pSecondSurname, pDatebirth, pPhoto);
+        
+        pOutId := s_person.currval;
+        
+        COMMIT;
+    END;
+
+    PROCEDURE insertSystemUser(pIdPerson IN NUMBER, pUsername IN VARCHAR2, pPhoneNumber IN NUMBER,
+    pIdentification IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER)
+    IS BEGIN
+        INSERT INTO systemUser (idSystemUser, username, phoneNumber,
+        email, pswd)
+        VALUES (pIdPerson, pUsername, pPhoneNumber, pEmail,
+        pPswd);
+    
+        INSERT INTO Identification (idIdentification, idTypeIdent, identNumber)
+        VALUES (s_identification.nextval, pIdTypeIdent, pIdentification);
+        
+        INSERT INTO IdentXSystem(idIdent,idSystemUser)
+        VALUES (s_identification.currval, pIdPerson);
+    END;
+
     PROCEDURE insertSex (
     pName IN VARCHAR2
     ) IS
@@ -140,7 +175,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
             WHEN NO_DATA_FOUND THEN
                 RETURN NULL;
     END;
-    CREATE OR REPLACE FUNCTION existsUsername(newUsername IN VARCHAR2)
+    FUNCTION existsUsername(newUsername IN VARCHAR2)
     RETURN NUMBER IS existentUsers NUMBER(5);
     BEGIN
     
@@ -151,7 +186,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     
     RETURN existentUsers;
     END;
-    CREATE OR REPLACE FUNCTION existsEmail(newEmail IN VARCHAR2)
+    FUNCTION existsEmail(newEmail IN VARCHAR2)
     RETURN NUMBER IS existentEmails NUMBER(5);
     BEGIN
         
@@ -167,7 +202,7 @@ END pkgBasic;
 CREATE OR REPLACE PACKAGE participantPkg IS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
-    pCountry IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER,
+    pCity IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER,
     pTrivia IN VARCHAR2, pPhoto IN BLOB);
     PROCEDURE deleteParticipant(pIdParticipant NUMBER);
     PROCEDURE insertRelative(pIdParticipant IN NUMBER, pIdRelative IN NUMBER, pIdKinship IN NUMBER);
@@ -177,17 +212,16 @@ END participantPkg;
 CREATE OR REPLACE PACKAGE BODY participantPkg AS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
-    pCountry IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
+    pCity IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
     pTrivia IN VARCHAR2, pPhoto IN BLOB)
     IS
+        pOutId NUMBER(7);
     BEGIN
-        INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-        secondSurname, datebirth, photo)
-        VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-        pSecondSurname, pDatebirth, pPhoto);
+         pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
+        pDatebirth, pPhoto, pOutId);
         
         INSERT INTO Participant (idParticipant, idCity, biography, height, trivia)
-        values(s_person.currval, pCity, pBiography, pHeight, pTrivia);
+        values(pOutId, pCity, pBiography, pHeight, pTrivia);
         
         COMMIT;
     END;
@@ -254,25 +288,16 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
     pIdNationality IN NUMBER)
     IS
+        pOutId NUMBER(7);
     BEGIN
-        INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-        secondSurname, datebirth, photo)
-        VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-        pSecondSurname, pDatebirth, pPhoto);
+        pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
+        pDatebirth, pPhoto, pOutId);
         
-        INSERT INTO systemUser (idSystemUser, username, phoneNumber,
-        email, pswd)
-        VALUES (s_person.currval, pUsername, pPhoneNumber, pEmail,
-        pPswd);
-    
-        INSERT INTO Identification (idIdentification, idTypeIdent, identNumber)
-        VALUES (s_identification.nextval, pIdTypeIdent, pIdentification);
-        
-        INSERT INTO IdentXSystem(idIdent,idSystemUser)
-        VALUES (s_identification.currval,s_person.currval);
+        pkgBasic.insertSystemUser(pOutId, pUsername, pPhoneNumber, pIdentification,
+        pEmail, pPswd, pIdTypeIdent);
         
         INSERT INTO end_user (idUser)
-        VALUES (s_person.currval);
+        VALUES (pOutId);
 
         INSERT INTO nationalityPerson(idPerson,idNationality)
         VALUES (s_person.currval, pIdNationality);
@@ -403,43 +428,40 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     
 END pkgEnd_user;
 /******************************************************************************/
-CREATE OR REPLACE PACKAGE administrator IS
+CREATE OR REPLACE PACKAGE pkgAdmin IS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
+    pIdNationality IN NUMBER);
     PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER);
     --PROCEDURE editCatalog(pIdAdmin IN NUMBER, pIdCatalog IN NUMBER);
-END administrator;
+END pkgAdmin;
 
-CREATE OR REPLACE PACKAGE BODY administrator AS
+CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER)
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
+    pIdNationality IN NUMBER)
     IS
+        pOutId NUMBER(7);
     BEGIN
-        INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
-        secondSurname, datebirth, photo)
-        VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
-        pSecondSurname, pDatebirth, pPhoto);
+        pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
+        pDatebirth, pPhoto, pOutId);
         
-        INSERT INTO systemUser (idSystemUser, username, phoneNumber,
-        email, pswd)
-        VALUES (s_person.currval, pUsername, pPhoneNumber, pEmail,
-        pPswd);
-    
-        INSERT INTO Identification (idIdentification, idTypeIdent, identNumber)
-        VALUES (s_identification.nextval, pIdTypeIdent, pIdentification);
-        
-        INSERT INTO IdentXSystem(idIdent,idSystemUser)
-        VALUES (s_identification.currval,s_person.currval);
+        pkgBasic.insertSystemUser(pOutId, pUsername, pPhoneNumber, pIdentification,
+        pEmail, pPswd, pIdTypeIdent);
         
         INSERT INTO administrator (idAdministrator)
-        VALUES (s_person.currval);
+        VALUES (pOutId);
+
+        /*INSERT INTO nationalityPerson(idPerson,idNationality)
+        VALUES (s_person.currval, pIdNationality);*/
         
         COMMIT;
     END;
+    
     PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER)
     IS
     BEGIN
@@ -461,7 +483,7 @@ CREATE OR REPLACE PACKAGE BODY administrator AS
         COMMIT;
     END;
     /*Terminar*/ 
-END administrator;
+END pkgAdmin;
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE product IS 
     PROCEDURE insertProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,

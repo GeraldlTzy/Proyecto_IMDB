@@ -24,8 +24,7 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertTypeProduct(pName IN VARCHAR2);
     PROCEDURE insertPlatform(pName IN VARCHAR2);
     FUNCTION getSystemUserInfo(pUsername IN VARCHAR2, pPswd IN VARCHAR2) RETURN SYS_REFCURSOR;
-    FUNCTION existsUsername(newUsername IN VARCHAR2) RETURN NUMBER;
-    FUNCTION existsEmail(newEmail IN VARCHAR2) RETURN NUMBER;
+    FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2) RETURN SYS_REFCURSOR;
 
     
     /*Añadir procedimientos para borrar y editar*/
@@ -178,27 +177,16 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
             WHEN NO_DATA_FOUND THEN
                 RETURN NULL;
     END;
-    FUNCTION existsUsername(newUsername IN VARCHAR2)
-    RETURN NUMBER IS existentUsers NUMBER(5);
+    FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2)
+    RETURN SYS_REFCURSOR 
+    IS 
+        existentNames SYS_REFCURSOR;
     BEGIN
-    
-        SELECT count(username) AS usernamesCount
-        INTO existentUsers
-        FROM systemuser
-        WHERE username = newUsername;
-    
-    RETURN existentUsers;
-    END;
-    FUNCTION existsEmail(newEmail IN VARCHAR2)
-    RETURN NUMBER IS existentEmails NUMBER(5);
-    BEGIN
-        
-        SELECT count(email) AS emailCount
-        INTO existentEmails
-        FROM systemuser
-        WHERE email = newEmail;
-    
-    RETURN existentEmails;
+        OPEN existentNames fOR
+            SELECT count(username) AS usernamesCount, count(email)
+            FROM systemuser
+            WHERE username = newUsername OR email = newEmail;
+        RETURN existentNames;
     END;
 END pkgBasic;
 /******************************************************************************/

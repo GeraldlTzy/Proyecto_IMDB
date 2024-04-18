@@ -181,11 +181,22 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     RETURN SYS_REFCURSOR 
     IS 
         existentNames SYS_REFCURSOR;
+        usernamesCount NUMBER(8);
+        emailsCount NUMBER(8);
     BEGIN
-        OPEN existentNames fOR
-            SELECT count(username) AS usernamesCount, count(email) AS emailsCount
-            FROM systemuser
-            WHERE username = newUsername OR email = newEmail;
+        SELECT count(username) 
+        INTO usernamesCount
+        FROM systemUser 
+        WHERE username = newUsername;
+        
+        SELECT count(email) 
+        INTO emailsCount
+        FROM systemUser 
+        WHERE email = newEmail;
+        
+        OPEN existentNames FOR
+        SELECT usernamesCount AS usernamesCount ,emailsCount AS emailsCount from DUAL;
+        
         RETURN existentNames;
     END;
 END pkgBasic;

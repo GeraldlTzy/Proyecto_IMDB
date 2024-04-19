@@ -26,6 +26,7 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     FUNCTION getSystemUserInfo(pUsername IN VARCHAR2, pPswd IN VARCHAR2) RETURN SYS_REFCURSOR;
     FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2, newPhone IN NUMBER) RETURN SYS_REFCURSOR;
     FUNCTION getNationalities RETURN SYS_REFCURSOR;
+    FUNCTION getTypeOfId RETURN SYS_REFCURSOR;
     
     /*Añadir procedimientos para borrar y editar*/
 END pkgBasic;
@@ -219,6 +220,19 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         
         RETURN nationalities;
     END;
+
+    FUNCTION getTypeOfId 
+    RETURN SYS_REFCURSOR
+    IS 
+        typesOfId SYS_REFCURSOR;
+    BEGIN
+        OPEN typesOfId FOR
+        SELECT idTypeIdent,nameTypeIdent
+        FROM TypeOfIdentification;
+        
+        RETURN typesOfId;
+    END;
+END pkgBasic;
     
 END pkgBasic;
 /

@@ -24,12 +24,12 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertTypeProduct(pName IN VARCHAR2);
     PROCEDURE insertPlatform(pName IN VARCHAR2);
     FUNCTION getSystemUserInfo(pUsername IN VARCHAR2, pPswd IN VARCHAR2) RETURN SYS_REFCURSOR;
-    FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2) RETURN SYS_REFCURSOR;
-
+    FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2, newPhone IN NUMBER) RETURN SYS_REFCURSOR;
+    FUNCTION getNationalities RETURN SYS_REFCURSOR;
     
     /*Añadir procedimientos para borrar y editar*/
 END pkgBasic;
-
+/
 CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     PROCEDURE insertPerson(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE, pPhoto IN BLOB,
@@ -177,12 +177,14 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
             WHEN NO_DATA_FOUND THEN
                 RETURN NULL;
     END;
-    FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2)
+    
+    FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2, newPhone IN NUMBER)
     RETURN SYS_REFCURSOR 
     IS 
         existentNames SYS_REFCURSOR;
         usernamesCount NUMBER(8);
         emailsCount NUMBER(8);
+        phonesCount NUMBER(8);
     BEGIN
         SELECT count(username) 
         INTO usernamesCount
@@ -194,12 +196,32 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         FROM systemUser 
         WHERE email = newEmail;
         
+        SELECT count(phoneNumber) 
+        INTO phonesCount
+        FROM systemUser 
+        WHERE phoneNumber = newPhone;
+        
         OPEN existentNames FOR
-        SELECT usernamesCount AS usernamesCount ,emailsCount AS emailsCount from DUAL;
+        SELECT usernamesCount AS usernamesCount ,emailsCount AS emailsCount, phonesCount AS phonesCount
+        FROM DUAL;
         
         RETURN existentNames;
     END;
+    
+    FUNCTION getNationalities
+    RETURN SYS_REFCURSOR
+    IS
+        nationalities SYS_REFCURSOR;
+    BEGIN
+        OPEN nationalities FOR
+            SELECT idNationality,name
+            FROM Nationality;
+        
+        RETURN nationalities;
+    END;
+    
 END pkgBasic;
+/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE participantPkg IS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,

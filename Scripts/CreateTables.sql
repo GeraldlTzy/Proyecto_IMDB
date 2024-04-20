@@ -418,20 +418,6 @@ constraint pk_CatalogxProduct primary key (idCatalog, idProduct)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
-
-CREATE TABLE CatalogXAdministrator (
-	idCatalog                  NUMBER(7),	
-	idAdministrator            NUMBER(7),
-	FOREIGN KEY (idCatalog) REFERENCES catalog(idCatalog),
-	FOREIGN KEY (idAdministrator) REFERENCES administrator(idAdministrator)
-);
-
-alter table CatalogXAdministrator
-add
-constraint pk_CatalogXAdministrator primary key (idCatalog, idAdministrator)
-using index
-tablespace su_ind pctfree 20
-storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
 CREATE TABLE platform (
 	idPlatform                  NUMBER(7),

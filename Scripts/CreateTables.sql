@@ -220,7 +220,8 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE Binnacle (
     idBinnacle                  NUMBER(7),
     idProduct                   NUMBER(7),
-    price                       NUMBER(7) CONSTRAINT binnacle_price_nn NOT NULL,
+    oldPrice                    NUMBER(7) CONSTRAINT binnacle_oldPrice_nn NOT NULL,
+    newPrice			NUMBER(7) CONSTRAINT binnacle_newPrice_nn NOT NULL,
     dateBinnacle                DATE CONSTRAINT binnacle_date_nn NOT NULL,
     CONSTRAINT fk_binnacle_product FOREIGN KEY (idProduct) REFERENCES Product(idProduct)
 );

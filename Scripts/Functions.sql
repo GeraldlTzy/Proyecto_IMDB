@@ -500,8 +500,6 @@ CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER)
     IS
     BEGIN
-        DELETE FROM CatalogXAdministrator
-        WHERE idAdministrator = pIdAdmin;
         
         DELETE FROM IdentXSystem
         WHERE idSystemUser = pIdAdmin;

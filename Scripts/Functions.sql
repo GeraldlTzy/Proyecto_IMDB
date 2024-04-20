@@ -27,6 +27,8 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2, newPhone IN NUMBER) RETURN SYS_REFCURSOR;
     FUNCTION getNationalities RETURN SYS_REFCURSOR;
     FUNCTION getTypeOfId RETURN SYS_REFCURSOR;
+    PROCEDURE insertBinnacle(pIdProduct NUMBER, pOldPrice NUMBER, pNewPrice NUMBER,
+                        pDateBinnacle DATE); 
     
     /*Añadir procedimientos para borrar y editar*/
 END pkgBasic;
@@ -232,7 +234,15 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         
         RETURN typesOfId;
     END;
-END pkgBasic;
+
+    PROCEDURE insertBinnacle(pIdProduct NUMBER, pOldPrice NUMBER, pNewPrice NUMBER,
+                        pDateBinnacle DATE) 
+    IS
+    BEGIN
+        INSERT INTO Binnacle(idBinnacle,IdProduct,oldPrice,newPrice,dateBinnacle)
+        VALUES (s_binnacle.nextval,pIdProduct,pOldPrice,pNewPrice, pDateBinnacle);
+        COMMIT;
+    END;
     
 END pkgBasic;
 /

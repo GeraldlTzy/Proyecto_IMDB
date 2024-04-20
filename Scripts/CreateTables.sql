@@ -200,12 +200,12 @@ storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE product (
 	idProduct                   NUMBER(7),
-	idType                      NUMBER(7),
-    link                        VARCHAR2(500) CONSTRAINT link_nn NOT NULL,	
+	idType                      NUMBER(7),	
 	releaseYear                 NUMBER(4)     CONSTRAINT releaseYear_nn NOT NULL,
 	title                       VARCHAR2(200) CONSTRAINT title_nn NOT NULL,
 	duration                    NUMBER(7)     CONSTRAINT duration_nn NOT NULL,
 	trailer                     VARCHAR2(500),
+	price			    NUMBER(7),
 	synopsis                    VARCHAR2(500) CONSTRAINT synopsis_nn NOT NULL,
 	CONSTRAINT fk_product_type FOREIGN KEY (idType) REFERENCES typeOfProduct(idType)
 );

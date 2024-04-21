@@ -25,11 +25,17 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertPlatform(pName IN VARCHAR2);
     FUNCTION getSystemUserInfo(pUsername IN VARCHAR2, pPswd IN VARCHAR2) RETURN SYS_REFCURSOR;
     FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2, newPhone IN NUMBER) RETURN SYS_REFCURSOR;
-    FUNCTION getNationalities RETURN SYS_REFCURSOR;
+    FUNCTION getNationality(pIdNationality IN NUMBER) RETURN SYS_REFCURSOR;
     FUNCTION getTypeOfId RETURN SYS_REFCURSOR;
     PROCEDURE insertBinnacle(pIdProduct NUMBER, pOldPrice NUMBER, pNewPrice NUMBER,
-                        pDateBinnacle DATE); 
+                        pDateBinnacle DATE);
+    FUNCTION getInfoRegisterParticipant(pIdParticipant IN NUMBER) RETURN SYS_REFCURSOR;
     
+    PROCEDURE getInfoCreationProduct (
+        cursorParticipants OUT SYS_REFCURSOR,
+        cursorTypeOfParticipant OUT SYS_REFCURSOR,
+        cursorTypeOfProduct OUT SYS_REFCURSOR
+    );
     /*Añadir procedimientos para borrar y editar*/
 END pkgBasic;
 /
@@ -211,18 +217,18 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         RETURN existentNames;
     END;
     
-    FUNCTION getNationalities
+    FUNCTION getNationality(pIdNationality IN NUMBER)
     RETURN SYS_REFCURSOR
     IS
-        nationalities SYS_REFCURSOR;
+        nationalityCursor SYS_REFCURSOR;
     BEGIN
-        OPEN nationalities FOR
-            SELECT idNationality,name
-            FROM Nationality;
-        
-        RETURN nationalities;
+        OPEN nationalityCursor FOR
+            SELECT idNationality, name
+            FROM nationality
+            WHERE idNationality = NVL(pIdNationality, idNationality);
+        RETURN nationalityCursor;
     END;
-
+    
     FUNCTION getTypeOfId 
     RETURN SYS_REFCURSOR
     IS 
@@ -244,23 +250,69 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         COMMIT;
     END;
     
+    FUNCTION getInfoRegisterParticipant(pIdParticipant IN NUMBER) 
+    RETURN SYS_REFCURSOR
+    IS
+        infoCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN infoCursor FOR
+            SELECT idNationality, name, 'Nationality' as fuente from nationality
+            UNION
+            /*SELECT idSex, sexname, 'Sex' as fuente from sex
+            UNION */
+            SELECT c.idCity AS city_id, co.nameCountry || ', ' || c.nameCity AS city_country, 'City' as fuente
+            FROM city c
+            INNER JOIN country co ON c.idCountry = co.idCountry
+            ORDER BY name;
+        RETURN infoCursor;    
+    END;
+      
+    PROCEDURE getInfoCreationProduct (
+        cursorParticipants OUT SYS_REFCURSOR,
+        cursorTypeOfParticipant OUT SYS_REFCURSOR,
+        cursorTypeOfProduct OUT SYS_REFCURSOR
+    )
+    IS
+    BEGIN
+        OPEN cursorTypeOfParticipant FOR
+            SELECT * FROM TypeOfParticipant;
+        
+        OPEN cursorParticipants FOR
+            SELECT pe.idPerson, pe.firstName, pe.secondName, pe.firstSurname, pe.secondSurname, 
+            pe.datebirth, pe.photo, ci.nameCity, co.nameCountry, pa.biography, pa.height,
+            pa.trivia, se.sexName
+            FROM person pe
+            INNER JOIN sex se
+            ON pe.idSex = se.idSex
+            INNER JOIN participant pa
+            ON pa.idParticipant = pe.idPerson
+            INNER JOIN city ci
+            ON ci.idCity = pa.idCity
+            INNER JOIN country co
+            ON ci.idCountry = co.idCountry;
+            
+        OPEN cursorTypeOfProduct FOR
+            SELECT * FROM typeOfProduct;
+    END;
+    
 END pkgBasic;
-/
 /******************************************************************************/
-CREATE OR REPLACE PACKAGE participantPkg IS
+CREATE OR REPLACE PACKAGE pkgParticipant IS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
-    pCity IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER,
+    pCity IN NUMBER, pIdNationality IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER,
     pTrivia IN VARCHAR2, pPhoto IN BLOB);
     PROCEDURE deleteParticipant(pIdParticipant NUMBER);
     PROCEDURE insertRelative(pIdParticipant IN NUMBER, pIdRelative IN NUMBER, pIdKinship IN NUMBER);
+    FUNCTION getParticipant(pIdParticipant IN NUMBER) RETURN SYS_REFCURSOR;
     
-END participantPkg;
+END pkgParticipant;
+/
 
-CREATE OR REPLACE PACKAGE BODY participantPkg AS
+CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
-    pCity IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
+    pCity IN NUMBER, pIdNationality IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
     pTrivia IN VARCHAR2, pPhoto IN BLOB)
     IS
         pOutId NUMBER(7);
@@ -296,8 +348,28 @@ CREATE OR REPLACE PACKAGE BODY participantPkg AS
         DELETE FROM Participant
         WHERE idParticipant = pIdParticipant;
     END;
-
-END participantPkg;
+    FUNCTION getParticipant(pIdParticipant IN NUMBER) RETURN SYS_REFCURSOR
+    IS 
+        vParticipantCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vParticipantCursor FOR
+            SELECT pe.idPerson, pe.firstName, pe.secondName, pe.firstSurname, pe.secondSurname, 
+            pe.datebirth, pe.photo, ci.nameCity, co.nameCountry, pa.biography, pa.height,
+            pa.trivia
+            FROM person pe
+            INNER JOIN participant pa
+            ON pe.idPerson = NVL(pIdParticipant, idParticipant) AND pa.idParticipant = pe.idPerson
+            INNER JOIN city ci
+            ON ci.idCity = pa.idCity
+            INNER JOIN country co
+            ON ci.idCountry = co.idCountry;
+        RETURN vParticipantCursor;
+    EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RETURN NULL;
+    END;
+    
+END pkgParticipant;
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgEnd_user IS
     /**************************************************************************/
@@ -510,7 +582,6 @@ CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER)
     IS
     BEGIN
-        
         DELETE FROM IdentXSystem
         WHERE idSystemUser = pIdAdmin;
         
@@ -528,28 +599,54 @@ CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     /*Terminar*/ 
 END pkgAdmin;
 /******************************************************************************/
-CREATE OR REPLACE PACKAGE product IS 
-    PROCEDURE insertProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
-    pPrice in NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pDuration IN NUMBER,
-    pTitle IN VARCHAR2, pReleaseYear IN NUMBER, pLink IN VARCHAR);
-
-END product;
-
-CREATE OR REPLACE PACKAGE BODY product AS 
-    PROCEDURE insertProduct(pIdType in NUMBER, pLink in VARCHAR2, pPhoto in BLOB,
-    pPrice in NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pDuration IN NUMBER,
-    pTitle IN VARCHAR2, pReleaseYear IN NUMBER, pLink IN VARCHAR) 
+CREATE OR REPLACE PACKAGE pkgProduct IS 
+    PROCEDURE insertProduct(pIdType IN NUMBER, pReleaseYear IN NUMBER, pTitle IN VARCHAR2,
+    pDuration IN NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pPrice IN NUMBER, pIdProduct OUT NUMBER);
+    PROCEDURE addParticipant(pIdProduct IN NUMBER, pIdParticipant IN NUMBER, pRol IN NUMBER);
+    PROCEDURE addSeason(pIdProduct IN NUMBER, pNumberSeason IN NUMBER, pDuration IN NUMBER, pIdSeason OUT NUMBER);
+    PROCEDURE addEpisode(pIdSeason IN NUMBER,pNumberEpisode IN NUMBER, pName IN VARCHAR2,
+    pDuration IN NUMBER);
+    PROCEDURE addPhoto(pIdProduct IN NUMBER, pImage IN BLOB);
+END pkgProduct;
+/
+CREATE OR REPLACE PACKAGE BODY pkgProduct AS 
+    PROCEDURE insertProduct(pIdType IN NUMBER, pReleaseYear IN NUMBER, pTitle IN VARCHAR2,
+    pDuration IN NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pPrice IN NUMBER, pIdProduct OUT NUMBER)
     IS
     BEGIN     
-        INSERT INTO Product(idProduct, link,releaseYear,title,duration,trailer,synopsis,idType)
-        VALUES (s_product.nextval,pLink,pReleaseYear,pTitle,pDuration,pTrailer,pSynopsis,pIdType);
-    
-        INSERT INTO Photo(idPhoto,image,idProduct)
-        VALUES (s_photo.nextval,pPhoto,s_product.currval);
-
-        INSERT INTO Binnacle(idBinnacle, dateBinnacle, price,idProduct)
-        VALUES (s_binnacle.nextval,SYSDATE,pPrice,s_product.currval);
-
-    COMMIT;
+        INSERT INTO Product(idProduct, idType, releaseYear, title, duration, synopsis, trailer, price)
+        VALUES (s_product.nextval, pIdType, pReleaseYear, pTitle, pDuration, pSynopsis, pTrailer, pPrice);
+        COMMIT;
+        pIdProduct := s_product.currval;
     END;
-END product;
+    PROCEDURE addParticipant(pIdProduct IN NUMBER, pIdParticipant IN NUMBER, pRol IN NUMBER)
+    IS
+    BEGIN
+        INSERT INTO ParticipantXProduct(idProduct, idParticipant, rol)
+        VALUES (pIdProduct, pIdParticipant, pRol);
+        COMMIT;
+    END;
+    PROCEDURE addSeason(pIdProduct IN NUMBER, pNumberSeason IN NUMBER, pDuration IN NUMBER, pIdSeason OUT NUMBER)
+    IS
+    BEGIN
+        INSERT INTO Season(idSeason, idProduct, numberSeason, duration)
+        VALUES (s_season.nextval, pIdProduct, pNumberSeason, pDuration);
+        pIdSeason := s_season.currval;
+        COMMIT;
+    END;
+    PROCEDURE addEpisode(pIdSeason IN NUMBER,pNumberEpisode IN NUMBER, pName IN VARCHAR2,
+    pDuration IN NUMBER)
+    IS
+    BEGIN
+        INSERT INTO Episode(idEpisode, idSeason, numberEpisode, name, duration)
+        VALUES (s_episode.nextval, pIdSeason, pNumberEpisode, pName, pDuration);
+        COMMIT;
+    END;
+    PROCEDURE addPhoto(pIdProduct IN NUMBER, pImage IN BLOB)
+    IS
+    BEGIN
+        INSERT INTO Photo(idPhoto, idProduct, image)
+        VALUES (s_photo.nextval, pIdProduct, pImage);
+        COMMIT;
+    END;
+END pkgProduct;

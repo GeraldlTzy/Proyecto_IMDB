@@ -607,6 +607,9 @@ CREATE OR REPLACE PACKAGE pkgProduct IS
     PROCEDURE addEpisode(pIdSeason IN NUMBER,pNumberEpisode IN NUMBER, pName IN VARCHAR2,
     pDuration IN NUMBER);
     PROCEDURE addPhoto(pIdProduct IN NUMBER, pImage IN BLOB);
+    FUNCTION getProducts RETURN SYS_REFCURSOR;
+    PROCEDURE getProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
+    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR);
 END pkgProduct;
 /
 CREATE OR REPLACE PACKAGE BODY pkgProduct AS 
@@ -648,5 +651,54 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         INSERT INTO Photo(idPhoto, idProduct, image)
         VALUES (s_photo.nextval, pIdProduct, pImage);
         COMMIT;
+    END;
+    FUNCTION getProducts RETURN SYS_REFCURSOR
+    IS
+        productsCursor SYS_REFCURSOR;
+    BEGIN
+    /*(pIdType IN NUMBER, pReleaseYear IN NUMBER, pTitle IN VARCHAR2,
+    pDuration IN NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pPrice IN NUMBER, pIdProduct OUT NUMBER);*/
+        /*OPEN productsCursor FOR
+            SELECT pro.idProduct, pro.idType, pro.releaseYear, pro.Title, pro.duration,
+            pro.synopsis, pro.trailer, pro.price
+            FROM product pro
+            INNER JOIN participant pa
+            ON pe.idPerson = NVL(pIdParticipant, idParticipant) AND pa.idParticipant = pe.idPerson
+            INNER JOIN city ci
+            ON ci.idCity = pa.idCity
+            INNER JOIN country co
+            ON ci.idCountry = co.idCountry;
+        RETURN productsCursor;*/
+        OPEN productsCursor FOR
+            SELECT pro.idProduct, pro.title, pho.image
+            FROM product pro
+            FULL JOIN photo pho
+            ON pro.idProduct = pho.idProduct;
+        RETURN productsCursor;
+    EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RETURN NULL;
+    END;
+    PROCEDURE getProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
+    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR)
+    IS
+        ---vProduct SYSREF
+    BEGIN
+        
+        OPEN vProductsCursor FOR
+            SELECT * FROM product pro WHERE idProduct = pIdProduct;
+        OPEN vParticipantsCursor FOR
+            SELECT idParticipant, rol FROM participantXproduct pro WHERE idProduct = pIdProduct;
+        OPEN vSeasonsCursor FOR
+            SELECT sea.idSeason, sea.numberSeason, sea.duration, epi.idEpisode,
+            epi.numberEpisode, epi.name, epi.duration
+            FROM season sea
+            INNER JOIN product pro
+            ON pro.idProduct = pIdProduct AND sea.idProduct = pro.idProduct
+            LEFT JOIN episode epi
+            ON sea.idProduct = pIdProduct
+            AND sea.idSeason = epi.idSeason;
+        /*OPEN vEpisodesCursor FOR
+            SELECT * FROM episodes */
     END;
 END pkgProduct;

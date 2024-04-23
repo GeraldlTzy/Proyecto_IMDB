@@ -29,13 +29,15 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     FUNCTION getTypeOfId RETURN SYS_REFCURSOR;
     PROCEDURE insertBinnacle(pIdProduct NUMBER, pOldPrice NUMBER, pNewPrice NUMBER,
                         pDateBinnacle DATE);
-    FUNCTION getInfoRegisterParticipant(pIdParticipant IN NUMBER) RETURN SYS_REFCURSOR;
+    FUNCTION getInfoInsertParticipant(pIdParticipant IN NUMBER) RETURN SYS_REFCURSOR;
     
     PROCEDURE getInfoCreationProduct (
         cursorParticipants OUT SYS_REFCURSOR,
         cursorTypeOfParticipant OUT SYS_REFCURSOR,
         cursorTypeOfProduct OUT SYS_REFCURSOR
     );
+    PROCEDURE getInfoRegister (cursorSex OUT SYS_REFCURSOR, cursorTypeOfId OUT SYS_REFCURSOR, 
+        cursorNationalities OUT SYS_REFCURSOR);
     /*Añadir procedimientos para borrar y editar*/
 END pkgBasic;
 /
@@ -250,7 +252,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         COMMIT;
     END;
     
-    FUNCTION getInfoRegisterParticipant(pIdParticipant IN NUMBER) 
+    FUNCTION getInfoInsertParticipant(pIdParticipant IN NUMBER) 
     RETURN SYS_REFCURSOR
     IS
         infoCursor SYS_REFCURSOR;
@@ -295,7 +297,22 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
             SELECT * FROM typeOfProduct;
     END;
     
+    PROCEDURE getInfoRegister (cursorSex OUT SYS_REFCURSOR, cursorTypeOfId OUT SYS_REFCURSOR, 
+        cursorNationalities OUT SYS_REFCURSOR)
+        IS 
+        BEGIN 
+        
+        OPEN cursorSex FOR 
+        SELECT idSex,sexname FROM sex;
+        
+        OPEN cursorTypeOfId FOR
+        SELECT idTypeIdent, nameTypeIdent FROM typeOfIdentification;
+        
+        OPEN cursorNationalities FOR
+        SELECT idNationality, name FROM Nationality;
+    END;
 END pkgBasic;
+/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgParticipant IS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
@@ -308,7 +325,6 @@ CREATE OR REPLACE PACKAGE pkgParticipant IS
     
 END pkgParticipant;
 /
-
 CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
@@ -322,7 +338,6 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
         
         INSERT INTO Participant (idParticipant, idCity, biography, height, trivia)
         values(pOutId, pCity, pBiography, pHeight, pTrivia);
-        
         COMMIT;
     END;
 
@@ -370,6 +385,7 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
     END;
     
 END pkgParticipant;
+/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgEnd_user IS
     /**************************************************************************/
@@ -400,7 +416,7 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     
     ---PROCEDURE updatePswd();
 END pkgEnd_user;
-
+/
 CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
@@ -418,13 +434,9 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         
         INSERT INTO end_user (idUser)
         VALUES (pOutId);
-
-        INSERT INTO nationalityPerson(idPerson,idNationality)
-        VALUES (s_person.currval, pIdNationality);
         
         COMMIT;
     END;
-    
     /*Terminar*/ 
     PROCEDURE deleteUser(pIdUser IN NUMBER)
     IS
@@ -547,6 +559,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     /**************************************************************************/    
     
 END pkgEnd_user;
+/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgAdmin IS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
@@ -557,7 +570,7 @@ CREATE OR REPLACE PACKAGE pkgAdmin IS
     PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER);
     --PROCEDURE editCatalog(pIdAdmin IN NUMBER, pIdCatalog IN NUMBER);
 END pkgAdmin;
-
+/
 CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
@@ -598,6 +611,7 @@ CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     END;
     /*Terminar*/ 
 END pkgAdmin;
+/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgProduct IS 
     PROCEDURE insertProduct(pIdType IN NUMBER, pReleaseYear IN NUMBER, pTitle IN VARCHAR2,
@@ -702,3 +716,5 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
             SELECT * FROM episodes */
     END;
 END pkgProduct;
+/
+

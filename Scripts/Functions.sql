@@ -701,8 +701,16 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         
         OPEN vProductsCursor FOR
             SELECT * FROM product pro WHERE idProduct = pIdProduct;
+            
         OPEN vParticipantsCursor FOR
-            SELECT idParticipant, rol FROM participantXproduct pro WHERE idProduct = pIdProduct;
+            SELECT pro.idParticipant, per.firstName, per.firstSurname, typeP.nameType 
+            FROM participantXproduct pro 
+            INNER JOIN Person per
+            ON pro.idParticipant = per.idPerson
+            INNER JOIN typeOfParticipant typeP
+            ON pro.rol = typeP.idType
+            WHERE pro.idProduct = pIdProduct;
+            
         OPEN vSeasonsCursor FOR
             SELECT sea.idSeason, sea.numberSeason, sea.duration, epi.idEpisode,
             epi.numberEpisode, epi.name, epi.duration
@@ -717,4 +725,3 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
     END;
 END pkgProduct;
 /
-

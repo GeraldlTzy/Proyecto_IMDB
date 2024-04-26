@@ -207,6 +207,9 @@ insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Uganda')
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Yibuti');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Zambia');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Zimbabue');
+
+
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Corea del Sur');
 /*******************************Insert provinces*******************************/
 /******************************************************************************/
 ---Costa Rica

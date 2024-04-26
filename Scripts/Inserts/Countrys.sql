@@ -37,7 +37,7 @@ insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Grecia')
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Hungría');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Irlanda');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Letonia');
-insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Litunia');
+insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Lituania');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Macedonia del Norte');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Mónaco');
 insert into Country(idCountry, nameCountry) values (s_country.nextval, 'Noruega');

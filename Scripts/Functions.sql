@@ -94,7 +94,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     IS
     BEGIN
         INSERT INTO typeOfIdentification(idTypeIdent, nameTypeIdent)
-        VALUES (s_identification.nextval, pName);
+        VALUES (s_typeofidentification.nextval, pName);
         COMMIT;
     END;
     PROCEDURE insertCountry (pName IN VARCHAR2)

@@ -47,8 +47,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         VALUES (s_person.currval, pIdNationality);
         
         pOutId := s_person.currval;
-        
-        COMMIT;
+
     END;
 
     PROCEDURE insertSystemUser(pIdPerson IN NUMBER, pUsername IN VARCHAR2, pPhoneNumber IN NUMBER,
@@ -421,15 +420,12 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     BEGIN
         pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
         pDatebirth, pPhoto, pIdNationality, pOutId);
-        
+                
         pkgBasic.insertSystemUser(pOutId, pUsername, pPhoneNumber, pIdentification,
         pEmail, pPswd, pIdTypeIdent);
         
         INSERT INTO end_user (idUser)
         VALUES (pOutId);
-
-        INSERT INTO nationalityPerson(idPerson,idNationality)
-        VALUES (s_person.currval, pIdNationality);
         
         COMMIT;
     END;

@@ -14,7 +14,6 @@ Begin
     pkgBasic.insertNationality('Surinamés');
     pkgBasic.insertNationality('Uruguayo');
     pkgBasic.insertNationality('Beliceño');
-    pkgBasic.insertNationality('Argentino');
     pkgBasic.insertNationality('Brasileño');
     pkgBasic.insertNationality('Chileno');
     pkgBasic.insertNationality('Dominicano');

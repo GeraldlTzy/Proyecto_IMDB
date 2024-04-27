@@ -624,6 +624,7 @@ CREATE OR REPLACE PACKAGE pkgProduct IS
     pDuration IN NUMBER);
     PROCEDURE removeEpisode(pIdEpisode IN NUMBER);
     PROCEDURE addPhoto(pIdProduct IN NUMBER, pImage IN BLOB);
+    PROCEDURE removePhoto (pIdPhoto IN NUMBER);
     FUNCTION getProducts RETURN SYS_REFCURSOR;
     PROCEDURE getProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
     vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR,
@@ -714,6 +715,15 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         VALUES (s_photo.nextval, pIdProduct, pImage);
         COMMIT;
     END;
+    
+    PROCEDURE removePhoto (pIdPhoto IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM Photo
+        WHERE idPhoto = pIdPhoto;
+        COMMIT;
+    END;
+    
     FUNCTION getProducts RETURN SYS_REFCURSOR
     IS
         productsCursor SYS_REFCURSOR;
@@ -756,7 +766,7 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
             AND sea.idSeason = epi.idSeason
             ORDER BY sea.idSeason ASC;
         OPEN vImagesCursor FOR
-            SELECT image FROM Photo
+            SELECT idPhoto, image FROM Photo
             WHERE idProduct = pIdProduct;
     END;
 END pkgProduct;

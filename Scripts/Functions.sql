@@ -378,6 +378,7 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
     END;
     
 END pkgParticipant;
+/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgEnd_user IS
     /**************************************************************************/
@@ -408,7 +409,7 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     
     ---PROCEDURE updatePswd();
 END pkgEnd_user;
-
+/
 CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
@@ -555,7 +556,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     /**************************************************************************/    
     
 END pkgEnd_user;
-select * from systemuser;
+/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgAdmin IS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
@@ -566,7 +567,7 @@ CREATE OR REPLACE PACKAGE pkgAdmin IS
     PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER);
     --PROCEDURE editCatalog(pIdAdmin IN NUMBER, pIdCatalog IN NUMBER);
 END pkgAdmin;
-
+/
 CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
@@ -610,6 +611,7 @@ CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     END;
     /*Terminar*/ 
 END pkgAdmin;
+/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgProduct IS 
     PROCEDURE insertProduct(pIdType IN NUMBER, pReleaseYear IN NUMBER, pTitle IN VARCHAR2,

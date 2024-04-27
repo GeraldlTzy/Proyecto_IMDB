@@ -745,7 +745,7 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         
         OPEN vProductsCursor FOR
             SELECT idProduct, idType, releaseYear, title, duration, trailer,
-            price, synopsis 
+            synopsis, price
             FROM product pro 
             WHERE idProduct = pIdProduct;
         OPEN vParticipantsCursor FOR

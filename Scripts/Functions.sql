@@ -1,11 +1,3 @@
-/******************************************************************************/
-/*
- *Description: Insert sex
- *Input: p_name, name of the sex
- *Output: void
- */
-/******************************************************************************/
-
 CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertPerson(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE, pPhoto IN BLOB,
@@ -252,7 +244,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         COMMIT;
     END;
     
-    FUNCTION getInfoInsertParticipant(pIdParticipant IN NUMBER) 
+    FUNCTION getInfoInsertParticipant(pIdParticipant IN NUMBER)
     RETURN SYS_REFCURSOR
     IS
         infoCursor SYS_REFCURSOR;
@@ -296,18 +288,17 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         OPEN cursorTypeOfProduct FOR
             SELECT * FROM typeOfProduct;
     END;
-    
     PROCEDURE getInfoRegister (cursorSex OUT SYS_REFCURSOR, cursorTypeOfId OUT SYS_REFCURSOR, 
         cursorNationalities OUT SYS_REFCURSOR)
         IS 
         BEGIN 
-        
+
         OPEN cursorSex FOR 
         SELECT idSex,sexname FROM sex;
-        
+
         OPEN cursorTypeOfId FOR
         SELECT idTypeIdent, nameTypeIdent FROM typeOfIdentification;
-        
+
         OPEN cursorNationalities FOR
         SELECT idNationality, name FROM Nationality;
     END;
@@ -325,6 +316,7 @@ CREATE OR REPLACE PACKAGE pkgParticipant IS
     
 END pkgParticipant;
 /
+
 CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
@@ -338,6 +330,7 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
         
         INSERT INTO Participant (idParticipant, idCity, biography, height, trivia)
         values(pOutId, pCity, pBiography, pHeight, pTrivia);
+        
         COMMIT;
     END;
 
@@ -385,7 +378,6 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
     END;
     
 END pkgParticipant;
-/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgEnd_user IS
     /**************************************************************************/
@@ -416,7 +408,7 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     
     ---PROCEDURE updatePswd();
 END pkgEnd_user;
-/
+
 CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
@@ -434,9 +426,13 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         
         INSERT INTO end_user (idUser)
         VALUES (pOutId);
+
+        INSERT INTO nationalityPerson(idPerson,idNationality)
+        VALUES (s_person.currval, pIdNationality);
         
         COMMIT;
     END;
+    
     /*Terminar*/ 
     PROCEDURE deleteUser(pIdUser IN NUMBER)
     IS
@@ -559,7 +555,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     /**************************************************************************/    
     
 END pkgEnd_user;
-/
+select * from systemuser;
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgAdmin IS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
@@ -570,7 +566,7 @@ CREATE OR REPLACE PACKAGE pkgAdmin IS
     PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER);
     --PROCEDURE editCatalog(pIdAdmin IN NUMBER, pIdCatalog IN NUMBER);
 END pkgAdmin;
-/
+
 CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
@@ -595,7 +591,6 @@ CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER)
     IS
     BEGIN
-
         DELETE FROM administrator
         WHERE idAdministrator = pIdAdmin;
         
@@ -615,19 +610,24 @@ CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     END;
     /*Terminar*/ 
 END pkgAdmin;
-/
 /******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgProduct IS 
     PROCEDURE insertProduct(pIdType IN NUMBER, pReleaseYear IN NUMBER, pTitle IN VARCHAR2,
     pDuration IN NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pPrice IN NUMBER, pIdProduct OUT NUMBER);
+    PROCEDURE updateProduct(pIdProduct IN NUMBER, pIdType IN NUMBER, pReleaseYear IN NUMBER, pTitle IN VARCHAR2,
+    pDuration IN NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pPrice IN NUMBER);
+    PROCEDURE deleteParticipant (pIdProduct IN NUMBER, pIdParticipant IN NUMBER);
     PROCEDURE addParticipant(pIdProduct IN NUMBER, pIdParticipant IN NUMBER, pRol IN NUMBER);
     PROCEDURE addSeason(pIdProduct IN NUMBER, pNumberSeason IN NUMBER, pDuration IN NUMBER, pIdSeason OUT NUMBER);
+    PROCEDURE removeSeason(pIdSeason IN NUMBER);
     PROCEDURE addEpisode(pIdSeason IN NUMBER,pNumberEpisode IN NUMBER, pName IN VARCHAR2,
     pDuration IN NUMBER);
+    PROCEDURE removeEpisode(pIdEpisode IN NUMBER);
     PROCEDURE addPhoto(pIdProduct IN NUMBER, pImage IN BLOB);
     FUNCTION getProducts RETURN SYS_REFCURSOR;
     PROCEDURE getProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
-    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR);
+    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR,
+    vImagesCursor OUT SYS_REFCURSOR);
 END pkgProduct;
 /
 CREATE OR REPLACE PACKAGE BODY pkgProduct AS 
@@ -640,6 +640,23 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         COMMIT;
         pIdProduct := s_product.currval;
     END;
+    
+    PROCEDURE updateProduct(pIdProduct IN NUMBER, pIdType IN NUMBER, pReleaseYear IN NUMBER, pTitle IN VARCHAR2,
+    pDuration IN NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pPrice IN NUMBER)
+    IS
+    BEGIN
+        UPDATE Product
+        SET idType = pIdType, 
+            releaseYear = pReleaseYear, 
+            title = pTitle, 
+            duration = pDuration, 
+            synopsis = pSynopsis, 
+            trailer = pTrailer, 
+            price = pPrice
+        WHERE idProduct = pIdProduct;
+        COMMIT;
+    END;
+    
     PROCEDURE addParticipant(pIdProduct IN NUMBER, pIdParticipant IN NUMBER, pRol IN NUMBER)
     IS
     BEGIN
@@ -647,6 +664,15 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         VALUES (pIdProduct, pIdParticipant, pRol);
         COMMIT;
     END;
+    
+    PROCEDURE deleteParticipant(pIdProduct IN NUMBER, pIdParticipant IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM ParticipantXProduct
+        WHERE idProduct = pIdProduct AND idParticipant = pIdParticipant;
+        COMMIT;
+    END;
+    
     PROCEDURE addSeason(pIdProduct IN NUMBER, pNumberSeason IN NUMBER, pDuration IN NUMBER, pIdSeason OUT NUMBER)
     IS
     BEGIN
@@ -655,6 +681,15 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         pIdSeason := s_season.currval;
         COMMIT;
     END;
+    
+    PROCEDURE removeSeason(pIdSeason IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM Season
+        WHERE idSeason = pIdSeason;
+        COMMIT;
+    END;
+    
     PROCEDURE addEpisode(pIdSeason IN NUMBER,pNumberEpisode IN NUMBER, pName IN VARCHAR2,
     pDuration IN NUMBER)
     IS
@@ -663,6 +698,15 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         VALUES (s_episode.nextval, pIdSeason, pNumberEpisode, pName, pDuration);
         COMMIT;
     END;
+    
+    PROCEDURE removeEpisode(pIdEpisode IN NUMBER)
+    IS
+    BEGIN
+        DELETE FROM Episode
+        WHERE idEpisode = pIdEpisode;
+        COMMIT;
+    END;
+    
     PROCEDURE addPhoto(pIdProduct IN NUMBER, pImage IN BLOB)
     IS
     BEGIN
@@ -674,19 +718,6 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
     IS
         productsCursor SYS_REFCURSOR;
     BEGIN
-    /*(pIdType IN NUMBER, pReleaseYear IN NUMBER, pTitle IN VARCHAR2,
-    pDuration IN NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pPrice IN NUMBER, pIdProduct OUT NUMBER);*/
-        /*OPEN productsCursor FOR
-            SELECT pro.idProduct, pro.idType, pro.releaseYear, pro.Title, pro.duration,
-            pro.synopsis, pro.trailer, pro.price
-            FROM product pro
-            INNER JOIN participant pa
-            ON pe.idPerson = NVL(pIdParticipant, idParticipant) AND pa.idParticipant = pe.idPerson
-            INNER JOIN city ci
-            ON ci.idCity = pa.idCity
-            INNER JOIN country co
-            ON ci.idCountry = co.idCountry;
-        RETURN productsCursor;*/
         OPEN productsCursor FOR
             SELECT pro.idProduct, pro.title, pho.image
             FROM product pro
@@ -698,23 +729,22 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
                 RETURN NULL;
     END;
     PROCEDURE getProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
-    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR)
+    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR, 
+    vImagesCursor OUT SYS_REFCURSOR)
     IS
         ---vProduct SYSREF
     BEGIN
         
         OPEN vProductsCursor FOR
             SELECT * FROM product pro WHERE idProduct = pIdProduct;
-            
         OPEN vParticipantsCursor FOR
             SELECT pro.idParticipant, per.firstName, per.firstSurname, typeP.nameType 
-            FROM participantXproduct pro 
-            INNER JOIN Person per
-            ON pro.idParticipant = per.idPerson
-            INNER JOIN typeOfParticipant typeP
-            ON pro.rol = typeP.idType
-            WHERE pro.idProduct = pIdProduct;
-            
+                FROM participantXproduct pro 
+                INNER JOIN Person per
+                ON pro.idParticipant = per.idPerson
+                INNER JOIN typeOfParticipant typeP
+                ON pro.rol = typeP.idType
+                WHERE pro.idProduct = pIdProduct;
         OPEN vSeasonsCursor FOR
             SELECT sea.idSeason, sea.numberSeason, sea.duration, epi.idEpisode,
             epi.numberEpisode, epi.name, epi.duration
@@ -723,9 +753,10 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
             ON pro.idProduct = pIdProduct AND sea.idProduct = pro.idProduct
             LEFT JOIN episode epi
             ON sea.idProduct = pIdProduct
-            AND sea.idSeason = epi.idSeason;
-        /*OPEN vEpisodesCursor FOR
-            SELECT * FROM episodes */
+            AND sea.idSeason = epi.idSeason
+            ORDER BY sea.idSeason ASC;
+        OPEN vImagesCursor FOR
+            SELECT image FROM Photo
+            WHERE idProduct = pIdProduct;
     END;
 END pkgProduct;
-/

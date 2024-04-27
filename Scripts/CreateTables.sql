@@ -1,7 +1,11 @@
 /**************************Atributes for systemUser****************************/
 CREATE TABLE TypeOfIdentification(
     idTypeIdent                 NUMBER(7),
-    nameTypeIdent               VARCHAR2(20)
+    nameTypeIdent               VARCHAR2(20),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 ALTER TABLE TypeOfIdentification
 ADD
@@ -12,7 +16,11 @@ storage (initial 10k next 10k pctincrease 0);
 /************************Atributes for person**********************************/
 CREATE TABLE Sex (
 	idSex			            NUMBER(7),
-	sexName		                VARCHAR(10) 
+	sexName		                VARCHAR(10),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 ALTER TABLE sex
 ADD
@@ -23,7 +31,11 @@ storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE Nationality (
     idNationality               NUMBER(7),
-    name                        VARCHAR2(50) CONSTRAINT name_nn NOT NULL
+    name                        VARCHAR2(50) CONSTRAINT name_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 alter table Nationality
 add
@@ -36,7 +48,11 @@ storage (initial 10k next 10k pctincrease 0);
 ---City has a reference to the country
 CREATE TABLE country (
 	idCountry                   NUMBER(7),
-	nameCountry                 VARCHAR2(100) CONSTRAINT nameCountry_nn NOT NULL
+	nameCountry                 VARCHAR2(100) CONSTRAINT nameCountry_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 alter table country
 add
@@ -50,7 +66,11 @@ CREATE TABLE city (
 	idCountry                   NUMBER(7),
     nameCity                    VARCHAR2(100) CONSTRAINT nameCity_nn NOT NULL,
     constraint fk_city_country foreign key (idCountry) 
-    references Country(idCountry)
+    references Country(idCountry),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 
 alter table city
@@ -62,7 +82,11 @@ storage (initial 10k next 10k pctincrease 0);
 
 create table Relative (
     idRelative                  number(7),
-    kindship                    varchar2(30) CONSTRAINT relative_kindship_nn NOT NULL
+    kindship                    varchar2(30) CONSTRAINT relative_kindship_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 alter table Relative
 add
@@ -80,7 +104,11 @@ CREATE TABLE Person (
 	secondSurname               VARCHAR2(20),
 	datebirth                   DATE         CONSTRAINT datebirth_nn NOT NULL,
     photo                       BLOB,
-	CONSTRAINT fk_Person_sex FOREIGN KEY (idSex) REFERENCES Sex(idSex)
+	CONSTRAINT fk_Person_sex FOREIGN KEY (idSex) REFERENCES Sex(idSex),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 alter table Person
 add
@@ -93,7 +121,11 @@ CREATE TABLE nationalityPerson (
 	idPerson                   NUMBER(7)    CONSTRAINT idPerson_nn NOT NULL,
 	idNationality              NUMBER(7)    CONSTRAINT idNationality_nn NOT NULL,
     constraint fk_natPerson_person foreign key (idPerson) references Person(idPerson),
-    constraint fk_natPerson_nationality foreign key (idNationality) references Nationality(idNationality)
+    constraint fk_natPerson_nationality foreign key (idNationality) references Nationality(idNationality),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 alter table nationalityPerson
 add
@@ -108,7 +140,11 @@ CREATE TABLE systemUser (
 	phoneNumber                 NUMBER(15)    CONSTRAINT phoneNumber_nn NOT NULL,
 	email                       VARCHAR2(20) CONSTRAINT email_nn NOT NULL,
 	pswd  		                VARCHAR2(20) CONSTRAINT systemuser_password_nn NOT NULL,
-    constraint fk_systemUser_person foreign key (idSystemUser) references Person(idPerson)
+    constraint fk_systemUser_person foreign key (idSystemUser) references Person(idPerson),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 alter table systemUser
 add
@@ -121,6 +157,10 @@ CREATE TABLE Identification(
     idIdentification            NUMBER(7),
     idTypeIdent                 NUMBER(7),
     identNumber                 NUMBER(10),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     CONSTRAINT fk_ident_type FOREIGN KEY (idTypeIdent) 
     REFERENCES TypeOfIdentification(idTypeIdent)
 );
@@ -134,6 +174,10 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE IdentXSystem (
     idIdent                     NUMBER(7),
     idSystemUser                NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     CONSTRAINT fk_identxsystem_ident FOREIGN KEY (idIdent) 
     REFERENCES Identification(idIdentification),
     CONSTRAINT fk_identxsystem_system FOREIGN KEY (idSystemUser) 
@@ -148,6 +192,10 @@ storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
 CREATE TABLE end_user (
 	idUser                     NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_endUser_systemUser foreign key (idUser) 
     references systemUser(idSystemUser)
 );
@@ -160,6 +208,10 @@ storage (initial 10k next 10k pctincrease 0);
 
 CREATE TABLE administrator (
 	idAdministrator            NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_administrator_systemUser foreign key (idAdministrator) 
     references systemUser(idSystemUser)
 );
@@ -176,6 +228,10 @@ CREATE TABLE participant (
 	biography                   VARCHAR2(500) CONSTRAINT biography_nn NOT NULL,	
 	height                      NUMBER(7)     CONSTRAINT height_nn NOT NULL,
 	trivia                      VARCHAR2(500) CONSTRAINT trivia_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
 	CONSTRAINT fk_part_city FOREIGN KEY (idCity) REFERENCES City(idCity),
 	CONSTRAINT fk_part_person FOREIGN KEY (idParticipant) REFERENCES Person(idPerson)
 );
@@ -188,7 +244,11 @@ storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
 CREATE TABLE typeOfProduct (
 	idType                      NUMBER(7),	
-	nickname                    VARCHAR2(100) CONSTRAINT nickname_nn NOT NULL
+	nickname                    VARCHAR2(100) CONSTRAINT nickname_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 
 alter table typeOfProduct
@@ -207,6 +267,10 @@ CREATE TABLE product (
 	trailer                     VARCHAR2(500),
 	price			    NUMBER(7),
 	synopsis                    VARCHAR2(500) CONSTRAINT synopsis_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
 	CONSTRAINT fk_product_type FOREIGN KEY (idType) REFERENCES typeOfProduct(idType)
 );
 
@@ -221,8 +285,12 @@ CREATE TABLE Binnacle (
     idBinnacle                  NUMBER(7),
     idProduct                   NUMBER(7),
     oldPrice                    NUMBER(7) CONSTRAINT binnacle_oldPrice_nn NOT NULL,
-    newPrice			NUMBER(7) CONSTRAINT binnacle_newPrice_nn NOT NULL,
+    newPrice			        NUMBER(7) CONSTRAINT binnacle_newPrice_nn NOT NULL,
     dateBinnacle                DATE CONSTRAINT binnacle_date_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     CONSTRAINT fk_binnacle_product FOREIGN KEY (idProduct) REFERENCES Product(idProduct)
 );
 alter table Binnacle
@@ -237,6 +305,10 @@ CREATE TABLE Season(
     idProduct                   NUMBER(7),
     numberSeason                NUMBER(7),
     duration                    NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     CONSTRAINT fk_season_product FOREIGN KEY (idProduct) REFERENCES Product(idProduct)
 );
 alter table Season
@@ -252,6 +324,10 @@ CREATE TABLE Episode(
     numberEpisode               NUMBER(7),
     name                        VARCHAR(20),
     duration                    NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     CONSTRAINT fk_episode_season FOREIGN KEY (idSeason) REFERENCES Season(idSeason)
 );
 alter table Episode
@@ -265,6 +341,10 @@ CREATE TABLE Photo(
     idPhoto                     NUMBER(7),
     idProduct                   NUMBER(7),
     image                       BLOB,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     CONSTRAINT fk_photo_product FOREIGN KEY (idProduct) REFERENCES Product(idProduct)
 );
 alter table Photo
@@ -273,26 +353,14 @@ constraint pk_photo primary key (idPhoto)
 using index
 tablespace su_ind pctfree 20
 storage (initial 10k next 10k pctincrease 0);
-
-CREATE TABLE PhotoXProduct (
-    idProduct NUMBER(7),
-    idPhoto NUMBER(7),
-    CONSTRAINT fk_photoxproduct_product FOREIGN KEY (idProduct) 
-    REFERENCES Product(idProduct),
-    CONSTRAINT fk_photoxproduct_photo FOREIGN KEY (idPhoto) 
-    REFERENCES Photo(idPhoto)
-);
-
-alter table PhotoXProduct
-add
-constraint pk_photoxproduct primary key (idProduct, idPhoto)
-using index
-tablespace su_ind pctfree 20
-storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
 CREATE TABLE typeOfParticipant (
 	idType                      NUMBER(7),	
-	nameType                    VARCHAR2(100) CONSTRAINT nickname_Participant_nn NOT NULL
+	nameType                    VARCHAR2(100) CONSTRAINT nickname_Participant_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 
 alter table typeOfParticipant
@@ -306,6 +374,10 @@ CREATE TABLE ParticipantXProduct (
 	idParticipant               NUMBER(7),	
 	idProduct                   NUMBER(7),
     rol                         NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_PartXPro_participant foreign key (idParticipant) references participant(idParticipant),
     constraint fk_PartXPro_product foreign key (idProduct) references product(idProduct),
     constraint fk_PartXPro_typepart foreign key (rol) references TypeOfParticipant(idType)
@@ -322,6 +394,10 @@ CREATE TABLE ParticipantXRelative (
 	idParticipant               NUMBER(7),	
 	idParticipant2              NUMBER(7),
     idRelative                  NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_PartXRela_part foreign key (idParticipant) references participant(idParticipant),
     constraint fk_PartXRela_part2 foreign key (idParticipant2) references participant(idParticipant),
     constraint fk_PartXRela_rela foreign key (idRelative) references Relative(idRelative)
@@ -337,6 +413,10 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE payment (
 	idPayment                  NUMBER(7),
 	idUser                     NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_payment_user foreign key (idUser) references end_user(idUser)
 );
 
@@ -353,6 +433,10 @@ CREATE TABLE card (
     expiration                  DATE            CONSTRAINT expiration_nn NOT NULL,
     ccv                         NUMBER(5)       CONSTRAINT ccv_nn NOT NULL,
     ownerName                   VARCHAR2(20)    CONSTRAINT owner_name_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_card_payment foreign key (idCard) references payment(idPayment)
 );
 alter table card
@@ -365,6 +449,10 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE Wishlist (
 	idUser                     NUMBER(7),
 	idProduct                  NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_Wishlist_user foreign key (idUser) references end_user(idUser),
     constraint fk_Wishlist_product foreign key (idProduct) references product(idProduct)
 );
@@ -381,6 +469,10 @@ CREATE TABLE Purchase (
     idProduct                   NUMBER(7),
     idPayment                   NUMBER(7),
 	history                     date constraint catXuser_history_nn not null,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     --isStreamed                  BOOLEAN,
     constraint fk_purchase_user foreign key (idUser) references end_user(idUser),
     constraint fk_purchase_product foreign key (idProduct) references Product(idProduct),
@@ -396,7 +488,11 @@ storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
 CREATE TABLE catalog (
 	idCatalog                   NUMBER(7),
-	genre                       VARCHAR2(20) CONSTRAINT genre_nn NOT NULL
+	genre                       VARCHAR2(20) CONSTRAINT genre_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 
 alter table catalog
@@ -409,6 +505,10 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE CatalogxProduct (
 	idCatalog                  NUMBER(7),	
 	idProduct                  NUMBER(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
 	FOREIGN KEY (idCatalog) REFERENCES catalog(idCatalog),
 	FOREIGN KEY (idProduct) REFERENCES product(idProduct)
 );
@@ -422,7 +522,11 @@ storage (initial 10k next 10k pctincrease 0);
 /******************************************************************************/
 CREATE TABLE platform (
 	idPlatform                  NUMBER(7),
-	namePlatform                VARCHAR2(20) CONSTRAINT platform_namePlatform_nn NOT NULL
+	namePlatform                VARCHAR2(20) CONSTRAINT platform_namePlatform_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE
 );
 alter table platform
 add
@@ -434,6 +538,10 @@ storage (initial 10k next 10k pctincrease 0);
 create table ProductXPlatform (
     idProduct                   number(7),
     idPlatform                  number(7),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_ProductXPlatform_product foreign key (idProduct) references product(idProduct),
     constraint fk_ProductXPlatform_platform foreign key (idPlatform) references platform(idPlatform)
 );
@@ -448,6 +556,10 @@ CREATE TABLE review (
 	idProduct              NUMBER(7),
     idUser                 number(7),
     stars                   number(2, 1),
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_review_product foreign key (idProduct) references product(idProduct),
     constraint fk_review_user foreign key (idUser) references end_user(idUser)
 );
@@ -462,6 +574,10 @@ CREATE TABLE commentary (
 	idProduct              NUMBER(7),
     idUser                 number(7),
     description             VARCHAR2(500) CONSTRAINT description_nn NOT NULL,
+    created_by VARCHAR2(15),
+    creation_date DATE,
+    updated_by VARCHAR(15),
+    update_date DATE,
     constraint fk_commentary_product foreign key (idProduct) references product(idProduct),
     constraint fk_commentary_user foreign key (idUser) references end_user(idUser)
 );

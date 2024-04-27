@@ -387,25 +387,6 @@ BEGIN
 END beforeUpdatePhoto;
 /
 
-CREATE OR REPLACE TRIGGER beforeInsertPhotoXProduct
-BEFORE INSERT
-ON PhotoXProduct
-FOR EACH ROW
-BEGIN
-    :new.created_by := USER;
-    :new.creation_date := SYSDATE;
-END beforeInsertPhotoXProduct;
-/
-CREATE OR REPLACE TRIGGER beforeUpdatePhotoXProduct
-BEFORE UPDATE
-ON PhotoXProduct
-FOR EACH ROW
-BEGIN
-    :new.updated_by := USER;
-    :new.update_date := SYSDATE;
-END beforeUpdatePhotoXProduct;
-/
-
 CREATE OR REPLACE TRIGGER beforeInsertPlatform
 BEFORE INSERT
 ON Platform

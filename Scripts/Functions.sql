@@ -269,7 +269,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     IS
     BEGIN
         OPEN cursorTypeOfParticipant FOR
-            SELECT * FROM TypeOfParticipant;
+            SELECT idType, nameType FROM TypeOfParticipant;
         
         OPEN cursorParticipants FOR
             SELECT pe.idPerson, pe.firstName, pe.secondName, pe.firstSurname, pe.secondSurname, 
@@ -286,7 +286,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
             ON ci.idCountry = co.idCountry;
             
         OPEN cursorTypeOfProduct FOR
-            SELECT * FROM typeOfProduct;
+            SELECT idType, nickname FROM typeOfProduct;
     END;
     PROCEDURE getInfoRegister (cursorSex OUT SYS_REFCURSOR, cursorTypeOfId OUT SYS_REFCURSOR, 
         cursorNationalities OUT SYS_REFCURSOR)
@@ -748,7 +748,10 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
     BEGIN
         
         OPEN vProductsCursor FOR
-            SELECT * FROM product pro WHERE idProduct = pIdProduct;
+            SELECT idProduct, idType, releaseYear, title, duration, trailer,
+            price, synopsis 
+            FROM product pro 
+            WHERE idProduct = pIdProduct;
         OPEN vParticipantsCursor FOR
             SELECT pro.idParticipant, per.firstName, per.firstSurname, typeP.nameType 
                 FROM participantXproduct pro 

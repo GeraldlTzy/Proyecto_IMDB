@@ -240,7 +240,7 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     BEGIN
         INSERT INTO Binnacle(idBinnacle,IdProduct,oldPrice,newPrice,dateBinnacle)
         VALUES (s_binnacle.nextval,pIdProduct,pOldPrice,pNewPrice, pDateBinnacle);
-        COMMIT;
+        ---COMMIT;
     END;
     
     FUNCTION getInfoInsertParticipant(pIdParticipant IN NUMBER)

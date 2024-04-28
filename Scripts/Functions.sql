@@ -1,7 +1,7 @@
 CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertPerson(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE, pPhoto IN BLOB,
-    pIdNationality IN NUMBER, pOutId OUT NUMBER);
+    pOutId OUT NUMBER);
     PROCEDURE insertSystemUser(pIdPerson IN NUMBER, pUsername IN VARCHAR2, pPhoneNumber IN NUMBER,
     pIdentification IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
     
@@ -36,15 +36,12 @@ END pkgBasic;
 CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     PROCEDURE insertPerson(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE, pPhoto IN BLOB,
-    pIdNationality IN NUMBER, pOutId OUT NUMBER)
+    pOutId OUT NUMBER)
     IS BEGIN
         INSERT INTO Person (idPerson, idSex, firstName, secondName, firstSurname,
         secondSurname, datebirth, photo)
         VALUES (s_person.nextval, pSex, pFirstName, pSecondName, pFirstSurname,
         pSecondSurname, pDatebirth, pPhoto);
-        
-        INSERT INTO nationalityPerson(idPerson,idNationality)
-        VALUES (s_person.currval, pIdNationality);
         
         pOutId := s_person.currval;
 
@@ -271,18 +268,11 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
             SELECT idType, nameType FROM TypeOfParticipant;
         
         OPEN cursorParticipants FOR
-            SELECT pe.idPerson, pe.firstName, pe.secondName, pe.firstSurname, pe.secondSurname, 
-            pe.datebirth, pe.photo, ci.nameCity, co.nameCountry, pa.biography, pa.height,
-            pa.trivia, se.sexName
-            FROM person pe
-            INNER JOIN sex se
-            ON pe.idSex = se.idSex
-            INNER JOIN participant pa
-            ON pa.idParticipant = pe.idPerson
-            INNER JOIN city ci
-            ON ci.idCity = pa.idCity
-            INNER JOIN country co
-            ON ci.idCountry = co.idCountry;
+            SELECT idPerson, firstName || ' ' || secondName || ' ' || firstSurname
+            || ' ' || secondSurname, photo
+            FROM Person pe
+            INNER JOIN Participant pa
+            ON pe.idPerson = pa.idParticipant;
             
         OPEN cursorTypeOfProduct FOR
             SELECT idType, nickname FROM typeOfProduct;
@@ -307,11 +297,17 @@ END pkgBasic;
 CREATE OR REPLACE PACKAGE pkgParticipant IS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
-    pCity IN NUMBER, pIdNationality IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER,
-    pTrivia IN VARCHAR2, pPhoto IN BLOB);
+    pCity IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER,
+    pTrivia IN VARCHAR2, pPhoto IN BLOB, pIdParticipant OUT NUMBER);
     PROCEDURE deleteParticipant(pIdParticipant NUMBER);
+    PROCEDURE updateParticipant(pIdParticipant IN NUMBER, pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
+    pCity IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
+    pTrivia IN VARCHAR2, pPhoto IN BLOB);
     PROCEDURE insertRelative(pIdParticipant IN NUMBER, pIdRelative IN NUMBER, pIdKinship IN NUMBER);
-    FUNCTION getParticipant(pIdParticipant IN NUMBER) RETURN SYS_REFCURSOR;
+    PROCEDURE getParticipant(pIdParticipant IN NUMBER, vParticipantInfoCursor OUT SYS_REFCURSOR,
+    vParticipantNatCursor OUT SYS_REFCURSOR);
+    FUNCTION getInfoParticipants RETURN SYS_REFCURSOR;
     
 END pkgParticipant;
 /
@@ -319,17 +315,17 @@ END pkgParticipant;
 CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
     PROCEDURE insertParticipant (pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
-    pCity IN NUMBER, pIdNationality IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
-    pTrivia IN VARCHAR2, pPhoto IN BLOB)
+    pCity IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
+    pTrivia IN VARCHAR2, pPhoto IN BLOB, pIdParticipant OUT NUMBER)
     IS
         pOutId NUMBER(7);
     BEGIN
          pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
-        pDatebirth, pPhoto, pIdNationality, pOutId);
+        pDatebirth, pPhoto, pOutId);
         
         INSERT INTO Participant (idParticipant, idCity, biography, height, trivia)
         values(pOutId, pCity, pBiography, pHeight, pTrivia);
-        
+        pIdParticipant := pOutId;
         COMMIT;
     END;
 
@@ -355,27 +351,70 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant AS
         DELETE FROM Participant
         WHERE idParticipant = pIdParticipant;
     END;
-    FUNCTION getParticipant(pIdParticipant IN NUMBER) RETURN SYS_REFCURSOR
-    IS 
-        vParticipantCursor SYS_REFCURSOR;
+    
+    PROCEDURE updateParticipant(pIdParticipant IN NUMBER, pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
+    pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDateBirth IN DATE,
+    pCity IN NUMBER, pBiography IN VARCHAR2, pHeight IN NUMBER, 
+    pTrivia IN VARCHAR2, pPhoto IN BLOB)
+    IS
     BEGIN
-        OPEN vParticipantCursor FOR
+        UPDATE Person
+        SET idSex = pSex, 
+            firstName = pFirstName,
+            secondName = pSecondName,
+            firstSurname = pFirstSurname,
+            secondSurname = pSecondSurname,
+            dateBirth = pDateBirth,
+            photo = pPhoto
+        WHERE idPerson = pIdParticipant;
+        
+        UPDATE Participant    
+        SET idCity = pCity,
+            biography = pBiography,
+            height = pHeight,
+            trivia = pTrivia
+        WHERE idParticipant = pIdParticipant;
+        COMMIT;
+    END;
+    
+    PROCEDURE getParticipant(pIdParticipant IN NUMBER, vParticipantInfoCursor OUT SYS_REFCURSOR,
+    vParticipantNatCursor OUT SYS_REFCURSOR)
+    IS
+    BEGIN
+        OPEN vParticipantInfoCursor FOR
             SELECT pe.idPerson, pe.firstName, pe.secondName, pe.firstSurname, pe.secondSurname, 
-            pe.datebirth, pe.photo, ci.nameCity, co.nameCountry, pa.biography, pa.height,
-            pa.trivia
+            pe.datebirth, pe.photo, ci.idCity, pa.biography, pa.height,
+            pa.trivia, pe.idSex
             FROM person pe
             INNER JOIN participant pa
-            ON pe.idPerson = NVL(pIdParticipant, idParticipant) AND pa.idParticipant = pe.idPerson
+            ON pe.idPerson = pIdParticipant AND pa.idParticipant = pe.idPerson
             INNER JOIN city ci
             ON ci.idCity = pa.idCity
             INNER JOIN country co
             ON ci.idCountry = co.idCountry;
-        RETURN vParticipantCursor;
+            
+        OPEN vParticipantNatCursor FOR
+            SELECT na.idNationality
+            FROM nationalityPerson na
+            INNER JOIN participant pa
+            ON idPerson = pIdParticipant;
+    END;
+    
+    FUNCTION getInfoParticipants RETURN SYS_REFCURSOR
+    IS
+        vParticipantsCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vParticipantsCursor FOR
+            SELECT idPerson, firstName || ' ' || secondName || ' ' || firstSurname
+            || ' ' || secondSurname, photo
+            FROM Person pe
+            INNER JOIN Participant pa
+            ON pe.idPerson = pa.idParticipant;
+        RETURN vParticipantsCursor;
     EXCEPTION
             WHEN NO_DATA_FOUND THEN
                 RETURN NULL;
     END;
-    
 END pkgParticipant;
 /
 /******************************************************************************/
@@ -384,8 +423,7 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER, 
-    pIdNationality IN NUMBER);
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
     PROCEDURE deleteUser(pIdUser IN NUMBER);
     --PROCEDURE updateUser(pIdUser IN NUMBER);
     /***********************Actions User for Nationality***********************/
@@ -413,13 +451,12 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
-    pIdNationality IN NUMBER)
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER)
     IS
         pOutId NUMBER(7);
     BEGIN
         pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
-        pDatebirth, pPhoto, pIdNationality, pOutId);
+        pDatebirth, pPhoto, pOutId);
                 
         pkgBasic.insertSystemUser(pOutId, pUsername, pPhoneNumber, pIdentification,
         pEmail, pPswd, pIdTypeIdent);
@@ -558,8 +595,7 @@ CREATE OR REPLACE PACKAGE pkgAdmin IS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
-    pIdNationality IN NUMBER);
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
     PROCEDURE deleteAdministrator(pIdAdmin IN NUMBER);
     --PROCEDURE editCatalog(pIdAdmin IN NUMBER, pIdCatalog IN NUMBER);
 END pkgAdmin;
@@ -568,13 +604,12 @@ CREATE OR REPLACE PACKAGE BODY pkgAdmin AS
     PROCEDURE insertAdministrator(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
-    pIdNationality IN NUMBER)
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER)
     IS
         pOutId NUMBER(7);
     BEGIN
         pkgBasic.insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
-        pDatebirth, pPhoto, pIdNationality, pOutId);
+        pDatebirth, pPhoto, pOutId);
         
         pkgBasic.insertSystemUser(pOutId, pUsername, pPhoneNumber, pIdentification,
         pEmail, pPswd, pIdTypeIdent);

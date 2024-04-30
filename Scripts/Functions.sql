@@ -423,7 +423,8 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER);
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
+    pidOut IN NUMBER DEFAULT null);
     PROCEDURE deleteUser(pIdUser IN NUMBER);
     --PROCEDURE updateUser(pIdUser IN NUMBER);
     /***********************Actions User for Nationality***********************/
@@ -451,7 +452,8 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
     PROCEDURE insertUser(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
-    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER)
+    pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
+    pidOut OUT NUMBER)
     IS
         pOutId NUMBER(7);
     BEGIN
@@ -463,6 +465,8 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         
         INSERT INTO end_user (idUser)
         VALUES (pOutId);
+        
+        pidOut := pOutId;
         
         COMMIT;
     END;

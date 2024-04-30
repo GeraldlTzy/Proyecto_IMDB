@@ -424,7 +424,7 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE,
     pPhoto IN BLOB, pUsername IN VARCHAR2, pIdentification IN NUMBER,
     pPhoneNumber IN NUMBER, pEmail IN VARCHAR2, pPswd IN VARCHAR2, pIdTypeIdent IN NUMBER,
-    pidOut IN NUMBER DEFAULT null);
+    pidOut OUT NUMBER);
     PROCEDURE deleteUser(pIdUser IN NUMBER);
     --PROCEDURE updateUser(pIdUser IN NUMBER);
     /***********************Actions User for Nationality***********************/

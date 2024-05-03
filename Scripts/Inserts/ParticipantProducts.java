@@ -1,5 +1,18 @@
-package Connect;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Interface;
 
+import Connect.ConnectDB;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
 import java.io.FileInputStream;
 
 /*
@@ -11,26 +24,41 @@ import java.io.FileInputStream;
  *
  * @author josed
  */
+
+
+
 public class main {
+    public static byte[] toBytes(String imagePath) throws IOException {
+    FileInputStream fis;
+    byte [] image = new byte[1];
+            try {
+                fis = new FileInputStream(imagePath);
+                image = new byte[fis.available()];
+                fis.read(image);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ParticipantWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return image;    
+}
     public static void main(String[] args) throws Exception {
         ConnectDB con = ConnectDB.getObject();
         String adress = "C:\\Users\\josed\\OneDrive\\Escritorio\\Imagenes\\";
         //Canadian
         //con.insertParticipant(1,"Keanu",null,"Reeves",null,"02-09-1964",5,18,"(Keanu Charles Reeves; Beirut, Líbano, 1964) Actor de cine estadounidense. De padre chino-hawaiano y de madre británica, Keanu Reeves creció en Toronto y se trasladó a los 16 años a Los Ángeles para trabajar como actor. De hecho ya antes, durante su estancia en Canadá, había actuado en el Theatre Arts High School.",186,null,adress+"keanu.jpg");
         //American
-        con.insertParticipant(1,"Chad",null,"Stahelski",null,"02-08-1968",5,40,"Chad Stahelski (20 de septiembre de 1968) es un director de cine y doble de riesgo estadounidense, reconocido por dirigir la saga de John Wick.1​2​3​ Stahelski además ofició como doble de Brandon Lee tras el accidente que le costó la vida al actor durante el rodaje de la película The Crow (1994).4​ Ha trabajado como coordinador de acrobacias y director de segunda unidad en varias películas.",185,null,adress+"chad.jpg");
-        con.insertParticipant(1,"Tyler",null,"Bates",null,"05-06-1965",5,40,"Tyler Bates (Los Ángeles, 5 de junio de 1965) es un productor musical y compositor estadounidense de música para cine, televisión y videojuegos. Entre sus trabajos más conocidos están las bandas sonoras de las películas Halloween, John Wick, Guardianes de la Galaxia...",191,null,adress+"tylerBates.jpg");
+        con.insertParticipant(1,"Chad",null,"Stahelski",null,"02-08-1968",5,"Chad Stahelski (20 de septiembre de 1968) es un director de cine y doble de riesgo estadounidense, reconocido por dirigir la saga de John Wick.1​2​3​ Stahelski además ofició como doble de Brandon Lee tras el accidente que le costó la vida al actor durante el rodaje de la película The Crow (1994).4​ Ha trabajado como coordinador de acrobacias y director de segunda unidad en varias películas.",185,null,toBytes(adress+"chad.jpg"));
+        con.insertParticipant(1,"Tyler",null,"Bates",null,"05-06-1965",5,"Tyler Bates (Los Ángeles, 5 de junio de 1965) es un productor musical y compositor estadounidense de música para cine, televisión y videojuegos. Entre sus trabajos más conocidos están las bandas sonoras de las películas Halloween, John Wick, Guardianes de la Galaxia...",191,null,toBytes(adress+"tylerBates.jpg"));
         //Scotland
-        con.insertParticipant(1,"Mikael",null,"Nyqvist",null,"08-11-1960",5,80,"Nacido en Estocolmo de padre italiano y madre sueca, Nyqvist se crio en un orfanato, de donde fue adoptado y estudió en la Escuela de Arte Dramático de Malmö.2​ Se dio a conocer en la primera temporada de la serie Beck (1997), en el papel de Banck. En la película El clavel negro fue el diplomático y humanitario sueco Harald Edelstam y ganó el Premio Guldbagge como mejor actor masculino en 2003.",178,null,adress+"mikael.jpg");
+        con.insertParticipant(1,"Mikael",null,"Nyqvist",null,"08-11-1960",5,"Nacido en Estocolmo de padre italiano y madre sueca, Nyqvist se crio en un orfanato, de donde fue adoptado y estudió en la Escuela de Arte Dramático de Malmö.2​ Se dio a conocer en la primera temporada de la serie Beck (1997), en el papel de Banck. En la película El clavel negro fue el diplomático y humanitario sueco Harald Edelstam y ganó el Premio Guldbagge como mejor actor masculino en 2003.",178,null,toBytes(adress+"mikael.jpg"));
         //American
-        con.insertParticipant(2,"Adrianne",null,"Palicki",null,"06-05-1983",5,40,"Adrianne Lee Palicki (Toledo, Ohio, 6 de mayo de 1983) es una actriz estadounidense conocida por su papel de Tyra Collette en la serie televisiva Friday Night Lights, como Bobbi Morse/Mockingbird en la serie Agents of S.H.I.E.L.D. de la cadena ABC y por su papel de Jessica Moore en la serie Supernatural.",180,null,adress+"adrianne.jpg");
+        con.insertParticipant(2,"Adrianne",null,"Palicki",null,"06-05-1983",5,"Adrianne Lee Palicki (Toledo, Ohio, 6 de mayo de 1983) es una actriz estadounidense conocida por su papel de Tyra Collette en la serie televisiva Friday Night Lights, como Bobbi Morse/Mockingbird en la serie Agents of S.H.I.E.L.D. de la cadena ABC y por su papel de Jessica Moore en la serie Supernatural.",180,null,toBytes(adress+"adrianne.jpg"));
         //English
-        con.insertParticipant(1,"Ian","David","McShane",null,"29-09-1942",5,81,"Ian David McShane (Blackburn, Inglaterra; 29 de septiembre de 1942) es un actor británico. A pesar de que ha protagonizado varias películas, es por sus papeles en televisión por los que es más conocido, comenzando por la serie de la BBC Lovejoy (1986-1994) y el wéstern de la HBO Deadwood (2004-2006), con la que obtuvo un Globo de Oro.",170,null,adress+"ianMcShane.jpg");
+        con.insertParticipant(1,"Ian","David","McShane",null,"29-09-1942",5,"Ian David McShane (Blackburn, Inglaterra; 29 de septiembre de 1942) es un actor británico. A pesar de que ha protagonizado varias películas, es por sus papeles en televisión por los que es más conocido, comenzando por la serie de la BBC Lovejoy (1986-1994) y el wéstern de la HBO Deadwood (2004-2006), con la que obtuvo un Globo de Oro.",170,null,toBytes(adress+"ianMcShane.jpg"));
         //Canadian
-        con.insertParticipant(1,"Denis",null,"Villeneuve",null,"03-10-1967",5,18,"Denis Villeneuve (Trois-Rivières, Quebec, 3 de octubre de 1967) es un guionista y director de cine canadiense. Fue nominado a un premio Óscar en la categoría de mejor dirección por su película La llegada (2016), y ha ganado tres premios Genie como mejor director por sus largometrajes Maelström (2000), Polytechnique (2009) e Incendies (2010).",182,null,adress+"villeneuve.jpg");
+        con.insertParticipant(1,"Denis",null,"Villeneuve",null,"03-10-1967",5,"Denis Villeneuve (Trois-Rivières, Quebec, 3 de octubre de 1967) es un guionista y director de cine canadiense. Fue nominado a un premio Óscar en la categoría de mejor dirección por su película La llegada (2016), y ha ganado tres premios Genie como mejor director por sus largometrajes Maelström (2000), Polytechnique (2009) e Incendies (2010).",182,null,toBytes(adress+"villeneuve.jpg"));
         //German
-        con.insertParticipant(1,"Hans",null,"Zimmer",null,"12-09-1957",5,68,"Hans Florian Zimmer (Fráncfort, 12 de septiembre de 1957) es un compositor de bandas sonoras alemán,1​ que se caracteriza por la integración de música electrónica y arreglos sinfónico-orquestales. Ha sido acreedor a reconocimientos cinematográficos como los Globos de oro, BAFTA, Emmy, Saturn, Grammy, además de dos Óscar de la Academia por su trabajo en El rey león (1994) y Dune (2021), premios a los que ha sido nominado en otras 10 ocasiones desde 1988 con Rain man.",178,null,adress+"hansZimmer.jpg");
-        
+        con.insertParticipant(1,"Hans",null,"Zimmer",null,"12-09-1957",5,"Hans Florian Zimmer (Fráncfort, 12 de septiembre de 1957) es un compositor de bandas sonoras alemán,1​ que se caracteriza por la integración de música electrónica y arreglos sinfónico-orquestales. Ha sido acreedor a reconocimientos cinematográficos como los Globos de oro, BAFTA, Emmy, Saturn, Grammy, además de dos Óscar de la Academia por su trabajo en El rey león (1994) y Dune (2021), premios a los que ha sido nominado en otras 10 ocasiones desde 1988 con Rain man.",178,null,toBytes(adress+"hansZimmer.jpg"));
+        */
         con.insertProduct(1,2021,"Dune",156,"https://www.youtube.com/watch?v=kPjOcWHVNGo","\"Dune\", el periplo de un héroe mítico y con una enorme carga emocional, cuenta la historia de Paul Atreides. Se trata de un joven brillante y de gran talento con un destino grandioso que no comprende todavía y que deberá viajar al planeta más peligroso del universo para asegurar el futuro de su familia y de su pueblo. Mientras las fuerzas del mal se enfrentan por uno de los recursos más excepcionales del planeta que tiene el poder de desbloquear todo el potencial de la humanidad, solo los que logren dominar sus miedos podrán sobrevivir.",4);
         con.insertProduct(1,2014,"John Wick",101,"https://www.youtube.com/watch?v=C0BMx-qxsP4&embeds_referring_euri=https%3A%2F%2Fwww.bing.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.bing.com&source_ve_path=Mjg2NjY&feature=emb_logo","John Wick está de luto por la muerte de su esposa, Helen, a causa de una enfermedad. Para ayudarle a sobrellevarlo, ella le regala un cachorro de beagle. Pocos días después, Wick es abordado en una gasolinera a las afueras de Nueva York por un grupo de gánsteres rusos, liderados por Iosef, que no consiguen intimidar a Wick para que les venda su Mustang Boss 429 de 1969. Esa noche, los hombres irrumpen en la casa de Wick, lo asaltan y matan al cachorro antes de robar el coche.",6);
         con.insertProduct(1,2012,"Los Juegos del Hambre",142,"https://www.youtube.com/watch?v=PbA63a7H0bo","Cada distrito se ve obligado a enviar anualmente un chico y una chica entre los doce y los dieciocho años para que participen en los Hunger Games, unos juegos que son transmitidos en directo por la televisión. Se trata de una lucha a muerte, en la que sólo puede haber un superviviente.",5);

@@ -284,7 +284,7 @@ storage (initial 10k next 10k pctincrease 0);
 CREATE TABLE Binnacle (
     idBinnacle                  NUMBER(7),
     idProduct                   NUMBER(7),
-    oldPrice                    NUMBER(7) CONSTRAINT binnacle_oldPrice_nn NOT NULL,
+    oldPrice                    NUMBER(7),
     newPrice			        NUMBER(7) CONSTRAINT binnacle_newPrice_nn NOT NULL,
     dateBinnacle                DATE CONSTRAINT binnacle_date_nn NOT NULL,
     created_by VARCHAR2(15),

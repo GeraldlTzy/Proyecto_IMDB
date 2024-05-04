@@ -1,3 +1,10 @@
+/******************************************************************************/
+/*
+ *Description: Insert sex
+ *Input: p_name, name of the sex
+ *Output: void
+ */
+/******************************************************************************/
 CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE insertPerson(pSex IN NUMBER, pFirstName IN VARCHAR2, pSecondName IN VARCHAR2,
     pFirstSurname IN VARCHAR2, pSecondSurname IN VARCHAR2, pDatebirth IN DATE, pPhoto IN BLOB,
@@ -433,7 +440,7 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     /**********************Actions User for Product****************************/
     PROCEDURE buyProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pIdPayment IN NUMBER);
     PROCEDURE commentProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pDescription IN VARCHAR);
-    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN NUMBER);
+    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN FLOAT);
     PROCEDURE insertFavorite(pIdUser IN NUMBER, pIdProduct IN NUMBER);
     /**************************************************************************/
     PROCEDURE deleteComment(pIdUser IN NUMBER, pIdProduct IN NUMBER);
@@ -444,6 +451,7 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     pExpiration IN DATE, pCcv IN NUMBER, pOwnerName IN VARCHAR2);
     PROCEDURE removeCard(pIdUser IN NUMBER, pIdCard IN NUMBER);
     /**************************************************************************/
+    FUNCTION getPaymentMethods(pIdUser IN NUMBER) RETURN SYS_REFCURSOR;
     
     ---PROCEDURE updatePswd();
 END pkgEnd_user;
@@ -529,12 +537,16 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         COMMIT;
     END;
     
-    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN NUMBER)
+    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN FLOAT)
     IS
     BEGIN
         INSERT INTO Review(idProduct, idUser, stars)
         VALUES (pIdProduct, pIdUser, pStars);
         COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+            RAISE;
     END;
     
     PROCEDURE insertFavorite(pIdUser IN NUMBER, pIdProduct IN NUMBER)
@@ -590,6 +602,19 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         
         COMMIT;
     END;
+    FUNCTION getPaymentMethods(pIdUser IN NUMBER) RETURN SYS_REFCURSOR
+    IS
+        vMethods SYS_REFCURSOR;
+    BEGIN
+        OPEN vMethods FOR
+            SELECT idCard, cardNumber, expiration, ccv, ownerName
+            FROM card
+            INNER JOIN Payment pay
+            ON idCard = pay.idPayment
+            AND pay.idUser = pIdUser;
+        RETURN vMethods;
+    END;
+        
     /**************************************************************************/    
     
 END pkgEnd_user;
@@ -655,7 +680,7 @@ CREATE OR REPLACE PACKAGE pkgProduct IS
     pDuration IN NUMBER, pSynopsis IN VARCHAR2, pTrailer IN VARCHAR2, pPrice IN NUMBER);
     PROCEDURE deleteParticipant (pIdProduct IN NUMBER, pIdParticipant IN NUMBER);
     PROCEDURE addParticipant(pIdProduct IN NUMBER, pIdParticipant IN NUMBER, pRol IN NUMBER);
-    PROCEDURE addSeason(pIdProduct IN NUMBER, pNumberSeason IN NUMBER, pDuration IN NUMBER, pIdSeason OUT NUMBER);
+    PROCEDURE addSeason(pIdProduct IN NUMBER, pNumberSeason IN NUMBER, pIdSeason OUT NUMBER);
     PROCEDURE removeSeason(pIdSeason IN NUMBER);
     PROCEDURE addEpisode(pIdSeason IN NUMBER,pNumberEpisode IN NUMBER, pName IN VARCHAR2,
     pDuration IN NUMBER);
@@ -666,6 +691,9 @@ CREATE OR REPLACE PACKAGE pkgProduct IS
     PROCEDURE getProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
     vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR,
     vImagesCursor OUT SYS_REFCURSOR);
+    PROCEDURE getAllProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
+    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR, 
+    vImagesCursor OUT SYS_REFCURSOR, vComments OUT SYS_REFCURSOR);
 END pkgProduct;
 /
 CREATE OR REPLACE PACKAGE BODY pkgProduct AS 
@@ -711,11 +739,11 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         COMMIT;
     END;
     
-    PROCEDURE addSeason(pIdProduct IN NUMBER, pNumberSeason IN NUMBER, pDuration IN NUMBER, pIdSeason OUT NUMBER)
+    PROCEDURE addSeason(pIdProduct IN NUMBER, pNumberSeason IN NUMBER, pIdSeason OUT NUMBER)
     IS
     BEGIN
-        INSERT INTO Season(idSeason, idProduct, numberSeason, duration)
-        VALUES (s_season.nextval, pIdProduct, pNumberSeason, pDuration);
+        INSERT INTO Season(idSeason, idProduct, numberSeason)
+        VALUES (s_season.nextval, pIdProduct, pNumberSeason);
         pIdSeason := s_season.currval;
         COMMIT;
     END;
@@ -796,7 +824,7 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
                 ON pro.rol = typeP.idType
                 WHERE pro.idProduct = pIdProduct;
         OPEN vSeasonsCursor FOR
-            SELECT sea.idSeason, sea.numberSeason, sea.duration, epi.idEpisode,
+            SELECT sea.idSeason, sea.numberSeason, epi.idEpisode,
             epi.numberEpisode, epi.name, epi.duration
             FROM season sea
             INNER JOIN product pro
@@ -809,4 +837,46 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
             SELECT idPhoto, image FROM Photo
             WHERE idProduct = pIdProduct;
     END;
+    PROCEDURE getAllProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
+    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR, 
+    vImagesCursor OUT SYS_REFCURSOR, vComments OUT SYS_REFCURSOR)
+    IS
+        ---vProduct SYSREF
+    BEGIN
+        
+        OPEN vProductsCursor FOR
+            SELECT idProduct, idType, releaseYear, title, duration, trailer,
+            synopsis, price
+            FROM product pro 
+            WHERE idProduct = pIdProduct;
+        OPEN vParticipantsCursor FOR
+            SELECT pro.idParticipant, per.firstName, per.firstSurname, typeP.nameType 
+                FROM participantXproduct pro 
+                INNER JOIN Person per
+                ON pro.idParticipant = per.idPerson
+                INNER JOIN typeOfParticipant typeP
+                ON pro.rol = typeP.idType
+                WHERE pro.idProduct = pIdProduct;
+        OPEN vSeasonsCursor FOR
+            SELECT sea.idSeason, sea.numberSeason, epi.idEpisode,
+            epi.numberEpisode, epi.name, epi.duration
+            FROM season sea
+            INNER JOIN product pro
+            ON pro.idProduct = pIdProduct AND sea.idProduct = pro.idProduct
+            LEFT JOIN episode epi
+            ON sea.idProduct = pIdProduct
+            AND sea.idSeason = epi.idSeason
+            ORDER BY sea.idSeason ASC;
+        OPEN vImagesCursor FOR
+            SELECT idPhoto, image FROM Photo
+            WHERE idProduct = pIdProduct;
+        OPEN vComments FOR    
+            SELECT co.idUser, stu.username, co.description, co.creation_date, re.stars
+            FROM REVIEW RE
+            FULL JOIN COMMENTARY CO
+            ON CO.IDPRODUCT = RE.IDPRODUCT
+            AND RE.IDPRODUCT = pIdProduct
+            INNER JOIN systemUser stu
+            ON co.idUser = stu.idSystemUser;
+    END;        
 END pkgProduct;

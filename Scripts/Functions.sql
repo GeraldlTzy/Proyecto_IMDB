@@ -33,7 +33,9 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE getInfoCreationProduct (
         cursorParticipants OUT SYS_REFCURSOR,
         cursorTypeOfParticipant OUT SYS_REFCURSOR,
-        cursorTypeOfProduct OUT SYS_REFCURSOR
+        cursorTypeOfProduct OUT SYS_REFCURSOR,
+        cursorGenres OUT SYS_REFCURSOR,
+        cursorPlatforms OUT SYS_REFCURSOR
     );
     PROCEDURE getInfoRegister (cursorSex OUT SYS_REFCURSOR, cursorTypeOfId OUT SYS_REFCURSOR, 
         cursorNationalities OUT SYS_REFCURSOR);
@@ -49,6 +51,17 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     FUNCTION getTypesParticipant RETURN SYS_REFCURSOR;
     FUNCTION getPlatforms RETURN SYS_REFCURSOR;
     FUNCTION getSexs RETURN SYS_REFCURSOR;
+    /**************************Setters*****************************************/
+    PROCEDURE setNationality (pId IN NUMBER, pName IN VARCHAR2);
+    PROCEDURE setCountry (pId IN NUMBER, pName IN VARCHAR2);
+    PROCEDURE setCity (pId IN NUMBER, pName IN VARCHAR2);
+    PROCEDURE setTypeIdent (pId IN NUMBER, pName IN VARCHAR2);
+    PROCEDURE setCatalog (pId IN NUMBER, pName IN VARCHAR2);
+    PROCEDURE setTypeProduct (pId IN NUMBER, pName IN VARCHAR2);
+    PROCEDURE setTypeParticipant (pId IN NUMBER, pName IN VARCHAR2);
+    PROCEDURE setPlatform (pId IN NUMBER, pName IN VARCHAR2);
+    PROCEDURE setSex (pId IN NUMBER, pName IN VARCHAR2);
+    
 END pkgBasic;
 /
 CREATE OR REPLACE PACKAGE BODY pkgBasic AS
@@ -279,7 +292,9 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
     PROCEDURE getInfoCreationProduct (
         cursorParticipants OUT SYS_REFCURSOR,
         cursorTypeOfParticipant OUT SYS_REFCURSOR,
-        cursorTypeOfProduct OUT SYS_REFCURSOR
+        cursorTypeOfProduct OUT SYS_REFCURSOR,
+        cursorGenres OUT SYS_REFCURSOR,
+        cursorPlatforms OUT SYS_REFCURSOR
     )
     IS
     BEGIN
@@ -295,6 +310,12 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
             
         OPEN cursorTypeOfProduct FOR
             SELECT idType, nickname FROM typeOfProduct;
+        OPEN cursorGenres FOR
+            SELECT idCatalog, genre
+            FROM Catalog;
+        OPEN cursorPlatforms FOR
+            SELECT idPlatform, namePlatform
+            FROM Platform;
     END;
     PROCEDURE getInfoRegister (cursorSex OUT SYS_REFCURSOR, cursorTypeOfId OUT SYS_REFCURSOR, 
         cursorNationalities OUT SYS_REFCURSOR)
@@ -389,6 +410,79 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         RETURN vCursor;
     END;
     
+    /**************************Setters*****************************************/
+    PROCEDURE setNationality (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Nationality
+            SET name = pName
+        WHERE idNationality = pId;
+        COMMIT;
+    END;
+    PROCEDURE setCountry (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Country
+            SET nameCountry = pName
+        WHERE idCountry = pId;
+        COMMIT;
+    END;
+    PROCEDURE setCity (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE City
+            SET nameCity = pName
+        WHERE idCity = pId;
+        COMMIT;
+    END;
+    PROCEDURE setTypeIdent (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE TypeOfIdentification
+            SET nameTypeIdent = pName
+        WHERE idTypeIdent = pId;
+        COMMIT;
+    END;
+    PROCEDURE setCatalog (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Catalog
+            SET genre = pName
+        WHERE idCatalog = pId;
+        COMMIT;
+    END;
+    PROCEDURE setTypeProduct (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE TypeOfProduct
+            SET nickname = pName
+        WHERE idType = pId;
+        COMMIT;
+    END;
+    PROCEDURE setTypeParticipant (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE TypeOfParticipant
+            SET nameType = pName
+        WHERE idType = pId;
+        COMMIT;
+    END;
+    PROCEDURE setPlatform (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Platform
+            SET namePlatform = pName
+        WHERE idPlatform = pId;
+        COMMIT;
+    END;
+    PROCEDURE setSex (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Sex
+            SET sexName = pName
+        WHERE idSex = pId;
+        COMMIT;
+    END;
     
 END pkgBasic;
 /
@@ -831,10 +925,13 @@ CREATE OR REPLACE PACKAGE pkgProduct IS
     FUNCTION getProducts RETURN SYS_REFCURSOR;
     PROCEDURE getProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
     vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR,
-    vImagesCursor OUT SYS_REFCURSOR);
-    PROCEDURE getAllProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
-    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR, 
-    vImagesCursor OUT SYS_REFCURSOR, vComments OUT SYS_REFCURSOR);
+    vImagesCursor OUT SYS_REFCURSOR, vGenresCursor OUT SYS_REFCURSOR,
+        vPlatformsCursor OUT SYS_REFCURSOR);
+    FUNCTION getFullReview(pIdProduct IN NUMBER) RETURN SYS_REFCURSOR;
+    
+    PROCEDURE addGenre (pIdProduct IN NUMBER, pIdGenre IN NUMBER);
+    PROCEDURE addPlatform (pIdProduct IN NUMBER, pIdPlatform IN NUMBER);
+    
 END pkgProduct;
 /
 CREATE OR REPLACE PACKAGE BODY pkgProduct AS 
@@ -946,7 +1043,8 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
     END;
     PROCEDURE getProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
     vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR, 
-    vImagesCursor OUT SYS_REFCURSOR)
+    vImagesCursor OUT SYS_REFCURSOR, vGenresCursor OUT SYS_REFCURSOR,
+        vPlatformsCursor OUT SYS_REFCURSOR)
     IS
         ---vProduct SYSREF
     BEGIN
@@ -977,40 +1075,25 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         OPEN vImagesCursor FOR
             SELECT idPhoto, image FROM Photo
             WHERE idProduct = pIdProduct;
+        OPEN vGenresCursor FOR
+            SELECT ca.idCatalog, ca.Genre
+            FROM CatalogXProduct cxp
+            INNER JOIN Catalog ca
+            ON cxp.idCatalog = ca.idCatalog
+            AND cxp.idProduct = pIdProduct;
+        OPEN vPlatformsCursor FOR
+            SELECT pa.idPlatform, pa.namePlatform
+            FROM ProductXPlatform pxp
+            INNER JOIN Platform pa
+            ON pxp.idPlatform = pa.idPlatform
+            AND pxp.idProduct = pIdProduct;    
+            
     END;
-    PROCEDURE getAllProductInfo(pIdProduct IN NUMBER, vProductsCursor OUT SYS_REFCURSOR,
-    vParticipantsCursor OUT SYS_REFCURSOR, vSeasonsCursor OUT SYS_REFCURSOR, 
-    vImagesCursor OUT SYS_REFCURSOR, vComments OUT SYS_REFCURSOR)
+    
+    FUNCTION getFullReview(pIdProduct IN NUMBER) RETURN SYS_REFCURSOR
     IS
-        ---vProduct SYSREF
+        vComments SYS_REFCURSOR;
     BEGIN
-        
-        OPEN vProductsCursor FOR
-            SELECT idProduct, idType, releaseYear, title, duration, trailer,
-            synopsis, price
-            FROM product pro 
-            WHERE idProduct = pIdProduct;
-        OPEN vParticipantsCursor FOR
-            SELECT pro.idParticipant, per.firstName, per.firstSurname, typeP.nameType 
-                FROM participantXproduct pro 
-                INNER JOIN Person per
-                ON pro.idParticipant = per.idPerson
-                INNER JOIN typeOfParticipant typeP
-                ON pro.rol = typeP.idType
-                WHERE pro.idProduct = pIdProduct;
-        OPEN vSeasonsCursor FOR
-            SELECT sea.idSeason, sea.numberSeason, epi.idEpisode,
-            epi.numberEpisode, epi.name, epi.duration
-            FROM season sea
-            INNER JOIN product pro
-            ON pro.idProduct = pIdProduct AND sea.idProduct = pro.idProduct
-            LEFT JOIN episode epi
-            ON sea.idProduct = pIdProduct
-            AND sea.idSeason = epi.idSeason
-            ORDER BY sea.idSeason ASC;
-        OPEN vImagesCursor FOR
-            SELECT idPhoto, image FROM Photo
-            WHERE idProduct = pIdProduct;
         OPEN vComments FOR    
             SELECT co.idUser, stu.username, co.description, co.creation_date, re.stars
             FROM PRODUCT PRO
@@ -1020,5 +1103,21 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
             ON co.idUser = re.idUser AND co.idProduct = re.idProduct
             INNER JOIN systemUser stu
             ON co.idUser = stu.idSystemUser;
-    END;        
+        RETURN vComments;    
+    END;
+    PROCEDURE addGenre (pIdProduct IN NUMBER, pIdGenre IN NUMBER)
+    IS
+    BEGIN
+        INSERT INTO CatalogXProduct(idProduct, idCatalog)
+        VALUES (pIdProduct, pIdGenre);
+        COMMIT;
+    END;
+    
+    PROCEDURE addPlatform (pIdProduct IN NUMBER, pIdPlatform IN NUMBER)
+    IS
+    BEGIN
+        INSERT INTO ProductXPlatform(idProduct, idPlatform)
+        VALUES (pIdProduct, pIdPlatform);
+        COMMIT;
+    END;
 END pkgProduct;

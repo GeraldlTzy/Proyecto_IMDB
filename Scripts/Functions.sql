@@ -931,6 +931,8 @@ CREATE OR REPLACE PACKAGE pkgProduct IS
     
     PROCEDURE addGenre (pIdProduct IN NUMBER, pIdGenre IN NUMBER);
     PROCEDURE addPlatform (pIdProduct IN NUMBER, pIdPlatform IN NUMBER);
+    PROCEDURE getStatistics(pStatisticsCursor OUT SYS_REFCURSOR,pUsersCursor OUT SYS_REFCURSOR, 
+    pUsersBySexCursor OUT SYS_REFCURSOR, pProductsCursor OUT SYS_REFCURSOR);
     
 END pkgProduct;
 /
@@ -1120,4 +1122,49 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
         VALUES (pIdProduct, pIdPlatform);
         COMMIT;
     END;
+    
+        PROCEDURE getStatistics(pStatisticsCursor OUT SYS_REFCURSOR,pUsersCursor OUT SYS_REFCURSOR, 
+    pUsersBySexCursor OUT SYS_REFCURSOR, pProductsCursor OUT SYS_REFCURSOR)
+    IS 
+        vTotalProducts NUMBER;
+    BEGIN 
+    
+        SELECT COUNT(*) INTO vTotalProducts
+        FROM Product;
+        
+        OPEN pStatisticsCursor FOR 
+            SELECT c.genre AS genre, 100*count(*)/15 AS percentage, count(*) AS ProductsByGenre
+            FROM CatalogXProduct cxp
+            INNER JOIN Catalog c
+            ON c.idCatalog = cxp.idCatalog
+            GROUP BY cxp.idCatalog,c.genre
+            UNION SELECT 'Total',15,null FROM dual;
+        OPEN pUsersCursor FOR
+            SELECT su.username,p.datebirth,p.idSex,TRUNC((SYSDATE - DATEBIRTH)/365) AS age
+            FROM Person p
+            INNER JOIN End_user u
+            ON p.idPerson = u.idUser
+            INNER JOIN systemUser su
+            ON u.idUser = su.idSystemUser
+            ORDER BY p.idSex;
+            
+        OPEN pUsersBySexCursor FOR
+            SELECT s.sexName AS sex, count(*) AS persons
+            FROM Person p
+            INNER JOIN sex s
+            ON s.idSex = p.idSex
+            RIGHT JOIN systemUser su
+            ON p.idPerson = su.idSystemUser
+            GROUP BY s.sexName;
+        OPEN pProductsCursor FOR
+            SELECT p.title, c.genre, p.idProduct
+            FROM Product p
+            INNER JOIN CatalogXProduct cxp
+            ON p.idProduct = cxp.idProduct
+            INNER JOIN Catalog c
+            ON c.idCatalog = cxp.idCatalog
+            ORDER BY p.idProduct;
+            
+    END;
+    
 END pkgProduct;

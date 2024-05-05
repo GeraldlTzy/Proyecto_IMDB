@@ -38,6 +38,17 @@ CREATE OR REPLACE PACKAGE pkgBasic AS
     PROCEDURE getInfoRegister (cursorSex OUT SYS_REFCURSOR, cursorTypeOfId OUT SYS_REFCURSOR, 
         cursorNationalities OUT SYS_REFCURSOR);
     /*Añadir procedimientos para borrar y editar*/
+    
+    
+    /***************************Getters****************************************/
+    FUNCTION getCountries RETURN SYS_REFCURSOR;
+    FUNCTION getCities RETURN SYS_REFCURSOR;
+    FUNCTION getTypesIdents RETURN SYS_REFCURSOR;
+    FUNCTION getCatalogs RETURN SYS_REFCURSOR;
+    FUNCTION getTypesProducts RETURN SYS_REFCURSOR;
+    FUNCTION getTypesParticipant RETURN SYS_REFCURSOR;
+    FUNCTION getPlatforms RETURN SYS_REFCURSOR;
+    FUNCTION getSexs RETURN SYS_REFCURSOR;
 END pkgBasic;
 /
 CREATE OR REPLACE PACKAGE BODY pkgBasic AS
@@ -173,10 +184,11 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         
         OPEN vSystemUserCursor FOR
             SELECT vUserType, pe.idPerson, pe.firstName, pe.firstSurname, pe.datebirth,
-            pe.photo, su.username, su.phoneNumber, su.email, su.pswd
-            FROM Person pe, SystemUser su
+            pe.photo, su.username, su.phoneNumber, su.email, su.pswd, sex.SexName
+            FROM Person pe, SystemUser su, Sex sex
             WHERE su.idSystemUser = vId
-            AND pe.idPerson = vId;
+            AND pe.idPerson = vId
+            AND pe.idSex = sex.idSex;
         RETURN vSystemUserCursor;
         
     EXCEPTION
@@ -298,6 +310,86 @@ CREATE OR REPLACE PACKAGE BODY pkgBasic AS
         OPEN cursorNationalities FOR
         SELECT idNationality, name FROM Nationality;
     END;
+    
+    
+    FUNCTION getCountries RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idCountry, nameCountry
+            FROM Country
+            ORDER BY nameCountry;
+        RETURN vCursor;
+    END;
+    FUNCTION getCities RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT ct.idCity, co.nameCountry || ', ' || ct.nameCity
+            FROM City ct
+            INNER JOIN country co
+            ON ct.idCountry = co.idCountry
+            ORDER BY nameCountry;
+        RETURN vCursor;
+    END;
+    FUNCTION getTypesIdents RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idTypeIdent, nameTypeIdent
+            FROM typeOfIdentification;
+        RETURN vCursor;
+    END;
+    FUNCTION getCatalogs RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idCatalog, genre
+            FROM Catalog;
+        RETURN vCursor;
+    END;
+    FUNCTION getTypesProducts RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idType, nickname
+            FROM typeOfProduct;
+        RETURN vCursor;
+    END;
+    FUNCTION getTypesParticipant RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idType, nameType
+            FROM typeOfParticipant;
+        RETURN vCursor;
+    END;
+    FUNCTION getPlatforms RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idPlatform, namePlatform
+            FROM Platform;
+        RETURN vCursor;
+    END;
+    FUNCTION getSexs RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idSex, sexName
+            FROM sex;
+        RETURN vCursor;
+    END;
+    
+    
 END pkgBasic;
 /
 /******************************************************************************/
@@ -440,18 +532,22 @@ CREATE OR REPLACE PACKAGE pkgEnd_user IS
     /**********************Actions User for Product****************************/
     PROCEDURE buyProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pIdPayment IN NUMBER);
     PROCEDURE commentProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pDescription IN VARCHAR);
-    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN FLOAT);
+    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN NUMBER);
     PROCEDURE insertFavorite(pIdUser IN NUMBER, pIdProduct IN NUMBER);
     /**************************************************************************/
     PROCEDURE deleteComment(pIdUser IN NUMBER, pIdProduct IN NUMBER);
     PROCEDURE deleteReview (pIdUser IN NUMBER, pIdProduct IN NUMBER);
     PROCEDURE deleteFavorite(pIdUser IN NUMBER, pIdProduct IN NUMBER);
     /**************************************************************************/
+    PROCEDURE updateComment(pIdUser IN NUMBER, pIdProduct IN NUMBER, pDescription IN VARCHAR);
+    PROCEDURE updateReview(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN NUMBER);
+    /**************************************************************************/
     PROCEDURE insertCard(pIdUser IN NUMBER, pCardNumber IN NUMBER, 
     pExpiration IN DATE, pCcv IN NUMBER, pOwnerName IN VARCHAR2);
     PROCEDURE removeCard(pIdUser IN NUMBER, pIdCard IN NUMBER);
     /**************************************************************************/
     FUNCTION getPaymentMethods(pIdUser IN NUMBER) RETURN SYS_REFCURSOR;
+    FUNCTION getWishlist(pIdUser IN NUMBER) RETURN SYS_REFCURSOR;
     
     ---PROCEDURE updatePswd();
 END pkgEnd_user;
@@ -536,8 +632,20 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
         VALUES (pIdProduct, pIdUser, pDescription);
         COMMIT;
     END;
+    PROCEDURE updateComment(pIdUser IN NUMBER, pIdProduct IN NUMBER, pDescription IN VARCHAR)
+    IS
+    BEGIN
+        UPDATE Commentary
+        SET description = pDescription
+        WHERE idUser = pIdUser AND idProduct = pIdProduct;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE;
+    END;
     
-    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN FLOAT)
+    /**************************************************************************/
+    PROCEDURE reviewProduct(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN NUMBER)
     IS
     BEGIN
         INSERT INTO Review(idProduct, idUser, stars)
@@ -549,13 +657,46 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user AS
             RAISE;
     END;
     
+    PROCEDURE updateReview(pIdUser IN NUMBER, pIdProduct IN NUMBER, pStars IN NUMBER)
+    IS
+    BEGIN
+        UPDATE Review
+        SET stars = pStars
+        WHERE idUser = pIdUser AND idProduct = pIdProduct;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE;
+    END;
+    
     PROCEDURE insertFavorite(pIdUser IN NUMBER, pIdProduct IN NUMBER)
     IS
     BEGIN
         INSERT INTO Wishlist(idProduct, idUser)
-        VALUES (pIdUser, pIdProduct);
+        VALUES (pIdProduct, pIdUser);
         COMMIT;
     END;
+    
+    FUNCTION getWishlist(pIdUser IN NUMBER) RETURN SYS_REFCURSOR
+    IS
+        vWishlistCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vWishlistCursor FOR
+            SELECT wl.idProduct, pd.Title, ph.image
+            FROM Wishlist wl
+            INNER JOIN Product pd
+            ON wl.idProduct = pd.idProduct AND wl.idUser = pIdUser
+            INNER JOIN (
+                SELECT idProduct, image
+                FROM (
+                    SELECT ph.idProduct, ph.image, ROW_NUMBER() OVER (PARTITION BY ph.idProduct ORDER BY ph.idProduct) AS rn
+                    FROM Photo ph
+                    ) WHERE rn = 1
+                ) ph
+            ON ph.idProduct = pd.idProduct;
+        RETURN vWishlistCursor; 
+    END;
+    
     /**Delete procedures**/
     PROCEDURE deleteComment(pIdUser IN NUMBER, pIdProduct IN NUMBER)
     IS
@@ -872,10 +1013,11 @@ CREATE OR REPLACE PACKAGE BODY pkgProduct AS
             WHERE idProduct = pIdProduct;
         OPEN vComments FOR    
             SELECT co.idUser, stu.username, co.description, co.creation_date, re.stars
-            FROM REVIEW RE
-            FULL JOIN COMMENTARY CO
-            ON CO.IDPRODUCT = RE.IDPRODUCT
-            AND RE.IDPRODUCT = pIdProduct
+            FROM PRODUCT PRO
+            INNER JOIN REVIEW RE
+            ON RE.IDPRODUCT = PRO.IDPRODUCT AND PRO.IDPRODUCT = pIdProduct
+            INNER JOIN COMMENTARY co
+            ON co.idUser = re.idUser AND co.idProduct = re.idProduct
             INNER JOIN systemUser stu
             ON co.idUser = stu.idSystemUser;
     END;        

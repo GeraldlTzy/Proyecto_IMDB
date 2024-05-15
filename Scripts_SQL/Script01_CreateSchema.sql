@@ -5,11 +5,13 @@ SHOW VARIABLES LIKE 'default_storage_engine';
 
 CREATE USER 'su'@'localhost' IDENTIFIED BY 'su';
 GRANT CREATE ON su.* TO 'su'@'localhost';
-
+GRANT DROP ON su.* TO 'su'@'localhost';
+GRANT SELECT ON su.* TO 'su'@'localhost';
+GRANT DELETE ON su.* TO 'su'@'localhost';
 /*
  * Se supone que no funcionan igual que los de oracle, habrá que usar
  * esquemas creo
- * CREATE TABLESPACE tablespace_name;
+ * CREATE TABLESPACE tb1;
  * DROP TABLESPACE tablespace_name;
  * InnoDB and NDB:
  *   [ADD DATAFILE 'file_name']

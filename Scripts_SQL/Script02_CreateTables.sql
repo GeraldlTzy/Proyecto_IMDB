@@ -1,8 +1,5 @@
 /*Tables*/
-/*DROP TABLE TypeOfIdentification;
-DROP TABLE
-DROP TABLE*/
-CREATE TABLE TypeOfIdentification (
+CREATE OR REPLACE TABLE TypeOfIdentification (
     idTypeIdent 				INT UNSIGNED AUTO_INCREMENT,
     nameTypeIdent 				VARCHAR(20) NOT NULL,
     created_by 					VARCHAR(15),
@@ -10,11 +7,9 @@ CREATE TABLE TypeOfIdentification (
     updated_by 					VARCHAR(15),
     update_date 				DATE,
     PRIMARY KEY (idTypeIdent)
-) ENGINE=InnoDB
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
+);
 /******************Atributes for person*************/
-CREATE TABLE Sex (
+CREATE OR REPLACE TABLE Sex (
 	idSex			        	INT UNSIGNED AUTO_INCREMENT,
 	sexName		            	VARCHAR(10),
     created_by 			    	VARCHAR(15),
@@ -24,7 +19,7 @@ CREATE TABLE Sex (
     PRIMARY KEY (idSex)
 );
 
-CREATE TABLE Nationality (
+CREATE OR REPLACE TABLE Nationality (
     idNationality               INT UNSIGNED AUTO_INCREMENT,
     name                        VARCHAR(50) NOT NULL,
     created_by 					VARCHAR(15),
@@ -35,7 +30,7 @@ CREATE TABLE Nationality (
 );
 /*****************************************************************************/
 /************************Atributes for participant****************************/
-CREATE TABLE country (
+CREATE OR REPLACE TABLE country (
 	idCountry                   INT UNSIGNED AUTO_INCREMENT,
 	nameCountry                 VARCHAR(100) NOT NULL,
     created_by 					VARCHAR(15),
@@ -45,9 +40,9 @@ CREATE TABLE country (
     PRIMARY KEY (idCountry)
 );
 
-CREATE TABLE city (
+CREATE OR REPLACE TABLE city (
 	idCity                      INT UNSIGNED AUTO_INCREMENT,
-	idCountry                   INT UNSIGNED AUTO_INCREMENT,
+	idCountry                   INT UNSIGNED,
     nameCity                    VARCHAR(100) NOT NULL,
     constraint fk_city_country foreign key (idCountry) 
     references Country(idCountry),
@@ -58,7 +53,7 @@ CREATE TABLE city (
     PRIMARY KEY (idCity)
 );
 
-create table Relative (
+CREATE OR REPLACE TABLE Relative (
     idRelative                  INT UNSIGNED AUTO_INCREMENT,
     kindship                    VARCHAR(30) NOT NULL,
     created_by 					VARCHAR(15),
@@ -68,9 +63,9 @@ create table Relative (
     PRIMARY KEY (idRelative)
 );
 /*****************************************************************************/
-CREATE TABLE Person (
+CREATE OR REPLACE TABLE Person (
   	idPerson                    INT UNSIGNED AUTO_INCREMENT,
-   	idSex			            INT UNSIGNED AUTO_INCREMENT,
+   	idSex			            INT UNSIGNED,
     firstName                   VARCHAR(20) NOT NULL,
 	secondName                  VARCHAR(20),
 	firstSurname                VARCHAR(20) NOT NULL,
@@ -85,9 +80,9 @@ CREATE TABLE Person (
     PRIMARY KEY (idPerson)
 );
 /**********************Tables with relation to Person*************************/
-CREATE TABLE nationalityPerson (
-	idPerson                   INT UNSIGNED AUTO_INCREMENT NOT NULL,
-	idNationality              INT UNSIGNED AUTO_INCREMENT NOT NULL,
+CREATE OR REPLACE TABLE nationalityPerson (
+	idPerson                   	INT UNSIGNED NOT NULL,
+	idNationality              	INT UNSIGNED NOT NULL,
     constraint fk_natPerson_person foreign key (idPerson) references Person(idPerson),
     constraint fk_natPerson_nationality foreign key (idNationality) references Nationality(idNationality),
     created_by 				    VARCHAR(15),
@@ -97,8 +92,8 @@ CREATE TABLE nationalityPerson (
     PRIMARY KEY(idPerson, idNationality)
 );
 /*****************************************************************************/
-CREATE TABLE systemUser (
-	idSystemUser                INT UNSIGNED AUTO_INCREMENT,
+CREATE OR REPLACE TABLE systemUser (
+	idSystemUser                INT UNSIGNED,
 	username                    VARCHAR(20) NOT NULL,
 	phoneNumber                 INT NOT NULL,
 	email                       VARCHAR(20) NOT NULL,
@@ -111,10 +106,10 @@ CREATE TABLE systemUser (
     PRIMARY KEY(idSystemUser)
 );
 /****************************Tables with relation to SystemUser****************/
-CREATE TABLE Identification(
+CREATE OR REPLACE TABLE Identification(
     idIdentification            INT UNSIGNED AUTO_INCREMENT,
-    idTypeIdent                 INT UNSIGNED AUTO_INCREMENT,
-    identNumber                 INT UNSIGNED AUTO_INCREMENT,
+    idTypeIdent                 INT UNSIGNED,
+    identNumber                 INT,
     created_by 					VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
@@ -124,9 +119,9 @@ CREATE TABLE Identification(
     PRIMARY KEY (idIdentification)
 );
 
-CREATE TABLE IdentXSystem (
-    idIdent                     INT UNSIGNED AUTO_INCREMENT,
-    idSystemUser                INT UNSIGNED AUTO_INCREMENT,
+CREATE OR REPLACE TABLE IdentXSystem (
+    idIdent                     INT UNSIGNED,
+    idSystemUser                INT UNSIGNED,
     created_by 					VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
@@ -138,8 +133,8 @@ CREATE TABLE IdentXSystem (
     PRIMARY KEY (idIdent, idSystemUser)
 );
 /*****************************************************************************/
-CREATE TABLE end_user (
-	idUser                     	INT UNSIGNED AUTO_INCREMENT,
+CREATE OR REPLACE TABLE end_user (
+	idUser                     	INT UNSIGNED,
     created_by 				   	VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
@@ -149,8 +144,8 @@ CREATE TABLE end_user (
     PRIMARY KEY (idUser)
 );
 
-CREATE TABLE administrator (
-	idAdministrator            	INT UNSIGNED AUTO_INCREMENT,
+CREATE OR REPLACE TABLE administrator (
+	idAdministrator            	INT UNSIGNED,
     created_by 					VARCHAR(15),
     creation_date	 			DATE,
     updated_by 					VARCHAR(15),
@@ -160,9 +155,9 @@ CREATE TABLE administrator (
     PRIMARY KEY (idAdministrator)
 );
 /*****************************************************************************/
-CREATE TABLE participant (
-	idParticipant               INT UNSIGNED AUTO_INCREMENT,
-	idCity                      INT UNSIGNED AUTO_INCREMENT,
+CREATE OR REPLACE TABLE participant (
+	idParticipant               INT UNSIGNED,
+	idCity                      INT UNSIGNED,
 	biography                   VARCHAR(500) NOT NULL,	
 	height                      INT NOT NULL,
 	trivia                      VARCHAR(500) NOT NULL,
@@ -175,7 +170,7 @@ CREATE TABLE participant (
     PRIMARY KEY (idParticipant)
 );
 /******************************************************************************/
-CREATE TABLE typeOfProduct (
+CREATE OR REPLACE TABLE typeOfProduct (
 	idType                      INT UNSIGNED AUTO_INCREMENT,	
 	nickname                    VARCHAR(100) NOT NULL,
     created_by 					VARCHAR(15),
@@ -185,9 +180,9 @@ CREATE TABLE typeOfProduct (
     PRIMARY KEY (idType)
 );
 
-CREATE TABLE product (
+CREATE OR REPLACE TABLE product (
 	idProduct                   INT UNSIGNED AUTO_INCREMENT,
-	idType                      INT UNSIGNED AUTO_INCREMENT,	
+	idType                      INT UNSIGNED,	
 	releaseYear                 INT NOT NULL,
 	title                       VARCHAR(200) NOT NULL,
 	duration                    INT NOT NULL,
@@ -202,9 +197,9 @@ CREATE TABLE product (
     PRIMARY KEY (idProduct)
 );
 /*************************Atributes for product********************************/
-CREATE TABLE Binnacle (
+CREATE OR REPLACE TABLE Binnacle (
     idBinnacle                  INT UNSIGNED AUTO_INCREMENT,
-    idProduct                   INT UNSIGNED AUTO_INCREMENT,
+    idProduct                   INT UNSIGNED,
     oldPrice                    INT,
     newPrice			        INT NOT NULL,
     dateBinnacle                DATE NOT NULL,
@@ -216,9 +211,9 @@ CREATE TABLE Binnacle (
     PRIMARY KEY (idBinnacle)
 );
 
-CREATE TABLE Season(
+CREATE OR REPLACE TABLE Season(
     idSeason                    INT UNSIGNED AUTO_INCREMENT,
-    idProduct                   INT UNSIGNED AUTO_INCREMENT,
+    idProduct                   INT UNSIGNED,
     numberSeason                INT,
     duration                    INT,
     created_by 					VARCHAR(15),
@@ -229,9 +224,9 @@ CREATE TABLE Season(
     PRIMARY KEY (idSeason)
 );
 
-CREATE TABLE Episode(
+CREATE OR REPLACE TABLE Episode(
     idEpisode                   INT UNSIGNED AUTO_INCREMENT,
-    idSeason                    INT UNSIGNED AUTO_INCREMENT,
+    idSeason                    INT UNSIGNED,
     numberEpisode               INT,
     name                        VARCHAR(20),
     duration                    INT,
@@ -243,9 +238,9 @@ CREATE TABLE Episode(
     PRIMARY KEY (idEpisode)
 );
 
-CREATE TABLE Photo(
+CREATE OR REPLACE TABLE Photo(
     idPhoto                     INT UNSIGNED AUTO_INCREMENT,
-    idProduct                   INT UNSIGNED AUTO_INCREMENT,
+    idProduct                   INT UNSIGNED,
     image                       BLOB,
     created_by 					VARCHAR(15),
     creation_date 				DATE,
@@ -254,3 +249,167 @@ CREATE TABLE Photo(
     CONSTRAINT fk_photo_product FOREIGN KEY (idProduct) REFERENCES Product(idProduct),
     PRIMARY KEY (idPhoto)
 );
+/******************************************************************************/
+CREATE OR REPLACE TABLE typeOfParticipant (
+	idType                      INT UNSIGNED AUTO_INCREMENT,	
+	nameType                    VARCHAR(100) NOT NULL,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    PRIMARY KEY (idType)
+);
+
+CREATE OR REPLACE TABLE ParticipantXProduct (
+	idParticipant               INT UNSIGNED,	
+	idProduct                   INT UNSIGNED,
+    rol                         INT UNSIGNED,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    constraint fk_PartXPro_participant foreign key (idParticipant) references participant(idParticipant),
+    constraint fk_PartXPro_product foreign key (idProduct) references product(idProduct),
+    constraint fk_PartXPro_typepart foreign key (rol) references TypeOfParticipant(idType),
+    PRIMARY KEY (idParticipant, idProduct, rol)
+);
+
+CREATE OR REPLACE TABLE ParticipantXRelative (
+	idParticipant               INT UNSIGNED,	
+	idParticipant2              INT UNSIGNED,
+    idRelative                  INT UNSIGNED,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    constraint fk_PartXRela_part foreign key (idParticipant) references participant(idParticipant),
+    constraint fk_PartXRela_part2 foreign key (idParticipant2) references participant(idParticipant),
+    constraint fk_PartXRela_rela foreign key (idRelative) references Relative(idRelative),
+    PRIMARY KEY (idParticipant, idParticipant2)
+);
+/******************************************************************************/
+CREATE OR REPLACE TABLE payment (
+	idPayment                  	INT UNSIGNED AUTO_INCREMENT,
+	idUser                     	INT UNSIGNED,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    constraint fk_payment_user foreign key (idUser) references end_user(idUser),
+    PRIMARY KEY (idPayment)
+);
+
+CREATE OR REPLACE TABLE card (
+    idCard                      INT UNSIGNED AUTO_INCREMENT,
+    cardNumber                  INT NOT NULL,
+    expiration                  DATE NOT NULL,
+    ccv                         INT NOT NULL,
+    ownerName                   VARCHAR(20) NOT NULL,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    constraint fk_card_payment foreign key (idCard) references payment(idPayment),
+    PRIMARY KEY (idCard)
+);
+/******************************************************************************/
+CREATE OR REPLACE TABLE Wishlist (
+	idUser                     	INT UNSIGNED,
+	idProduct                  	INT UNSIGNED,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    constraint fk_Wishlist_user foreign key (idUser) references end_user(idUser),
+    constraint fk_Wishlist_product foreign key (idProduct) references product(idProduct),
+    PRIMARY KEY (idProduct, idUser)
+);
+
+
+CREATE OR REPLACE TABLE Purchase (	
+	idUser                      INT UNSIGNED,
+    idProduct                   INT UNSIGNED,
+    idPayment                   INT UNSIGNED,
+	history                     date not null,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    constraint fk_purchase_user foreign key (idUser) references end_user(idUser),
+    constraint fk_purchase_product foreign key (idProduct) references Product(idProduct),
+    constraint fk_purchase_payment foreign key (idPayment) references Payment(idPayment),
+    PRIMARY KEY (idUser, idProduct)
+);
+
+/******************************************************************************/
+CREATE OR REPLACE TABLE catalog (
+	idCatalog                   INT UNSIGNED AUTO_INCREMENT,
+	genre                       VARCHAR(20) NOT NULL,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    PRIMARY KEY (idCatalog)
+);
+/******************************************************************************/
+CREATE OR REPLACE TABLE CatalogxProduct (
+	idCatalog                  	INT UNSIGNED,	
+	idProduct                  	INT UNSIGNED,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+	FOREIGN KEY (idCatalog) REFERENCES catalog(idCatalog),
+	FOREIGN KEY (idProduct) REFERENCES product(idProduct),
+	PRIMARY KEY (idCatalog, idProduct)
+);
+/******************************************************************************/
+CREATE OR REPLACE TABLE platform (
+	idPlatform                  INT UNSIGNED AUTO_INCREMENT,
+	namePlatform                VARCHAR(20) NOT NULL,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    PRIMARY KEY (idPlatform)
+);
+
+create OR REPLACE table ProductXPlatform (
+    idProduct                   INT UNSIGNED,
+    idPlatform                  INT UNSIGNED,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    constraint fk_ProductXPlatform_product foreign key (idProduct) references product(idProduct),
+    constraint fk_ProductXPlatform_platform foreign key (idPlatform) references platform(idPlatform),
+    PRIMARY KEY(idProduct, idPlatform)
+);
+
+/******************************************************************************/
+CREATE OR REPLACE TABLE review (	
+	idProduct              		INT UNSIGNED,
+    idUser                 		INT UNSIGNED,
+	stars                  		INT,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    constraint fk_review_product foreign key (idProduct) references product(idProduct),
+    constraint fk_review_user foreign key (idUser) references end_user(idUser),
+    PRIMARY KEY (idProduct, idUser)
+);
+/*******************************************/
+CREATE OR REPLACE TABLE commentary (
+	idProduct              		INT UNSIGNED,
+    idUser                 		INT UNSIGNED,
+    description             	VARCHAR(500) NOT NULL,
+    created_by 					VARCHAR(15),
+    creation_date 				DATE,
+    updated_by 					VARCHAR(15),
+    update_date 				DATE,
+    constraint fk_commentary_product foreign key (idProduct) references product(idProduct),
+    constraint fk_commentary_user foreign key (idUser) references end_user(idUser),
+    PRIMARY KEY (idProduct, idUser)
+);
+/******************************************************************************/

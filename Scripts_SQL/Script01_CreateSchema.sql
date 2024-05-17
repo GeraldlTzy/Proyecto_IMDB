@@ -1,13 +1,13 @@
-CREATE SCHEMA IF NOT EXISTS SU;
+CREATE SCHEMA IF NOT EXISTS su;
 
-/*See the engine*/
-SHOW VARIABLES LIKE 'default_storage_engine';
+create role su_user;
+create user 'su'@'localhost' IDENTIFIED BY 'su';
+grant select, drop, insert, update, create, alter, delete on su.* to 'su'@'localhost';
+grant create routine, alter routine on su.* to 'su'@'localhost'
 
-CREATE USER 'su'@'localhost' IDENTIFIED BY 'su';
-GRANT CREATE ON su.* TO 'su'@'localhost';
-GRANT DROP ON su.* TO 'su'@'localhost';
-GRANT SELECT ON su.* TO 'su'@'localhost';
-GRANT DELETE ON su.* TO 'su'@'localhost';
+/*drop user 'su'@'localhost';
+create user 'su'@'localhost' IDENTIFIED BY 'su';
+grant su_user to 'su'@'localhost';*/
 /*
  * Se supone que no funcionan igual que los de oracle, habrá que usar
  * esquemas creo

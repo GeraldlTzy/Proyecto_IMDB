@@ -136,37 +136,31 @@ BEGIN
 END
 //
 /*******************CONTINUAR APARTIR DE ACÁ***************/
-/*CREATE OR REPLACE FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2, newPhone IN NUMBER)
-    RETURN SYS_REFCURSOR 
-    IS 
-        existentNames SYS_REFCURSOR;
-        usernamesCount NUMBER(8);
-        emailsCount NUMBER(8);
-        phonesCount NUMBER(8);
-    BEGIN
-        SELECT count(username) 
-        INTO usernamesCount
-        FROM systemUser 
-        WHERE username = newUsername;
-        
-        SELECT count(email) 
-        INTO emailsCount
-        FROM systemUser 
-        WHERE email = newEmail;
-        
-        SELECT count(phoneNumber) 
-        INTO phonesCount
-        FROM systemUser 
-        WHERE phoneNumber = newPhone;
-        
-        OPEN existentNames FOR
-        SELECT usernamesCount AS usernamesCount ,emailsCount AS emailsCount, phonesCount AS phonesCount
-        FROM DUAL;
-        
-        RETURN existentNames;
-    END;
+CREATE OR REPLACE FUNCTION validateRegister(
+    IN pUsername VARCHAR(20), 
+    IN pEmail VARCHAR(20)
+)
+RETURNS BOOLEAN
+BEGIN
+    DECLARE usernamesCount INT;
+    DECLARE emailsCount INT;
+    
+    SELECT COUNT(*) INTO usernamesCount 
+    FROM systemuser 
+    WHERE username = pUsername;
+    
+    SELECT COUNT(*) INTO emailsCount
+    FROM systemuser
+    WHERE email = pEmail;
+    
+    IF usernamesCount = 0 AND emailsCount = 0 THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END
 //
-*/
+
 CREATE OR REPLACE PROCEDURE getNationality(IN pIdNationality int)
     BEGIN
         SELECT idNationality, name
@@ -200,50 +194,15 @@ CREATE OR REPLACE PROCEDURE getInfoInsertParticipant()
         ORDER BY name;    
     END;
 //
-/*HAcer despues
-CREATE OR REPLACE PROCEDURE getInfoCreationProduct (
-        cursorParticipants OUT SYS_REFCURSOR,
-        cursorTypeOfParticipant OUT SYS_REFCURSOR,
-        cursorTypeOfProduct OUT SYS_REFCURSOR,
-        cursorGenres OUT SYS_REFCURSOR,
-        cursorPlatforms OUT SYS_REFCURSOR
-    )
-    IS
+CREATE OR REPLACE PROCEDURE getParticipants()
     BEGIN
-        OPEN cursorTypeOfParticipant FOR
-            SELECT idType, nameType FROM TypeOfParticipant;
-        
-        OPEN cursorParticipants FOR
-            SELECT idPerson, firstName || ' ' || secondName || ' ' || firstSurname
-            || ' ' || secondSurname, photo
-            FROM Person pe
-            INNER JOIN Participant pa
-            ON pe.idPerson = pa.idParticipant;
-            
-        OPEN cursorTypeOfProduct FOR
-            SELECT idType, nickname FROM typeOfProduct;
-        OPEN cursorGenres FOR
-            SELECT idCatalog, genre
-            FROM Catalog;
-        OPEN cursorPlatforms FOR
-            SELECT idPlatform, namePlatform
-            FROM Platform;
+        SELECT idPerson, firstName || ' ' || secondName || ' ' || firstSurname
+        || ' ' || secondSurname fullname, photo
+        FROM Person pe
+        INNER JOIN Participant pa
+        ON pe.idPerson = pa.idParticipant;
     END;
-    PROCEDURE getInfoRegister (cursorSex OUT SYS_REFCURSOR, cursorTypeOfId OUT SYS_REFCURSOR, 
-        cursorNationalities OUT SYS_REFCURSOR)
-        IS 
-        BEGIN 
-
-        OPEN cursorSex FOR 
-        SELECT idSex,sexname FROM sex;
-
-        OPEN cursorTypeOfId FOR
-        SELECT idTypeIdent, nameTypeIdent FROM typeOfIdentification;
-
-        OPEN cursorNationalities FOR
-        SELECT idNationality, name FROM Nationality;
-    END;*/
-
+//
 CREATE OR REPLACE PROCEDURE getCountries()
     BEGIN
         SELECT idCountry, nameCountry

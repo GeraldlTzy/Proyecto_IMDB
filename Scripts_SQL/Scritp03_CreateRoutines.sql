@@ -136,7 +136,7 @@ BEGIN
 END
 //
 /*******************CONTINUAR APARTIR DE ACÁ***************/
-CREATE OR REPLACE FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2, newPhone IN NUMBER)
+/*CREATE OR REPLACE FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2, newPhone IN NUMBER)
     RETURN SYS_REFCURSOR 
     IS 
         existentNames SYS_REFCURSOR;
@@ -166,14 +166,15 @@ CREATE OR REPLACE FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN
         RETURN existentNames;
     END;
 //
-CREATE OR REPLACE FUNCTION getNationality(IN pIdNationality int)
+*/
+CREATE OR REPLACE PROCEDURE getNationality(IN pIdNationality int)
     BEGIN
         SELECT idNationality, name
         FROM nationality
         WHERE idNationality = NVL(pIdNationality, idNationality);
     END;
 //  
-CREATE OR REPLACE FUNCTION getTypeOfId 
+CREATE OR REPLACE PROCEDURE getTypeOfId()
     BEGIN
         SELECT idTypeIdent, nameTypeIdent
         FROM TypeOfIdentification;
@@ -183,28 +184,24 @@ CREATE OR REPLACE PROCEDURE insertBinnacle(IN pIdProduct int UNSIGNED, IN pOldPr
 	IN pNewPrice int, IN pDateBinnacle DATE) 
     BEGIN
         INSERT INTO Binnacle(IdProduct,oldPrice,newPrice,dateBinnacle)
-        VALUES (,pIdProduct,pOldPrice,pNewPrice, pDateBinnacle);
-        ---COMMIT;
+        VALUES (pIdProduct,pOldPrice,pNewPrice, pDateBinnacle);
+        /*---COMMIT;*/
     END;
 //
-    FUNCTION getInfoInsertParticipant(pIdParticipant IN NUMBER)
-    RETURN SYS_REFCURSOR
-    IS
-        infoCursor SYS_REFCURSOR;
-    BEGIN
-        OPEN infoCursor FOR
-            SELECT idNationality, name, 'Nationality' as fuente from nationality
-            UNION
-            /*SELECT idSex, sexname, 'Sex' as fuente from sex
-            UNION */
-            SELECT c.idCity AS city_id, co.nameCountry || ', ' || c.nameCity AS city_country, 'City' as fuente
-            FROM city c
-            INNER JOIN country co ON c.idCountry = co.idCountry
-            ORDER BY name;
-        RETURN infoCursor;    
+CREATE OR REPLACE PROCEDURE getInfoInsertParticipant()
+   BEGIN
+        SELECT idNationality, name, 'Nationality' as fuente from nationality
+        UNION
+        /*SELECT idSex, sexname, 'Sex' as fuente from sex
+        UNION */
+        SELECT c.idCity AS city_id, co.nameCountry || ', ' || c.nameCity AS city_country, 'City' as fuente
+        FROM city c
+        INNER JOIN country co ON c.idCountry = co.idCountry
+        ORDER BY name;    
     END;
-      
-    PROCEDURE getInfoCreationProduct (
+//
+/*HAcer despues
+CREATE OR REPLACE PROCEDURE getInfoCreationProduct (
         cursorParticipants OUT SYS_REFCURSOR,
         cursorTypeOfParticipant OUT SYS_REFCURSOR,
         cursorTypeOfProduct OUT SYS_REFCURSOR,
@@ -245,159 +242,142 @@ CREATE OR REPLACE PROCEDURE insertBinnacle(IN pIdProduct int UNSIGNED, IN pOldPr
 
         OPEN cursorNationalities FOR
         SELECT idNationality, name FROM Nationality;
-    END;
-    
-    
-    FUNCTION getCountries RETURN SYS_REFCURSOR
-    IS
-        vCursor SYS_REFCURSOR;
+    END;*/
+
+CREATE OR REPLACE PROCEDURE getCountries()
     BEGIN
-        OPEN vCursor FOR
-            SELECT idCountry, nameCountry
-            FROM Country
-            ORDER BY nameCountry;
-        RETURN vCursor;
+        SELECT idCountry, nameCountry
+        FROM Country
+        ORDER BY nameCountry;
     END;
-    FUNCTION getCities RETURN SYS_REFCURSOR
-    IS
-        vCursor SYS_REFCURSOR;
+//
+CREATE OR REPLACE PROCEDURE getCities()
+	BEGIN
+        SELECT ct.idCity, co.nameCountry || ', ' || ct.nameCity
+        FROM City ct
+        INNER JOIN country co
+        ON ct.idCountry = co.idCountry
+        ORDER BY nameCountry;
+    END;
+//
+CREATE OR REPLACE PROCEDURE getTypesIdents()
     BEGIN
-        OPEN vCursor FOR
-            SELECT ct.idCity, co.nameCountry || ', ' || ct.nameCity
-            FROM City ct
-            INNER JOIN country co
-            ON ct.idCountry = co.idCountry
-            ORDER BY nameCountry;
-        RETURN vCursor;
+        SELECT idTypeIdent, nameTypeIdent
+        FROM typeOfIdentification;
     END;
-    FUNCTION getTypesIdents RETURN SYS_REFCURSOR
-    IS
-        vCursor SYS_REFCURSOR;
+//
+CREATE OR REPLACE PROCEDURE getCatalogs()
     BEGIN
-        OPEN vCursor FOR
-            SELECT idTypeIdent, nameTypeIdent
-            FROM typeOfIdentification;
-        RETURN vCursor;
+        SELECT idCatalog, genre
+        FROM Catalog;
     END;
-    FUNCTION getCatalogs RETURN SYS_REFCURSOR
-    IS
-        vCursor SYS_REFCURSOR;
+//
+CREATE OR REPLACE PROCEDURE getTypesProducts()
+	BEGIN
+        SELECT idType, nickname
+        FROM typeOfProduct;
+    END;
+//
+
+CREATE OR REPLACE PROCEDURE getTypesParticipant()
+	BEGIN
+
+        SELECT idType, nameType
+        FROM typeOfParticipant;
+	END;
+//    
+CREATE OR REPLACE PROCEDURE getPlatforms()
     BEGIN
-        OPEN vCursor FOR
-            SELECT idCatalog, genre
-            FROM Catalog;
-        RETURN vCursor;
+        SELECT idPlatform, namePlatform
+        FROM Platform;
     END;
-    FUNCTION getTypesProducts RETURN SYS_REFCURSOR
-    IS
-        vCursor SYS_REFCURSOR;
+//
+CREATE OR REPLACE PROCEDURE getSexs()
     BEGIN
-        OPEN vCursor FOR
-            SELECT idType, nickname
-            FROM typeOfProduct;
-        RETURN vCursor;
+        SELECT idSex, sexName
+        FROM sex;
     END;
-    FUNCTION getTypesParticipant RETURN SYS_REFCURSOR
-    IS
-        vCursor SYS_REFCURSOR;
-    BEGIN
-        OPEN vCursor FOR
-            SELECT idType, nameType
-            FROM typeOfParticipant;
-        RETURN vCursor;
-    END;
-    FUNCTION getPlatforms RETURN SYS_REFCURSOR
-    IS
-        vCursor SYS_REFCURSOR;
-    BEGIN
-        OPEN vCursor FOR
-            SELECT idPlatform, namePlatform
-            FROM Platform;
-        RETURN vCursor;
-    END;
-    FUNCTION getSexs RETURN SYS_REFCURSOR
-    IS
-        vCursor SYS_REFCURSOR;
-    BEGIN
-        OPEN vCursor FOR
-            SELECT idSex, sexName
-            FROM sex;
-        RETURN vCursor;
-    END;
-    
-    /**************************Setters*****************************************/
-    PROCEDURE setNationality (pId IN NUMBER, pName IN VARCHAR2)
-    IS
+//
+/**************************Setters*****************************************/
+CREATE OR REPLACE PROCEDURE setNationality (
+	IN pId int UNSIGNED, IN pName varchar(50))
     BEGIN
         UPDATE Nationality
             SET name = pName
         WHERE idNationality = pId;
         COMMIT;
     END;
-    PROCEDURE setCountry (pId IN NUMBER, pName IN VARCHAR2)
-    IS
+//
+CREATE OR REPLACE PROCEDURE setCountry (
+	IN pId int UNSIGNED, IN pName varchar(100))
     BEGIN
         UPDATE Country
             SET nameCountry = pName
         WHERE idCountry = pId;
         COMMIT;
     END;
-    PROCEDURE setCity (pId IN NUMBER, pName IN VARCHAR2)
-    IS
+//
+CREATE OR REPLACE PROCEDURE setCity (
+	IN pId int UNSIGNED, IN pName varchar(100))
     BEGIN
         UPDATE City
             SET nameCity = pName
         WHERE idCity = pId;
         COMMIT;
     END;
-    PROCEDURE setTypeIdent (pId IN NUMBER, pName IN VARCHAR2)
-    IS
+//
+CREATE OR REPLACE PROCEDURE setTypeIdent (
+	IN pId int UNSIGNED, IN pName varchar(20))
     BEGIN
         UPDATE TypeOfIdentification
             SET nameTypeIdent = pName
         WHERE idTypeIdent = pId;
         COMMIT;
     END;
-    PROCEDURE setCatalog (pId IN NUMBER, pName IN VARCHAR2)
-    IS
+//
+CREATE OR REPLACE PROCEDURE setCatalog (
+	IN pId int UNSIGNED, IN pName varchar(20))
     BEGIN
         UPDATE Catalog
             SET genre = pName
         WHERE idCatalog = pId;
         COMMIT;
     END;
-    PROCEDURE setTypeProduct (pId IN NUMBER, pName IN VARCHAR2)
-    IS
+//
+CREATE OR REPLACE PROCEDURE setTypeProduct (
+	IN pId int UNSIGNED, IN pName varchar(100))
     BEGIN
         UPDATE TypeOfProduct
             SET nickname = pName
         WHERE idType = pId;
         COMMIT;
     END;
-    PROCEDURE setTypeParticipant (pId IN NUMBER, pName IN VARCHAR2)
-    IS
+//   
+CREATE OR REPLACE PROCEDURE setTypeParticipant (
+	IN pId int UNSIGNED, IN pName varchar(100))
     BEGIN
         UPDATE TypeOfParticipant
             SET nameType = pName
         WHERE idType = pId;
         COMMIT;
     END;
-    PROCEDURE setPlatform (pId IN NUMBER, pName IN VARCHAR2)
-    IS
+//   
+CREATE OR REPLACE PROCEDURE setPlatform (
+	IN pId int UNSIGNED, IN pName varchar(20))
     BEGIN
         UPDATE Platform
             SET namePlatform = pName
         WHERE idPlatform = pId;
         COMMIT;
     END;
-    PROCEDURE setSex (pId IN NUMBER, pName IN VARCHAR2)
-    IS
+//
+CREATE OR REPLACE PROCEDURE setSex (
+	IN pId int UNSIGNED, IN pName varchar(10))
     BEGIN
         UPDATE Sex
             SET sexName = pName
         WHERE idSex = pId;
         COMMIT;
     END;
-    
-END pkgBasic;
+//
 DELIMITER ;

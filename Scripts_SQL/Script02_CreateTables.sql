@@ -45,7 +45,7 @@ CREATE OR REPLACE TABLE city (
 	idCountry                   INT UNSIGNED,
     nameCity                    VARCHAR(100) NOT NULL,
     constraint fk_city_country foreign key (idCountry) 
-    references Country(idCountry),
+    references Country(idCountry) ON DELETE CASCADE ON UPDATE CASCADE,
     created_by 					VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
@@ -72,7 +72,8 @@ CREATE OR REPLACE TABLE Person (
 	secondSurname               VARCHAR(20),
 	datebirth                   DATE NOT NULL,
     photo                       BLOB,
-	CONSTRAINT fk_Person_sex FOREIGN KEY (idSex) REFERENCES Sex(idSex),
+	CONSTRAINT fk_Person_sex FOREIGN KEY (idSex) REFERENCES Sex(idSex)
+	ON DELETE CASCADE ON UPDATE CASCADE,
     created_by 					VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
@@ -83,8 +84,10 @@ CREATE OR REPLACE TABLE Person (
 CREATE OR REPLACE TABLE nationalityPerson (
 	idPerson                   	INT UNSIGNED NOT NULL,
 	idNationality              	INT UNSIGNED NOT NULL,
-    constraint fk_natPerson_person foreign key (idPerson) references Person(idPerson),
-    constraint fk_natPerson_nationality foreign key (idNationality) references Nationality(idNationality),
+    constraint fk_natPerson_person foreign key (idPerson) 
+    references Person(idPerson) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_natPerson_nationality foreign key (idNationality) 
+    references Nationality(idNationality) ON DELETE CASCADE ON UPDATE CASCADE,
     created_by 				    VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
@@ -98,7 +101,8 @@ CREATE OR REPLACE TABLE systemUser (
 	phoneNumber                 INT NOT NULL,
 	email                       VARCHAR(20) NOT NULL,
 	pswd  		                VARCHAR(20) NOT NULL,
-    constraint fk_systemUser_person foreign key (idSystemUser) references Person(idPerson),
+    constraint fk_systemUser_person foreign key (idSystemUser) 
+    references Person(idPerson) ON DELETE CASCADE ON UPDATE CASCADE,
     created_by 					VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
@@ -115,7 +119,7 @@ CREATE OR REPLACE TABLE Identification(
     updated_by 					VARCHAR(15),
     update_date 				DATE,
     CONSTRAINT fk_ident_type FOREIGN KEY (idTypeIdent) 
-    REFERENCES TypeOfIdentification(idTypeIdent),
+    REFERENCES TypeOfIdentification(idTypeIdent) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idIdentification)
 );
 
@@ -127,9 +131,9 @@ CREATE OR REPLACE TABLE IdentXSystem (
     updated_by 					VARCHAR(15),
     update_date 				DATE,
     CONSTRAINT fk_identxsystem_ident FOREIGN KEY (idIdent) 
-    REFERENCES Identification(idIdentification),
+    REFERENCES Identification(idIdentification) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_identxsystem_system FOREIGN KEY (idSystemUser) 
-    REFERENCES SystemUser(idSystemUser),
+    REFERENCES SystemUser(idSystemUser) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idIdent, idSystemUser)
 );
 /*****************************************************************************/
@@ -140,7 +144,7 @@ CREATE OR REPLACE TABLE end_user (
     updated_by 					VARCHAR(15),
     update_date 				DATE,
     constraint fk_endUser_systemUser foreign key (idUser) 
-    references systemUser(idSystemUser),
+    references systemUser(idSystemUser) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idUser)
 );
 
@@ -151,7 +155,7 @@ CREATE OR REPLACE TABLE administrator (
     updated_by 					VARCHAR(15),
     update_date 				DATE,
     constraint fk_administrator_systemUser foreign key (idAdministrator) 
-    references systemUser(idSystemUser),
+    references systemUser(idSystemUser) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idAdministrator)
 );
 /*****************************************************************************/
@@ -165,8 +169,10 @@ CREATE OR REPLACE TABLE participant (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-	CONSTRAINT fk_part_city FOREIGN KEY (idCity) REFERENCES City(idCity),
-	CONSTRAINT fk_part_person FOREIGN KEY (idParticipant) REFERENCES Person(idPerson),
+	CONSTRAINT fk_part_city FOREIGN KEY (idCity) 
+	REFERENCES City(idCity) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_part_person FOREIGN KEY (idParticipant) 
+	REFERENCES Person(idPerson) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idParticipant)
 );
 /******************************************************************************/
@@ -193,7 +199,8 @@ CREATE OR REPLACE TABLE product (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-	CONSTRAINT fk_product_type FOREIGN KEY (idType) REFERENCES typeOfProduct(idType),
+	CONSTRAINT fk_product_type FOREIGN KEY (idType) 
+	REFERENCES typeOfProduct(idType) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idProduct)
 );
 /*************************Atributes for product********************************/
@@ -207,7 +214,8 @@ CREATE OR REPLACE TABLE Binnacle (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date		 			DATE,
-    CONSTRAINT fk_binnacle_product FOREIGN KEY (idProduct) REFERENCES Product(idProduct),
+    CONSTRAINT fk_binnacle_product FOREIGN KEY (idProduct) 
+    REFERENCES Product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idBinnacle)
 );
 
@@ -220,7 +228,8 @@ CREATE OR REPLACE TABLE Season(
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    CONSTRAINT fk_season_product FOREIGN KEY (idProduct) REFERENCES Product(idProduct),
+    CONSTRAINT fk_season_product FOREIGN KEY (idProduct) 
+    REFERENCES Product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idSeason)
 );
 
@@ -234,7 +243,8 @@ CREATE OR REPLACE TABLE Episode(
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    CONSTRAINT fk_episode_season FOREIGN KEY (idSeason) REFERENCES Season(idSeason),
+    CONSTRAINT fk_episode_season FOREIGN KEY (idSeason) 
+    REFERENCES Season(idSeason) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idEpisode)
 );
 
@@ -246,7 +256,8 @@ CREATE OR REPLACE TABLE Photo(
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    CONSTRAINT fk_photo_product FOREIGN KEY (idProduct) REFERENCES Product(idProduct),
+    CONSTRAINT fk_photo_product FOREIGN KEY (idProduct) 
+    REFERENCES Product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idPhoto)
 );
 /******************************************************************************/
@@ -268,9 +279,12 @@ CREATE OR REPLACE TABLE ParticipantXProduct (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    constraint fk_PartXPro_participant foreign key (idParticipant) references participant(idParticipant),
-    constraint fk_PartXPro_product foreign key (idProduct) references product(idProduct),
-    constraint fk_PartXPro_typepart foreign key (rol) references TypeOfParticipant(idType),
+    constraint fk_PartXPro_participant foreign key (idParticipant) 
+    references participant(idParticipant) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_PartXPro_product FOREIGN key (idProduct) 
+    references product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_PartXPro_typepart foreign key (rol) 
+    references TypeOfParticipant(idType) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idParticipant, idProduct, rol)
 );
 
@@ -282,9 +296,12 @@ CREATE OR REPLACE TABLE ParticipantXRelative (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    constraint fk_PartXRela_part foreign key (idParticipant) references participant(idParticipant),
-    constraint fk_PartXRela_part2 foreign key (idParticipant2) references participant(idParticipant),
-    constraint fk_PartXRela_rela foreign key (idRelative) references Relative(idRelative),
+    constraint fk_PartXRela_part foreign key (idParticipant) 
+    references participant(idParticipant) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_PartXRela_part2 foreign key (idParticipant2) references 
+    participant(idParticipant) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_PartXRela_rela foreign key (idRelative) 
+    references Relative(idRelative) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idParticipant, idParticipant2)
 );
 /******************************************************************************/
@@ -295,7 +312,8 @@ CREATE OR REPLACE TABLE payment (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    constraint fk_payment_user foreign key (idUser) references end_user(idUser),
+    constraint fk_payment_user foreign key (idUser) 
+    references end_user(idUser) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idPayment)
 );
 
@@ -309,7 +327,8 @@ CREATE OR REPLACE TABLE card (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    constraint fk_card_payment foreign key (idCard) references payment(idPayment),
+    constraint fk_card_payment foreign key (idCard) 
+    references payment(idPayment) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idCard)
 );
 /******************************************************************************/
@@ -320,11 +339,12 @@ CREATE OR REPLACE TABLE Wishlist (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    constraint fk_Wishlist_user foreign key (idUser) references end_user(idUser),
-    constraint fk_Wishlist_product foreign key (idProduct) references product(idProduct),
+    constraint fk_Wishlist_user foreign key (idUser) 
+    references end_user(idUser) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_Wishlist_product foreign key (idProduct) 
+    references product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idProduct, idUser)
 );
-
 
 CREATE OR REPLACE TABLE Purchase (	
 	idUser                      INT UNSIGNED,
@@ -335,9 +355,12 @@ CREATE OR REPLACE TABLE Purchase (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    constraint fk_purchase_user foreign key (idUser) references end_user(idUser),
-    constraint fk_purchase_product foreign key (idProduct) references Product(idProduct),
-    constraint fk_purchase_payment foreign key (idPayment) references Payment(idPayment),
+    constraint fk_purchase_user foreign key (idUser) 
+    references end_user(idUser) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_purchase_product foreign key (idProduct) 
+    references Product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_purchase_payment foreign key (idPayment) 
+    references Payment(idPayment) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idUser, idProduct)
 );
 
@@ -359,8 +382,10 @@ CREATE OR REPLACE TABLE CatalogxProduct (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-	FOREIGN KEY (idCatalog) REFERENCES catalog(idCatalog),
-	FOREIGN KEY (idProduct) REFERENCES product(idProduct),
+	FOREIGN KEY (idCatalog) REFERENCES catalog(idCatalog)
+	ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (idProduct) REFERENCES product(idProduct)
+	ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (idCatalog, idProduct)
 );
 /******************************************************************************/
@@ -381,8 +406,10 @@ create OR REPLACE table ProductXPlatform (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    constraint fk_ProductXPlatform_product foreign key (idProduct) references product(idProduct),
-    constraint fk_ProductXPlatform_platform foreign key (idPlatform) references platform(idPlatform),
+    constraint fk_ProductXPlatform_product foreign key (idProduct) 
+    references product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_ProductXPlatform_platform foreign key (idPlatform) 
+    references platform(idPlatform) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY(idProduct, idPlatform)
 );
 
@@ -395,8 +422,10 @@ CREATE OR REPLACE TABLE review (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    constraint fk_review_product foreign key (idProduct) references product(idProduct),
-    constraint fk_review_user foreign key (idUser) references end_user(idUser),
+    constraint fk_review_product foreign key (idProduct) 
+    references product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_review_user foreign key (idUser) 
+    references end_user(idUser) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idProduct, idUser)
 );
 /*******************************************/
@@ -408,8 +437,10 @@ CREATE OR REPLACE TABLE commentary (
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
     update_date 				DATE,
-    constraint fk_commentary_product foreign key (idProduct) references product(idProduct),
-    constraint fk_commentary_user foreign key (idUser) references end_user(idUser),
+    constraint fk_commentary_product foreign key (idProduct) 
+    references product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
+    constraint fk_commentary_user foreign key (idUser) 
+    references end_user(idUser) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (idProduct, idUser)
 );
 /******************************************************************************/

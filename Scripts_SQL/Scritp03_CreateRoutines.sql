@@ -1,0 +1,403 @@
+/*Stored procedures*/
+DELIMITER //
+CREATE OR REPLACE PROCEDURE insertPerson (
+  IN pSex INT UNSIGNED, IN pFirstName varchar(20), IN pSecondName varchar(20), IN pFirstSurname varchar(20),
+  IN pSecondSurname varchar(20), IN pBirthdate date, IN pPhoto BLOB, OUT pOutId int
+)
+ BEGIN
+  	INSERT INTO Person(idSex, firstName, secondName, firstSurname,
+        secondSurname, datebirth, photo)
+	VALUES (pSex, pFirstName, pSecondName, pFirstSurname,
+        pSecondSurname, pBirthdate, pPhoto);
+	SET pOutId = last_insert_id(); 
+ END;
+//
+CREATE OR REPLACE PROCEDURE insertSystemUser(
+	IN pIdPerson int, IN pUsername varchar(20), IN pPhoneNumber int,
+    IN pIdentification int, IN pEmail varchar(20), IN pPswd varchar(20), IN pIdTypeIdent int)
+    BEGIN
+	    DECLARE vIdIdent int UNSIGNED;
+        
+	    INSERT INTO systemUser (idSystemUser, username, phoneNumber,
+        email, pswd)
+        VALUES (pIdPerson, pUsername, pPhoneNumber, pEmail,
+        pPswd);
+    
+        INSERT INTO Identification (idTypeIdent, identNumber)
+        VALUES (pIdTypeIdent, pIdentification);
+        SET vIdIdent = last_insert_id(); 
+        INSERT INTO IdentXSystem(idIdent,idSystemUser)
+        VALUES (vIdIdent, pIdPerson);
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertSex (
+    IN pName varchar(10)
+    )
+    BEGIN
+        INSERT INTO sex(sexName)
+        VALUES (pName);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertNationality(
+    IN pName varchar(50)
+    )
+    BEGIN
+        INSERT INTO nationality (name)
+        VALUES (pName);
+        COMMIT;
+    END;
+// 
+CREATE OR REPLACE PROCEDURE insertNationalityPerson (IN pIdNationality int, IN pIdPerson int)
+    BEGIN
+        INSERT INTO NationalityPerson (idNationality, idPerson)
+        VALUES (pIdNationality, pIdPerson);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertTypeIdent (IN pName varchar(20))
+    BEGIN
+        INSERT INTO typeOfIdentification(nameTypeIdent)
+        VALUES (pName);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertCountry (IN pName varchar(100))
+    BEGIN
+        INSERT INTO country(nameCountry)
+        VALUES (pName);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertCity (IN pIdCountry int, IN pName varchar(100))
+    BEGIN
+        INSERT INTO city(idCountry, nameCity)
+        VALUES (pIdCountry, pName);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertTypeParticipant(IN pNameType varchar(100))
+    BEGIN
+        INSERT INTO typeOfParticipant (nameType)
+        VALUES(pNameType);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertCatalog(IN pGenre varchar(20))
+    BEGIN
+        INSERT INTO catalog (genre)
+        VALUES(pGenre);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertTypeProduct(IN pName varchar(100))
+    BEGIN
+        INSERT INTO typeOfProduct(nickname)
+        VALUES (pName);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertPlatform(IN pName varchar(20))
+    BEGIN
+        INSERT INTO Platform (namePlatform)
+        VALUES (pName);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE getSystemUserInfo(IN pUsername VARCHAR(20), IN pPswd VARCHAR(20))
+BEGIN
+    DECLARE vId INT DEFAULT NULL;
+    DECLARE vUserType INT DEFAULT NULL;
+
+    /*Search reference in table administrator*/
+    /*Por alguna razón esto retorna NULL y un INNER JOIN no*/
+    SELECT ad.idAdministrator, 2 INTO vId, vUserType
+    FROM SystemUser sy
+    LEFT JOIN Administrator ad ON ad.idAdministrator = sy.idSystemUser 
+    WHERE sy.username = pUsername AND sy.pswd = pPswd;
+
+    /*Search reference in table end_user*/
+    IF vId IS NULL THEN
+        SELECT us.idUser, 1 INTO vId, vUserType
+        FROM End_user us
+        INNER JOIN SystemUser sy ON us.idUser = sy.idSystemUser 
+        WHERE sy.username = pUsername AND sy.pswd = pPswd;
+    END IF;
+
+    /*Cursor? Maybe*/
+    IF vId IS NOT NULL THEN
+        SELECT vUserType, pe.idPerson, pe.firstName, pe.firstSurname, pe.datebirth,
+        pe.photo, su.username, su.phoneNumber, su.email, su.pswd, sex.SexName
+        FROM Person pe, SystemUser su, Sex sex
+        WHERE su.idSystemUser = vId
+        AND pe.idPerson = vId
+        AND pe.idSex = sex.idSex;
+    END IF;
+END
+//
+/*******************CONTINUAR APARTIR DE ACÁ***************/
+CREATE OR REPLACE FUNCTION validateRegister(newUsername IN VARCHAR2, newEmail IN VARCHAR2, newPhone IN NUMBER)
+    RETURN SYS_REFCURSOR 
+    IS 
+        existentNames SYS_REFCURSOR;
+        usernamesCount NUMBER(8);
+        emailsCount NUMBER(8);
+        phonesCount NUMBER(8);
+    BEGIN
+        SELECT count(username) 
+        INTO usernamesCount
+        FROM systemUser 
+        WHERE username = newUsername;
+        
+        SELECT count(email) 
+        INTO emailsCount
+        FROM systemUser 
+        WHERE email = newEmail;
+        
+        SELECT count(phoneNumber) 
+        INTO phonesCount
+        FROM systemUser 
+        WHERE phoneNumber = newPhone;
+        
+        OPEN existentNames FOR
+        SELECT usernamesCount AS usernamesCount ,emailsCount AS emailsCount, phonesCount AS phonesCount
+        FROM DUAL;
+        
+        RETURN existentNames;
+    END;
+//
+CREATE OR REPLACE FUNCTION getNationality(IN pIdNationality int)
+    BEGIN
+        SELECT idNationality, name
+        FROM nationality
+        WHERE idNationality = NVL(pIdNationality, idNationality);
+    END;
+//  
+CREATE OR REPLACE FUNCTION getTypeOfId 
+    BEGIN
+        SELECT idTypeIdent, nameTypeIdent
+        FROM TypeOfIdentification;
+    END;
+//
+CREATE OR REPLACE PROCEDURE insertBinnacle(IN pIdProduct int UNSIGNED, IN pOldPrice int,
+	IN pNewPrice int, IN pDateBinnacle DATE) 
+    BEGIN
+        INSERT INTO Binnacle(IdProduct,oldPrice,newPrice,dateBinnacle)
+        VALUES (,pIdProduct,pOldPrice,pNewPrice, pDateBinnacle);
+        ---COMMIT;
+    END;
+//
+    FUNCTION getInfoInsertParticipant(pIdParticipant IN NUMBER)
+    RETURN SYS_REFCURSOR
+    IS
+        infoCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN infoCursor FOR
+            SELECT idNationality, name, 'Nationality' as fuente from nationality
+            UNION
+            /*SELECT idSex, sexname, 'Sex' as fuente from sex
+            UNION */
+            SELECT c.idCity AS city_id, co.nameCountry || ', ' || c.nameCity AS city_country, 'City' as fuente
+            FROM city c
+            INNER JOIN country co ON c.idCountry = co.idCountry
+            ORDER BY name;
+        RETURN infoCursor;    
+    END;
+      
+    PROCEDURE getInfoCreationProduct (
+        cursorParticipants OUT SYS_REFCURSOR,
+        cursorTypeOfParticipant OUT SYS_REFCURSOR,
+        cursorTypeOfProduct OUT SYS_REFCURSOR,
+        cursorGenres OUT SYS_REFCURSOR,
+        cursorPlatforms OUT SYS_REFCURSOR
+    )
+    IS
+    BEGIN
+        OPEN cursorTypeOfParticipant FOR
+            SELECT idType, nameType FROM TypeOfParticipant;
+        
+        OPEN cursorParticipants FOR
+            SELECT idPerson, firstName || ' ' || secondName || ' ' || firstSurname
+            || ' ' || secondSurname, photo
+            FROM Person pe
+            INNER JOIN Participant pa
+            ON pe.idPerson = pa.idParticipant;
+            
+        OPEN cursorTypeOfProduct FOR
+            SELECT idType, nickname FROM typeOfProduct;
+        OPEN cursorGenres FOR
+            SELECT idCatalog, genre
+            FROM Catalog;
+        OPEN cursorPlatforms FOR
+            SELECT idPlatform, namePlatform
+            FROM Platform;
+    END;
+    PROCEDURE getInfoRegister (cursorSex OUT SYS_REFCURSOR, cursorTypeOfId OUT SYS_REFCURSOR, 
+        cursorNationalities OUT SYS_REFCURSOR)
+        IS 
+        BEGIN 
+
+        OPEN cursorSex FOR 
+        SELECT idSex,sexname FROM sex;
+
+        OPEN cursorTypeOfId FOR
+        SELECT idTypeIdent, nameTypeIdent FROM typeOfIdentification;
+
+        OPEN cursorNationalities FOR
+        SELECT idNationality, name FROM Nationality;
+    END;
+    
+    
+    FUNCTION getCountries RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idCountry, nameCountry
+            FROM Country
+            ORDER BY nameCountry;
+        RETURN vCursor;
+    END;
+    FUNCTION getCities RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT ct.idCity, co.nameCountry || ', ' || ct.nameCity
+            FROM City ct
+            INNER JOIN country co
+            ON ct.idCountry = co.idCountry
+            ORDER BY nameCountry;
+        RETURN vCursor;
+    END;
+    FUNCTION getTypesIdents RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idTypeIdent, nameTypeIdent
+            FROM typeOfIdentification;
+        RETURN vCursor;
+    END;
+    FUNCTION getCatalogs RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idCatalog, genre
+            FROM Catalog;
+        RETURN vCursor;
+    END;
+    FUNCTION getTypesProducts RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idType, nickname
+            FROM typeOfProduct;
+        RETURN vCursor;
+    END;
+    FUNCTION getTypesParticipant RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idType, nameType
+            FROM typeOfParticipant;
+        RETURN vCursor;
+    END;
+    FUNCTION getPlatforms RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idPlatform, namePlatform
+            FROM Platform;
+        RETURN vCursor;
+    END;
+    FUNCTION getSexs RETURN SYS_REFCURSOR
+    IS
+        vCursor SYS_REFCURSOR;
+    BEGIN
+        OPEN vCursor FOR
+            SELECT idSex, sexName
+            FROM sex;
+        RETURN vCursor;
+    END;
+    
+    /**************************Setters*****************************************/
+    PROCEDURE setNationality (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Nationality
+            SET name = pName
+        WHERE idNationality = pId;
+        COMMIT;
+    END;
+    PROCEDURE setCountry (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Country
+            SET nameCountry = pName
+        WHERE idCountry = pId;
+        COMMIT;
+    END;
+    PROCEDURE setCity (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE City
+            SET nameCity = pName
+        WHERE idCity = pId;
+        COMMIT;
+    END;
+    PROCEDURE setTypeIdent (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE TypeOfIdentification
+            SET nameTypeIdent = pName
+        WHERE idTypeIdent = pId;
+        COMMIT;
+    END;
+    PROCEDURE setCatalog (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Catalog
+            SET genre = pName
+        WHERE idCatalog = pId;
+        COMMIT;
+    END;
+    PROCEDURE setTypeProduct (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE TypeOfProduct
+            SET nickname = pName
+        WHERE idType = pId;
+        COMMIT;
+    END;
+    PROCEDURE setTypeParticipant (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE TypeOfParticipant
+            SET nameType = pName
+        WHERE idType = pId;
+        COMMIT;
+    END;
+    PROCEDURE setPlatform (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Platform
+            SET namePlatform = pName
+        WHERE idPlatform = pId;
+        COMMIT;
+    END;
+    PROCEDURE setSex (pId IN NUMBER, pName IN VARCHAR2)
+    IS
+    BEGIN
+        UPDATE Sex
+            SET sexName = pName
+        WHERE idSex = pId;
+        COMMIT;
+    END;
+    
+END pkgBasic;
+DELIMITER ;

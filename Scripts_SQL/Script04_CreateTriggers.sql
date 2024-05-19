@@ -4,9 +4,8 @@ BEFORE UPDATE
 ON Product
 FOR EACH ROW
 BEGIN
-    pkgBasic.insertBinnacle(:old.idProduct,:old.price,NEW.price,NOW());
-    
-END beforeUpdateProductPrice;
+   CALL insertBinnacle(OLD.idProduct, OLD.price, NEW.price,NOW());
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertAdministrator
@@ -16,7 +15,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertAdministrator;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateAdministrator
 BEFORE UPDATE
@@ -25,7 +24,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateAdministrator;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertBinnacle
@@ -35,7 +34,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertBinnacle;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateBinnacle
 BEFORE UPDATE
@@ -44,7 +43,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateBinnacle;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertCard
@@ -54,7 +53,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertCard;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateCard
 BEFORE UPDATE
@@ -63,7 +62,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateCard;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertCatalog
@@ -73,7 +72,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertCatalog;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateCatalog
 BEFORE UPDATE
@@ -82,7 +81,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateCatalog;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertCatalogXProduct
@@ -92,7 +91,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertCatalogXProduct;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateCatalogXProduct
 BEFORE UPDATE
@@ -101,7 +100,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateCatalogXProduct;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertCity
@@ -111,7 +110,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertAdministrator;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateCity
 BEFORE UPDATE
@@ -120,7 +119,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateAdministrator;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertCommentary
@@ -130,7 +129,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertCommentary;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateCommentary
 BEFORE UPDATE
@@ -139,7 +138,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateCommentary;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertCountry
@@ -149,7 +148,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertCountry;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateCountry
 BEFORE UPDATE
@@ -158,26 +157,26 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateCountry;
+END;
 //
 
-CREATE OR REPLACE TRIGGER beforeInsertEnd_USER()
+CREATE OR REPLACE TRIGGER beforeInsertEnd_user
 BEFORE INSERT
-ON End_USER()
+ON End_user
 FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertEnd_USER();
+END;
 //
-CREATE OR REPLACE TRIGGER beforeUpdateEnd_USER()
+CREATE OR REPLACE TRIGGER beforeUpdateEnd_user
 BEFORE UPDATE
-ON End_USER()
+ON End_user
 FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateEnd_USER();
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertEpisode
@@ -187,7 +186,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertEpisode;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateEpisode
 BEFORE UPDATE
@@ -196,7 +195,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateEpisode;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertIdentification
@@ -206,7 +205,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertAdministrator;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateIdentification
 BEFORE UPDATE
@@ -215,7 +214,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateIdentification;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertIdentXSystem
@@ -225,7 +224,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertIdentXSystem;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateIdentXSystem
 BEFORE UPDATE
@@ -234,7 +233,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateIdentXSystem;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertNationality
@@ -244,7 +243,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertNationality;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateNationality
 BEFORE UPDATE
@@ -253,7 +252,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateNationality;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertNationalityPerson
@@ -263,7 +262,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertNationalityPerson;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateNationalityPerson
 BEFORE UPDATE
@@ -272,7 +271,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateNationalityPerson;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertParticipant
@@ -282,7 +281,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertParticipant;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateParticipant
 BEFORE UPDATE
@@ -291,7 +290,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateParticipant;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertParticipXProd
@@ -301,7 +300,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertParticipXProd;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeInsertParticipXProd
 BEFORE UPDATE
@@ -310,7 +309,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeInsertParticipXProd;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeInsertParticipXRel
 BEFORE INSERT
@@ -319,7 +318,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertParticipXRel;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeInsertParticipXRel
 BEFORE UPDATE
@@ -328,7 +327,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeInsertParticipXRel;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertPayment
@@ -338,7 +337,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertPayment;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdatePayment
 BEFORE UPDATE
@@ -347,7 +346,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdatePayment;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertPerson
@@ -357,7 +356,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertPerson;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdatePerson
 BEFORE UPDATE
@@ -366,7 +365,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdatePerson;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertPhoto
@@ -376,7 +375,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertPhoto;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdatePhoto
 BEFORE UPDATE
@@ -385,7 +384,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdatePhoto;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertPlatform
@@ -395,7 +394,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertPlatform;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdatePlatform
 BEFORE UPDATE
@@ -404,7 +403,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdatePlatform;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertProduct
@@ -414,7 +413,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertProduct;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateProduct
 BEFORE UPDATE
@@ -423,7 +422,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateProduct;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertProductXPlatform
@@ -433,7 +432,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertProductXPlatform;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateProductXPlatform
 BEFORE UPDATE
@@ -442,7 +441,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateProductXPlatform;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertPurchase
@@ -452,7 +451,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertPurchase;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdatePurchase
 BEFORE UPDATE
@@ -461,7 +460,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdatePurchase;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertRelative
@@ -471,7 +470,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertRelative;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateRelative
 BEFORE UPDATE
@@ -480,7 +479,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateRelative;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertReview
@@ -490,7 +489,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertReview;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateReview
 BEFORE UPDATE
@@ -499,7 +498,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateReview;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertSeason
@@ -509,7 +508,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertSeason;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateSeason
 BEFORE UPDATE
@@ -518,7 +517,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateSeason;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertSex
@@ -528,7 +527,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertSex;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateSex
 BEFORE UPDATE
@@ -537,26 +536,26 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateSex;
+END;
 //
 
-CREATE OR REPLACE TRIGGER beforeInsertSystemUSER()
+CREATE OR REPLACE TRIGGER beforeInsertSystemUser
 BEFORE INSERT
-ON SystemUSER()
+ON SystemUser
 FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertSystemUSER();
+END;
 //
-CREATE OR REPLACE TRIGGER beforeUpdateSystemUSER()
+CREATE OR REPLACE TRIGGER beforeUpdateSystemUser
 BEFORE UPDATE
-ON SystemUSER()
+ON SystemUser
 FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateSystemUSER();
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeUpdateTypeOfId
@@ -566,7 +565,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeUpdateTypeOfId;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateTypeOfId
 BEFORE UPDATE
@@ -575,7 +574,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateTypeOfId;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertTypeOfParticipant
@@ -585,7 +584,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertTypeOfParticipant;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateTypeOfParticipant
 BEFORE UPDATE
@@ -594,7 +593,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateTypeOfParticipant;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertTypeOfProduct
@@ -604,7 +603,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertTypeOfProduct;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateTypeOfProduct
 BEFORE UPDATE
@@ -613,7 +612,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateTypeOfProduct;
+END;
 //
 
 CREATE OR REPLACE TRIGGER beforeInsertWishlist
@@ -623,7 +622,7 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_by = USER();
     SET NEW.creation_date = NOW();
-END beforeInsertWishlist;
+END;
 //
 CREATE OR REPLACE TRIGGER beforeUpdateWishlist
 BEFORE UPDATE
@@ -632,6 +631,6 @@ FOR EACH ROW
 BEGIN
     SET NEW.updated_by = USER();
     SET NEW.update_date = NOW();
-END beforeUpdateWishlist;
+END;
 //
 DELIMITER ;

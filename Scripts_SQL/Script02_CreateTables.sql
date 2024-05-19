@@ -100,7 +100,7 @@ CREATE OR REPLACE TABLE systemUser (
 	username                    VARCHAR(20) NOT NULL,
 	phoneNumber                 INT NOT NULL,
 	email                       VARCHAR(50) NOT NULL,
-	pswd  		                VARCHAR(20) NOT NULL,
+	pswd  		                VARCHAR(40) NOT NULL,
     constraint fk_systemUser_person foreign key (idSystemUser) 
     references Person(idPerson) ON DELETE CASCADE ON UPDATE CASCADE,
     created_by 					VARCHAR(15),
@@ -164,7 +164,7 @@ CREATE OR REPLACE TABLE participant (
 	idCity                      INT UNSIGNED,
 	biography                   VARCHAR(500) NOT NULL,	
 	height                      INT NOT NULL,
-	trivia                      VARCHAR(500) NOT NULL,
+	trivia                      VARCHAR(500),
     created_by 					VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
@@ -192,9 +192,9 @@ CREATE OR REPLACE TABLE product (
 	releaseYear                 INT NOT NULL,
 	title                       VARCHAR(200) NOT NULL,
 	duration                    INT NOT NULL,
-	trailer                     VARCHAR(500),
+	trailer                     VARCHAR(1000),
 	price			    		INT,
-	synopsis                    VARCHAR(500) NOT NULL,
+	synopsis                    VARCHAR(1000) NOT NULL,
     created_by 					VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),
@@ -444,3 +444,14 @@ CREATE OR REPLACE TABLE commentary (
     PRIMARY KEY (idProduct, idUser)
 );
 /******************************************************************************/
+/******************************************************************************/
+CREATE OR REPLACE TABLE UserXProduct (
+	idUser						INT UNSIGNED,
+	idProduct					INT UNSIGNED,
+	visitDate					DATE NOT NULL,
+	CONSTRAINT fk_userxproduct_user FOREIGN KEY (idUser)
+	REFERENCES end_user(idUser) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_userxproduct_product FOREIGN KEY (idProduct)
+	REFERENCES product(idProduct) ON DELETE CASCADE ON UPDATE CASCADE,
+	PRIMARY KEY (idUser,idProduct)
+);	

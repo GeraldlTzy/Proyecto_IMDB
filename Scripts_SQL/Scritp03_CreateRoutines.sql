@@ -384,4 +384,224 @@ CREATE OR REPLACE PROCEDURE insertAdministrator(IN pSex int UNSIGNED, IN pFirstN
         COMMIT;
     END;
 //
+
+
+#Product routines
+CREATE OR REPLACE PROCEDURE insertProduct(IN pIdType INT, IN pReleaseYear INT, IN pTitle VARCHAR(200),
+    IN pDuration INT, IN pSynopsis VARCHAR(1000), IN pTrailer VARCHAR(1000), IN pPrice INT, OUT pIdProduct INT)
+    BEGIN     
+        INSERT INTO Product(idType, releaseYear, title, duration, synopsis, trailer, price)
+        VALUES (pIdType, pReleaseYear, pTitle, pDuration, pSynopsis, pTrailer, pPrice);
+        COMMIT;
+        SET pIdProduct = LAST_INSERT_ID();
+    END;
+//
+CREATE OR REPLACE PROCEDURE updateProduct(IN pIdProduct INT, IN pIdType INT, IN pReleaseYear INT, IN pTitle VARCHAR(200),
+    IN pDuration INT, IN pSynopsis VARCHAR(1000), IN pTrailer VARCHAR(1000), IN pPrice INT)
+    BEGIN
+        UPDATE Product
+        SET idType = pIdType, 
+            releaseYear = pReleaseYear, 
+            title = pTitle, 
+            duration = pDuration, 
+            synopsis = pSynopsis, 
+            trailer = pTrailer, 
+            price = pPrice
+        WHERE idProduct = pIdProduct;
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE addParticipant(IN pIdProduct INT, IN pIdParticipant INT, IN pRol INT)
+    BEGIN
+        INSERT INTO ParticipantXProduct(idProduct, idParticipant, rol)
+        VALUES (pIdProduct, pIdParticipant, pRol);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE deleteParticipant(IN pIdProduct INT, IN pIdParticipant INT)
+    BEGIN
+        DELETE FROM ParticipantXProduct
+        WHERE idProduct = pIdProduct AND idParticipant = pIdParticipant;
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE addSeason(IN pIdProduct INT, IN pNumberSeason INT, OUT pIdSeason INT)
+    BEGIN
+        INSERT INTO Season(idProduct, numberSeason)
+        VALUES (pIdProduct, pNumberSeason);
+        SET pIdSeason = LAST_INSERT_ID();
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE removeSeason(IN pIdSeason INT)
+    BEGIN
+        DELETE FROM Season
+        WHERE idSeason = pIdSeason;
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE addEpisode(IN pIdSeason INT, IN pNumberEpisode INT, IN pName VARCHAR(20),
+    IN pDuration INT)
+    BEGIN
+        INSERT INTO Episode(idSeason, numberEpisode, name, duration)
+        VALUES (pIdSeason, pNumberEpisode, pName, pDuration);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE removeEpisode(IN pIdEpisode INT)
+    BEGIN
+        DELETE FROM Episode
+        WHERE idEpisode = pIdEpisode;
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE addPhoto(IN pIdProduct INT, IN pImage BLOB)
+    BEGIN
+        INSERT INTO photo(idProduct, image)
+        VALUES (pIdProduct, pImage);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE removePhoto (IN pIdPhoto INT)
+    BEGIN
+        DELETE FROM Photo
+        WHERE idPhoto = pIdPhoto;
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE getProducts()
+    BEGIN
+         SELECT pro.idProduct, pro.title, pho.image
+         FROM product pro
+         LEFT JOIN photo pho
+         ON pro.idProduct = pho.idProduct;
+    END;
+//
+CREATE OR REPLACE PROCEDURE getProductInfo(IN pIdProduct INT)
+   BEGIN
+         SELECT idProduct, idType, releaseYear, title, duration, trailer,
+         synopsis, price
+         FROM product pro 
+         WHERE idProduct = pIdProduct;
+   END;
+//   
+CREATE OR REPLACE PROCEDURE getProductParticipants(IN pIdProduct INT)
+	BEGIN
+         SELECT pro.idParticipant, per.firstName, per.firstSurname, typeP.nameType 
+         FROM participantXproduct pro 
+         INNER JOIN Person per
+         ON pro.idParticipant = per.idPerson
+         INNER JOIN typeOfParticipant typeP
+         ON pro.rol = typeP.idType
+         WHERE pro.idProduct = pIdProduct;
+   END;
+//
+CREATE OR REPLACE PROCEDURE getProductSeasons(IN pIdProduct INT)
+	BEGIN
+         SELECT sea.idSeason, sea.numberSeason, epi.idEpisode,
+         	epi.numberEpisode, epi.name, epi.duration
+         FROM season sea
+         INNER JOIN product pro
+         ON pro.idProduct = pIdProduct AND sea.idProduct = pro.idProduct
+         LEFT JOIN episode epi
+         ON sea.idProduct = pIdProduct
+         AND sea.idSeason = epi.idSeason
+         ORDER BY sea.idSeason ASC;
+	END;
+//
+CREATE OR REPLACE PROCEDURE getProductImages(IN pIdProduct INT)        
+	BEGIN
+         SELECT idPhoto, image FROM Photo
+         WHERE idProduct = pIdProduct;
+   END;
+//
+CREATE OR REPLACE PROCEDURE getProductGenres(IN pIdProduct INT)
+	BEGIN
+         SELECT ca.idCatalog, ca.Genre
+         FROM CatalogXProduct cxp
+         INNER JOIN Catalog ca
+         ON cxp.idCatalog = ca.idCatalog
+         AND cxp.idProduct = pIdProduct;
+	END;
+//
+CREATE OR REPLACE PROCEDURE getProductPlatforms(IN pIdProduct INT)
+	BEGIN
+         SELECT pa.idPlatform, pa.namePlatform
+         FROM ProductXPlatform pxp
+         INNER JOIN Platform pa
+         ON pxp.idPlatform = pa.idPlatform
+         AND pxp.idProduct = pIdProduct;        
+    END;
+//
+CREATE OR REPLACE PROCEDURE getFullReview(IN pIdProduct INT)
+    BEGIN
+         SELECT co.idUser, stu.username, co.description, co.creation_date, re.stars
+         FROM PRODUCT PRO
+         INNER JOIN REVIEW RE
+         ON RE.IDPRODUCT = PRO.IDPRODUCT AND PRO.IDPRODUCT = pIdProduct
+         INNER JOIN COMMENTARY co
+         ON co.idUser = re.idUser AND co.idProduct = re.idProduct
+         INNER JOIN systemUser stu
+         ON co.idUser = stu.idSystemUser;
+    END;
+//
+CREATE OR REPLACE PROCEDURE addGenre (IN pIdProduct INT, IN pIdGenre INT)
+    BEGIN
+        INSERT INTO CatalogXProduct(idProduct, idCatalog)
+        VALUES (pIdProduct, pIdGenre);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE addPlatform (IN pIdProduct INT, IN pIdPlatform INT)
+    BEGIN
+        INSERT INTO ProductXPlatform(idProduct, idPlatform)
+        VALUES (pIdProduct, pIdPlatform);
+        COMMIT;
+    END;
+//
+CREATE OR REPLACE PROCEDURE getProductStatistics()
+   BEGIN 
+      	SELECT @vTotalProducts := COUNT(*) FROM Product;
+      	SELECT c.genre AS genre, 100*COUNT(*)/@vTotalProducts AS percentage, count(*) AS ProductsByGenre
+         FROM CatalogXProduct cxp
+         INNER JOIN Catalog c
+         ON c.idCatalog = cxp.idCatalog
+         GROUP BY cxp.idCatalog,c.genre
+         UNION SELECT 'Total',@vTotalProducts,null FROM dual;
+   END;
+//
+CREATE OR REPLACE PROCEDURE getUsersStatisticsByAge()
+	BEGIN
+         SELECT su.username,p.datebirth,p.idSex,TRUNC((SYSDATE - DATEBIRTH)/365) AS age
+         FROM Person p
+         INNER JOIN End_user u
+         ON p.idPerson = u.idUser
+         INNER JOIN systemUser su
+         ON u.idUser = su.idSystemUser
+         ORDER BY p.idSex;
+	END;
+//
+CREATE OR REPLACE PROCEDURE getUsersStatisticsBySex()
+	BEGIN
+            SELECT s.sexName AS sex, count(*) AS persons
+            FROM Person p
+            INNER JOIN sex s
+            ON s.idSex = p.idSex
+            RIGHT JOIN systemUser su
+            ON p.idPerson = su.idSystemUser
+            GROUP BY s.sexName;
+   END;
+//
+CREATE OR REPLACE PROCEDURE getProductsXGenre()
+	BEGIN
+            SELECT p.title, c.genre, p.idProduct
+            FROM Product p
+            INNER JOIN CatalogXProduct cxp
+            ON p.idProduct = cxp.idProduct
+            INNER JOIN Catalog c
+            ON c.idCatalog = cxp.idCatalog
+            ORDER BY p.idProduct;
+            
+    END;
+//    
 DELIMITER ;

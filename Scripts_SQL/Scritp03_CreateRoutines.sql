@@ -196,8 +196,8 @@ CREATE OR REPLACE PROCEDURE getInfoInsertParticipant()
 //
 CREATE OR REPLACE PROCEDURE getParticipants()
     BEGIN
-        SELECT idPerson, firstName || ' ' || secondName || ' ' || firstSurname
-        || ' ' || secondSurname fullname, photo
+        SELECT idPerson, CONCAT(firstName, ' ', secondName, ' ', firstSurname,
+        ' ', secondSurname) fullname, photo
         FROM Person pe
         INNER JOIN Participant pa
         ON pe.idPerson = pa.idParticipant;
@@ -212,7 +212,7 @@ CREATE OR REPLACE PROCEDURE getCountries()
 //
 CREATE OR REPLACE PROCEDURE getCities()
 	BEGIN
-        SELECT ct.idCity, co.nameCountry || ', ' || ct.nameCity
+        SELECT ct.idCity, CONCAT(co.nameCountry, ', ',ct.nameCity)
         FROM City ct
         INNER JOIN country co
         ON ct.idCountry = co.idCountry

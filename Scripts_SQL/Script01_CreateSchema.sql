@@ -3,7 +3,8 @@ CREATE SCHEMA IF NOT EXISTS su;
 create role su_user;
 create user 'su'@'localhost' IDENTIFIED BY 'su';
 grant select, drop, insert, update, create, alter, delete on su.* to 'su'@'localhost';
-grant create routine, alter routine on su.* to 'su'@'localhost'
+grant create routine, alter routine on su.* to 'su'@'localhost';
+GRANT EXECUTE on su.* to 'su'@'localhost';
 
 /*drop user 'su'@'localhost';
 create user 'su'@'localhost' IDENTIFIED BY 'su';

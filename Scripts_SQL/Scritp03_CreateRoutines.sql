@@ -339,6 +339,8 @@ CREATE OR REPLACE PROCEDURE setSex (
         COMMIT;
     END;
 //
+/*****************************************************************************/
+/*User routines*/
 CREATE OR REPLACE PROCEDURE insertUser(IN pSex int UNSIGNED, IN pFirstName varchar(20), 
 	IN pSecondName varchar(20), IN pFirstSurname varchar(20), IN pSecondSurname varchar(20),
 	IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername varchar(20), IN pIdentification int,
@@ -353,6 +355,28 @@ CREATE OR REPLACE PROCEDURE insertUser(IN pSex int UNSIGNED, IN pFirstName varch
         pEmail, pPswd, pIdTypeIdent);
         
         INSERT INTO end_user (idUser)
+        VALUES (pOutId);
+        
+        SET pidOut = pOutId;
+        
+        COMMIT;
+    END;
+//
+/*Administrator routines*/
+CREATE OR REPLACE PROCEDURE insertAdministrator(IN pSex int UNSIGNED, IN pFirstName varchar(20), 
+	IN pSecondName varchar(20), IN pFirstSurname varchar(20), IN pSecondSurname varchar(20),
+	IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername varchar(20), IN pIdentification int,
+    IN pPhoneNumber int, IN pEmail varchar(20), IN pPswd varchar(20), IN pIdTypeIdent int UNSIGNED,
+    pidOut int UNSIGNED)
+    BEGIN
+	    DECLARE pOutId int;
+        CALL insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,
+        pDatebirth, pPhoto, pOutId);
+
+        CALL insertSystemUser(pOutId, pUsername, pPhoneNumber, pIdentification,
+        pEmail, pPswd, pIdTypeIdent);
+        
+        INSERT INTO administrator (idAdministrator)
         VALUES (pOutId);
         
         SET pidOut = pOutId;

@@ -4,8 +4,11 @@ create role su_user;
 create user 'su'@'localhost' IDENTIFIED BY 'su';
 grant select, drop, insert, update, create, alter, delete on su.* to 'su'@'localhost';
 grant create routine, alter routine on su.* to 'su'@'localhost';
-GRANT EXECUTE on su.* to 'su'@'localhost';
+GRANT EXECUTE ON su.* TO 'su'@'localhost';
+grant create trigger on su.* to 'su'@'localhost';
 GRANT TRIGGER ON su.* TO 'su'@'localhost';
+GRANT EVENT on su.* TO 'su'@'localhost';
+SET GLOBAL event_scheduler=ON;
 /*drop user 'su'@'localhost';
 create user 'su'@'localhost' IDENTIFIED BY 'su';
 grant su_user to 'su'@'localhost';*/

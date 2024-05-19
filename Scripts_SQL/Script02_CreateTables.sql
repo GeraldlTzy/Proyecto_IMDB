@@ -99,7 +99,7 @@ CREATE OR REPLACE TABLE systemUser (
 	idSystemUser                INT UNSIGNED,
 	username                    VARCHAR(20) NOT NULL,
 	phoneNumber                 INT NOT NULL,
-	email                       VARCHAR(20) NOT NULL,
+	email                       VARCHAR(50) NOT NULL,
 	pswd  		                VARCHAR(20) NOT NULL,
     constraint fk_systemUser_person foreign key (idSystemUser) 
     references Person(idPerson) ON DELETE CASCADE ON UPDATE CASCADE,

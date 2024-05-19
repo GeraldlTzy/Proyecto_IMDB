@@ -1,0 +1,213 @@
+CALL insertNationality('Argentino');
+CALL insertNationality('Boliviano');
+CALL insertNationality('Canadiense');
+CALL insertNationality('Colombiano');
+CALL insertNationality('Cubano');
+CALL insertNationality('Ecuatoriano');
+CALL insertNationality('Guatemalteco');
+CALL insertNationality('Haitiano');
+CALL insertNationality('Jamaiquino');
+CALL insertNationality('Nicaragüense');
+    
+CALL insertNationality('Paraguayo');
+CALL insertNationality('Surinamés');
+CALL insertNationality('Uruguayo');
+CALL insertNationality('Beliceño');
+CALL insertNationality('Brasileño');
+CALL insertNationality('Chileno');
+CALL insertNationality('Dominicano');
+CALL insertNationality('Salvadoreño');
+CALL insertNationality('Guyanés');
+    
+CALL insertNationality('Hondureño');
+CALL insertNationality('Mexicano');
+CALL insertNationality('Panameño');
+CALL insertNationality('Peruano');
+CALL insertNationality('Estadounidense');
+CALL insertNationality('Venezolano');
+CALL insertNationality('Albanés');
+CALL insertNationality('Austriaco');
+CALL insertNationality('Bosnio');
+CALL insertNationality('Croata');
+    
+CALL insertNationality('Danés');
+CALL insertNationality('Francés');
+CALL insertNationality('Griego');
+CALL insertNationality('Húngaro');
+CALL insertNationality('Irlandés');
+CALL insertNationality('Letón');
+CALL insertNationality('Lituano');
+CALL insertNationality('Macedónio');
+CALL insertNationality('Monegasco');
+CALL insertNationality('Noruego');
+    
+CALL insertNationality('Portugués');
+CALL insertNationality('Ruso');
+CALL insertNationality('Eslovaco');
+CALL insertNationality('Español');
+CALL insertNationality('Suizo');
+CALL insertNationality('Estonio');
+CALL insertNationality('Montenegrino');
+CALL insertNationality('Andorrano');
+CALL insertNationality('Belga');
+CALL insertNationality('Búlgaro');
+    
+CALL insertNationality('Checo');
+CALL insertNationality('Finlandés');
+CALL insertNationality('Alemán');
+CALL insertNationality('Vaticano');
+CALL insertNationality('Islandés');
+CALL insertNationality('Italiano');
+CALL insertNationality('Liechtensteiniano');
+CALL insertNationality('Luxemburgués');
+CALL insertNationality('Maltés');
+CALL insertNationality('Neerlandés');
+    
+CALL insertNationality('Polaco');
+CALL insertNationality('Rumano');
+CALL insertNationality('Sanmarinense');
+CALL insertNationality('Esloveno');
+CALL insertNationality('Sueco');
+CALL insertNationality('Inglés');
+CALL insertNationality('Galés');
+CALL insertNationality('Escocés');
+CALL insertNationality('Serbio');
+CALL insertNationality('Costarricense');
+    
+CALL insertNationality('Antiguano');
+CALL insertNationality('Bahameño');
+CALL insertNationality('Barbadense');
+CALL insertNationality('Dominiqués');
+CALL insertNationality('Granadino');
+CALL insertNationality('Sancristobaleño');
+CALL insertNationality('Sanvicentino');
+CALL insertNationality('Santalucense');
+CALL insertNationality('Trinitense');
+CALL insertNationality('Turco');
+    
+CALL insertNationality('Bielorruso');
+CALL insertNationality('Chipriota');
+CALL insertNationality('Georgiano');
+CALL insertNationality('Moldavo');
+CALL insertNationality('Ucraniano');
+CALL insertNationality('Afgano');
+CALL insertNationality('Saudí');
+CALL insertNationality('Armenio');
+CALL insertNationality('Azerbaiyano');
+CALL insertNationality('Bangladesí');
+    
+CALL insertNationality('Bareiní');
+CALL insertNationality('Birmano');
+CALL insertNationality('Bruneano');
+CALL insertNationality('Buranés');
+CALL insertNationality('Camboyano');
+CALL insertNationality('Catarí');
+CALL insertNationality('Chino');
+CALL insertNationality('Norcoreano');
+CALL insertNationality('Emiratí');
+CALL insertNationality('Filipino');
+    
+CALL insertNationality('Indio');
+CALL insertNationality('Indonés');
+CALL insertNationality('Iraquí');
+CALL insertNationality('Iraní');
+CALL insertNationality('Israelí');
+CALL insertNationality('Japonés');
+CALL insertNationality('Jordano');
+CALL insertNationality('Kazajo');
+CALL insertNationality('Kirguís');
+CALL insertNationality('Kuwaití');
+    
+CALL insertNationality('Laosiano');
+CALL insertNationality('Libanés');
+CALL insertNationality('Malasio');
+CALL insertNationality('Maldivo');
+CALL insertNationality('Mongol');
+CALL insertNationality('Nepalí');
+CALL insertNationality('Omaní');
+CALL insertNationality('Pakistaní');
+CALL insertNationality('Singapurense');
+CALL insertNationality('Sirio');
+    
+CALL insertNationality('Esrilanqués');
+CALL insertNationality('Tailandés');
+CALL insertNationality('Tayiko');
+CALL insertNationality('Timorense');
+CALL insertNationality('Turkmeno');
+CALL insertNationality('Uzbeko');
+CALL insertNationality('Vietnamita');
+CALL insertNationality('Yemení');
+CALL insertNationality('Australiano');
+CALL insertNationality('Fiyiano');
+    
+CALL insertNationality('Marshalés');
+CALL insertNationality('Salomonense');
+CALL insertNationality('Kiribatiano');
+CALL insertNationality('Micronesio');
+CALL insertNationality('Nauruano');
+CALL insertNationality('Neozelandés');
+CALL insertNationality('Palauano');
+CALL insertNationality('Papú');
+CALL insertNationality('Samoano');
+CALL insertNationality('Togano');
+    
+CALL insertNationality('Tuvaluano');
+CALL insertNationality('Vanuatuense');
+CALL insertNationality('Angoleño');
+CALL insertNationality('Argelino');
+CALL insertNationality('Beninés');
+CALL insertNationality('Botsuano');
+CALL insertNationality('Burkinés');
+CALL insertNationality('Burundés');
+CALL insertNationality('Caboverdiano');
+CALL insertNationality('Camerunés');
+    
+CALL insertNationality('Chadiano');
+CALL insertNationality('Comorense');
+CALL insertNationality('Marfileño');
+CALL insertNationality('Egipcio');
+CALL insertNationality('Eritreo');
+CALL insertNationality('Etíope');
+CALL insertNationality('Gabonés');
+CALL insertNationality('Gambiano');
+CALL insertNationality('Ghanés');
+CALL insertNationality('Guineano');
+    
+CALL insertNationality('Ecuatoguineano');
+CALL insertNationality('Keniano');
+CALL insertNationality('Lesotense');
+CALL insertNationality('Liberiano');
+CALL insertNationality('Libio');
+CALL insertNationality('Malgache');
+CALL insertNationality('Malauí');
+CALL insertNationality('Maliense');
+CALL insertNationality('Marroquí');
+CALL insertNationality('Mauriciano');
+    
+CALL insertNationality('Mauritano');
+CALL insertNationality('Mozambiqueño');
+CALL insertNationality('Namibio');
+CALL insertNationality('Nigerino');
+CALL insertNationality('Nigeriano');
+CALL insertNationality('Centroafricano');
+CALL insertNationality('Congoleño');
+CALL insertNationality('Ruandés');
+CALL insertNationality('Santotomense');
+CALL insertNationality('Senegalés');
+    
+CALL insertNationality('Seychelense');
+CALL insertNationality('Sierraleonés');
+CALL insertNationality('Somalí');
+CALL insertNationality('Suazi');
+    
+CALL insertNationality('Sudafricano');
+CALL insertNationality('Sudanés');
+CALL insertNationality('Sursudanés');
+CALL insertNationality('Tanzano');
+    
+CALL insertNationality('Togolés');
+CALL insertNationality('Tunecino');
+CALL insertNationality('Ugandés');
+CALL insertNationality('Yibutiano');
+CALL insertNationality('Zambiano');
+CALL insertNationality('Zimbabuense');

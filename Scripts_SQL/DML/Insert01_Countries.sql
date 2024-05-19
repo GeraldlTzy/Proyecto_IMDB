@@ -75,7 +75,6 @@ insert into Country(nameCountry) values ('Costa Rica');
 insert into Country(nameCountry) values ('Antigua y Barbuda');
 insert into Country(nameCountry) values ('Bahamas');
 insert into Country(nameCountry) values ('Barbados');
-insert into Country(nameCountry) values ('Costa Rica');
 insert into Country(nameCountry) values ('Dominica');
 insert into Country(nameCountry) values ('Granada');
 insert into Country(nameCountry) values ('San Cristóbal y Nieves');
@@ -212,7 +211,7 @@ insert into Country(nameCountry) values ('Zimbabue');
 insert into Country(nameCountry) values ('Corea del Sur');
 /*******************************Insert provinces*******************************/
 /******************************************************************************/
----Costa Rica
+/*---Costa Rica*/
 insert into City(idCountry, nameCity) values (69, 'San José');
 insert into City(idCountry, nameCity) values (69, 'Limón');
 insert into City(idCountry, nameCity) values (69, 'Cartago');
@@ -1415,3 +1414,4 @@ insert into City(idCountry, nameCity) values (68, 'Vojvodina');
 insert into City(idCountry, nameCity) values (68, 'Šumadija and Western Serbia');
 insert into City(idCountry, nameCity) values (68, 'South and Eastern Serbia');
 insert into City(idCountry, nameCity) values (68, 'Kosovo and Metohija');
+COMMIT;

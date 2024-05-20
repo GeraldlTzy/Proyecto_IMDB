@@ -1,5 +1,12 @@
 /****************************Inserts Countrys**********************************/
 /*******************************America****************************************/
+/*DELETE FROM country;
+SELECT * FROM participant;
+DELETE FROM person;
+SELECT * FROM person
+ALTER TABLE city
+AUTO_INCREMENT = 1;*/
+
 insert into Country(nameCountry) values ('Argentina');
 insert into Country(nameCountry) values ('Bolivia');
 insert into Country(nameCountry) values ('Canadá');
@@ -75,6 +82,7 @@ insert into Country(nameCountry) values ('Costa Rica');
 insert into Country(nameCountry) values ('Antigua y Barbuda');
 insert into Country(nameCountry) values ('Bahamas');
 insert into Country(nameCountry) values ('Barbados');
+insert into Country(nameCountry) values ('Borrar');
 insert into Country(nameCountry) values ('Dominica');
 insert into Country(nameCountry) values ('Granada');
 insert into Country(nameCountry) values ('San Cristóbal y Nieves');

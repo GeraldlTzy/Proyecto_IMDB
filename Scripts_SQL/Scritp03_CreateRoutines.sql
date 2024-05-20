@@ -21,7 +21,7 @@ CREATE OR REPLACE PROCEDURE insertSystemUser(
 	    INSERT INTO systemUser (idSystemUser, username, phoneNumber,
         email, pswd)
         VALUES (pIdPerson, pUsername, pPhoneNumber, pEmail,
-        pPswd);
+        SHA1(pPswd));
     
         INSERT INTO Identification (idTypeIdent, identNumber)
         VALUES (pIdTypeIdent, pIdentification);
@@ -114,14 +114,14 @@ BEGIN
     SELECT ad.idAdministrator, 2 INTO vId, vUserType
     FROM SystemUser sy
     LEFT JOIN Administrator ad ON ad.idAdministrator = sy.idSystemUser 
-    WHERE sy.username = pUsername AND sy.pswd = pPswd;
+    WHERE sy.username = pUsername AND sy.pswd = SHA1(pPswd);
 
     /*Search reference in table end_user*/
     IF vId IS NULL THEN
         SELECT us.idUser, 1 INTO vId, vUserType
         FROM End_user us
         INNER JOIN SystemUser sy ON us.idUser = sy.idSystemUser 
-        WHERE sy.username = pUsername AND sy.pswd = pPswd;
+        WHERE sy.username = pUsername AND sy.pswd = SHA1(pPswd);
     END IF;
 
     /*Cursor? Maybe*/
@@ -133,7 +133,7 @@ BEGIN
         AND pe.idPerson = vId
         AND pe.idSex = sex.idSex;
     END IF;
-END
+END;
 //
 /*******************CONTINUAR APARTIR DE ACÁ***************/
 CREATE OR REPLACE FUNCTION validateRegister(
@@ -158,7 +158,7 @@ BEGIN
     ELSE
         RETURN FALSE;
     END IF;
-END
+END;
 //
 
 CREATE OR REPLACE PROCEDURE getNationality(IN pIdNationality int)

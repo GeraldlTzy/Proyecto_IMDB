@@ -71,7 +71,7 @@ CREATE OR REPLACE TABLE Person (
 	firstSurname                VARCHAR(20) NOT NULL,
 	secondSurname               VARCHAR(20),
 	datebirth                   DATE NOT NULL,
-    photo                       BLOB,
+    photo                       LONGBLOB,
 	CONSTRAINT fk_Person_sex FOREIGN KEY (idSex) REFERENCES Sex(idSex)
 	ON DELETE CASCADE ON UPDATE CASCADE,
     created_by 					VARCHAR(15),

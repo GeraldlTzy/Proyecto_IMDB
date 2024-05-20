@@ -24,7 +24,7 @@ public class Test {
 
     public static void main(String[] args){
         ConnectDB con = ConnectDB.getObject();
-        String adress = "C:\\Users\\josed\\OneDrive\\Escritorio\\Imagenes\\";
+        String adress = "C:\\Users\\josed\\OneDrive\\Escritorio\\ParticipantImages\\";
         //Canadian
         //con.insertParticipant(1,"Keanu",null,"Reeves",null,"02-09-1964",5,18,"(Keanu Charles Reeves; Beirut, Líbano, 1964) Actor de cine estadounidense. De padre chino-hawaiano y de madre británica, Keanu Reeves creció en Toronto y se trasladó a los 16 años a Los Ángeles para trabajar como actor. De hecho ya antes, durante su estancia en Canadá, había actuado en el Theatre Arts High School.",186,null,adress+"keanu.jpg");
         //American

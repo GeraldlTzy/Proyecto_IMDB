@@ -2,7 +2,7 @@
 DELIMITER //
 CREATE OR REPLACE PROCEDURE insertPerson (
   IN pSex INT UNSIGNED, IN pFirstName varchar(20), IN pSecondName varchar(20), IN pFirstSurname varchar(20),
-  IN pSecondSurname varchar(20), IN pBirthdate date, IN pPhoto BLOB, OUT pOutId int
+  IN pSecondSurname varchar(20), IN pBirthdate date, IN pPhoto LONGBLOB, OUT pOutId int
 )
  BEGIN
   	INSERT INTO Person(idSex, firstName, secondName, firstSurname,
@@ -343,7 +343,7 @@ CREATE OR REPLACE PROCEDURE setSex (
 /*User routines*/
 CREATE OR REPLACE PROCEDURE insertUser(IN pSex int UNSIGNED, IN pFirstName varchar(20), 
 	IN pSecondName varchar(20), IN pFirstSurname varchar(20), IN pSecondSurname varchar(20),
-	IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername varchar(20), IN pIdentification int,
+	IN pDatebirth DATE, IN pPhoto LONGBLOB, IN pUsername varchar(20), IN pIdentification int,
     IN pPhoneNumber int, IN pEmail varchar(20), IN pPswd varchar(20), IN pIdTypeIdent int UNSIGNED,
     pidOut int UNSIGNED)
     BEGIN
@@ -365,7 +365,7 @@ CREATE OR REPLACE PROCEDURE insertUser(IN pSex int UNSIGNED, IN pFirstName varch
 /*Administrator routines*/
 CREATE OR REPLACE PROCEDURE insertAdministrator(IN pSex int UNSIGNED, IN pFirstName varchar(20), 
 	IN pSecondName varchar(20), IN pFirstSurname varchar(20), IN pSecondSurname varchar(20),
-	IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername varchar(20), IN pIdentification int,
+	IN pDatebirth DATE, IN pPhoto LONGBLOB, IN pUsername varchar(20), IN pIdentification int,
     IN pPhoneNumber int, IN pEmail varchar(20), IN pPswd varchar(20), IN pIdTypeIdent int UNSIGNED,
     pidOut int UNSIGNED)
     BEGIN
@@ -384,8 +384,7 @@ CREATE OR REPLACE PROCEDURE insertAdministrator(IN pSex int UNSIGNED, IN pFirstN
         COMMIT;
     END;
 //
-
-
+DELIMITER //
 #Product routines
 CREATE OR REPLACE PROCEDURE insertProduct(IN pIdType INT, IN pReleaseYear INT, IN pTitle VARCHAR(200),
     IN pDuration INT, IN pSynopsis VARCHAR(1000), IN pTrailer VARCHAR(1000), IN pPrice INT, OUT pIdProduct INT)
@@ -601,7 +600,7 @@ CREATE OR REPLACE PROCEDURE getProductsXGenre()
             INNER JOIN Catalog c
             ON c.idCatalog = cxp.idCatalog
             ORDER BY p.idProduct;
-            
+
     END;
 //    
 DELIMITER ;

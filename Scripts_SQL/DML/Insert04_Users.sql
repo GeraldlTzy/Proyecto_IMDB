@@ -1,0 +1,12 @@
+CALL insertUser(1,'Gerald', 'Estifén', 'Calderón','Castro', '2004-05-06', NULL, 'gerald', 728234493, 95778760, 'gerald@gmail.com', '12345', 1, 5);
+CALL insertAdministrator(1,'Gerald', 'Estifén', 'Calderón','Castro', '2004-05-06', NULL, 'GECC', 728234493, 95778760, 'gecc@gmail.com', '12345', 1, 5);
+call insertUser(1, 'John', 'Doe', 'Smith', NULL, '1990-04-15', NULL, 'john_doe', 12345678, 98765432, 'john_doe@gmail.com', '56432', 2, NULL);
+call insertUser(2, 'Jane', NULL, 'Williams', NULL, '1985-07-20', NULL, 'jane_will', 87654321, 12345678, 'jane@gmail.com', '65424', 3, NULL);
+call insertUser(1, 'Michael', NULL, 'Brown', 'Taylor', '1975-12-10', NULL, 'mike_brown', 13579246, 87654321, 'mike@gmail.com', '987473', 1, NULL);
+call insertUser(2, 'Emily', 'Grace', 'Johnson', ' ', '1988-09-05', NULL, 'emily_j', 98761234, 23456789, 'emily@gmail.com', '45454', 2, NULL);
+Call insertUser(1, 'William', NULL, 'Miller', NULL, '1979-03-30', NULL, 'will_miller', 24681357, 34567890, 'will@gmail.com', '6546456', 3, NULL);
+call insertUser(2, 'Olivia', 'Anne', 'Davis', NULL, '1995-08-12', NULL, 'olivia_d', 65432198, 45678901, 'olivia@gmail.com', '657474', 1, NULL);
+call insertUser(1, 'Daniel', 'Paul', 'Anderson', NULL, '1982-11-25', NULL, 'daniel_a', 78945612, 56789012, 'daniel@gmail.com', '546546', 2, NULL);
+call insertUser(2, 'Sophia', NULL, 'Martinez', NULL, '1992-06-18', NULL, 'sophia_m', 36925814, 67890123, 'sophia@gmail.com', '4645654', 3, NULL);
+call insertUser(1, 'Matthew', NULL, 'Thompson', NULL, '1987-02-08', NULL, 'matt_t', 98765432, 78901234, 'matt@gmail.com', '646456', 1, NULL);
+call insertUser(2, 'Emma', NULL, 'Harris', NULL, '1998-05-03', NULL, 'emma_h', 74185296, 89012345, 'emma@gmail.com', '6456456', 2, NULL);

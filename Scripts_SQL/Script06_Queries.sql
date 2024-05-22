@@ -1,6 +1,6 @@
 DELIMITER //
 # Query for admin
-PROCEDURE getTopNPurchases(IN N int)
+CREATE OR REPLACE PROCEDURE getTopNPurchases(IN N int)
 BEGIN
     SELECT top.idProduct, top.title, ph.image, top.total 
     FROM
@@ -22,19 +22,20 @@ BEGIN
 END;
 //
 # Queries for users
-CREATE OR REPLACE PROCEDURE getPurchasesInLastNMonths(IN itv int)
+CREATE OR REPLACE PROCEDURE getPurchasesInLastNMonths(IN pIdUser int unsigned, IN itv int)
 BEGIN
 	IF itv IS NULL OR itv = 0 THEN
 		SELECT pr.idProduct
 		FROM purchase pu
 		JOIN product pr
-		ON pu.idProduct = pr.idProduct;
+		ON pu.idProduct = pr.idProduct
+		AND pu.idUser = pIdUser;
 	ELSE 
 		SELECT pr.idProduct
 		FROM purchase pu
 		JOIN product pr
 		ON pu.idProduct = pr.idProduct
+		AND pu.idUser = pIdUser
 		WHERE pu.history >= DATE_SUB(NOW(), INTERVAL itv MONTH);
 	END IF;
 END //
-DELIMITER ;

@@ -10,3 +10,16 @@ call insertUser(1, 'Daniel', 'Paul', 'Anderson', NULL, '1982-11-25', NULL, 'dani
 call insertUser(2, 'Sophia', NULL, 'Martinez', NULL, '1992-06-18', NULL, 'sophia_m', 36925814, 67890123, 'sophia@gmail.com', '4645654', 3, NULL);
 call insertUser(1, 'Matthew', NULL, 'Thompson', NULL, '1987-02-08', NULL, 'matt_t', 98765432, 78901234, 'matt@gmail.com', '646456', 1, NULL);
 call insertUser(2, 'Emma', NULL, 'Harris', NULL, '1998-05-03', NULL, 'emma_h', 74185296, 89012345, 'emma@gmail.com', '6456456', 2, NULL);
+
+
+call insertCard(31, 890893854, '2025-05-03', 676, 'John');
+call buyProduct(31, 5, 3);
+call buyProduct(31, 9, 3);
+call buyProduct(31, 20, 3);
+call buyProduct(31, 23, 3);
+
+call insertCard(37, 432478247, '2027-11-30', 906, 'Daniel');
+call buyProduct(37, 4, 4);
+call buyProduct(37, 18, 4);
+call buyProduct(37, 7, 4);
+call buyProduct(37, 21, 4);

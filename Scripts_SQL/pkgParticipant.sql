@@ -1,52 +1,6 @@
---Package pkgParticipant
+/*Package pkgParticipant*/
 DELIMITER //
 
-
-CREATE OR REPLACE PACKAGE pkgParticipant
-
-	PROCEDURE insertParticipant(IN pSex INT, IN pFirstName VARCHAR(20), IN pSecondName VARCHAR(20),
-	    IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20), IN pDatebirth DATE,
-	    IN pCity INT, IN pBiography VARCHAR(500), IN pHeight INT, 
-	    IN pTrivia VARCHAR(500), IN pPhoto BLOB, OUT pIdParticipant INT);
-	PROCEDURE insertRelative(IN pIdParticipant INT,
-		IN pIdRelative INT, IN pIdKinship INT);
-	PROCEDURE deleteParticipant(IN pIdParticipant INT);
-	PROCEDURE updateParticipant(IN pIdParticipant INT
-		IN pSex INT, IN pFirstName VARCHAR(20), IN pSecondName VARCHAR(20),
-	    IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20), IN pDatebirth DATE,
-	    IN pCity INT, IN pBiography VARCHAR(500), IN pHeight INT, 
-	    IN pTrivia VARCHAR(500), IN pPhoto BLOB);
-	
-	FUNCTION getParticipantInfo(IN pIdParticipant INT) RETURN SYS_REFCURSOR; 
-	FUNCTION getParticipantNat(IN pIdParticipant INT) RETURN SYS_REFCURSOR;
-	FUNCTION getInfoParticipants() RETURN SYS_REFCURSOR;
-
-END;
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-END;
-//
-
-CREATE OR REPLACE PACKAGE BODY pkgParticipant
 
 	CREATE OR REPLACE PROCEDURE insertParticipant(IN pSex INT, IN pFirstName VARCHAR(20), IN pSecondName VARCHAR(20),
 	    IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20), IN pDatebirth DATE,
@@ -69,7 +23,7 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant
 
 	    	COMMIT;
 		END;
-	--//
+	//
 
 
 
@@ -80,7 +34,7 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant
 	        VALUES (pIdParticipant,pIdRelative,pIdKinship);
 	        COMMIT;
 		END;
-	--//
+	//
 
 
 
@@ -99,11 +53,11 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant
 
 	    	COMMIT;
 		END;
-	--//
+	//
 
 
 
-	CREATE OR REPLACE PROCEDURE updateParticipant(IN pIdParticipant INT
+	CREATE OR REPLACE PROCEDURE updateParticipant(IN pIdParticipant INT,
 		IN pSex INT, IN pFirstName VARCHAR(20), IN pSecondName VARCHAR(20),
 	    IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20), IN pDatebirth DATE,
 	    IN pCity INT, IN pBiography VARCHAR(500), IN pHeight INT, 
@@ -130,12 +84,15 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant
 
 	    	COMMIT;
 		END;
-	--//
+	//
 
 
+	/*
 	--###**Cursor**###
 	--old: getParticipant [PROCEDURE]
 	--new: getParticipantInfo [FUNCTION] -AND- getParticipantNat [FUNCTION]
+	*/
+	/*
 	CREATE OR REPLACE FUNCTION getParticipantInfo(IN pIdParticipant INT) RETURNS CURSOR READS SQL DATA
 		BEGIN
 			DECLARE vParticipantInfoCursor CURSOR FOR
@@ -154,8 +111,11 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant
 
 		    RETURN vParticipantInfoCursor;
 		END;
-	--//
+	//
+	*/
 
+	
+	/*
 	CREATE OR REPLACE FUNCTION getParticipantNat(IN pIdParticipant INT) RETURNS CURSOR READS SQL DATA
 		BEGIN
 			DECLARE vParticipantNatCursor CURSOR FOR
@@ -168,15 +128,11 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant
 
 		    RETURN vParticipantNatCursor;
 		END;
-	--//
+	//
+	*/
 
 
-
-
-
-
-
-
+	/*
 	CREATE OR REPLACE FUNCTION getInfoParticipants() RETURNS CURSOR READS SQL DATA
 		BEGIN
 		    DECLARE vParticipantsCursor CURSOR FOR
@@ -194,11 +150,9 @@ CREATE OR REPLACE PACKAGE BODY pkgParticipant
 
 		    RETURN vParticipantsCursor;
 		END;
-	--//
+	//
+	*/
 
-END;
 
-
-//
 
 DELIMITER ;

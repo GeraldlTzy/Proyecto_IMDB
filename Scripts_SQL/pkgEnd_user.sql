@@ -1,75 +1,32 @@
---Package pkgEnd_user
+/*Package pkgEnd_user*/
 DELIMITER //
 
 
-CREATE OR REPLACE PACKAGE pkgEnd_user
-  PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
-	    IN pSecondName VARCHAR(20), IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20),
-	    IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername VARCHAR(20), IN pIdentification INT,
-	    IN pPhoneNumber INT, IN pEmail VARCHAR(50), IN pPswd VARCHAR(20), IN pIdTypeIdent INT,
-	    OUT pidOut INT);
-	PROCEDURE deleteUser(IN pIdUser INT);
-	PROCEDURE buyProduct(IN pIdUser INT, IN pIdProduct INT, IN pIdPayment INT);
-	PROCEDURE commentProduct(IN pIdUser INT, IN pIdProduct INT, IN pDescription VARCHAR(500));
-	PROCEDURE updateComment(IN pIdUser INT, IN pIdProduct INT, IN pDescription VARCHAR(500));
-	PROCEDURE reviewProduct(IN pIdUser INT, IN pIdProduct INT, IN pStars INT);
-	PROCEDURE updateReview(IN pIdUser INT, IN pIdProduct INT, IN pStars INT);
-	PROCEDURE insertFavorite(IN pIdUser INT, IN pIdProduct INT);
-	FUNCTION getWishlist(pIdUser INT) RETURN SYS_REFCURSOR;
-	PROCEDURE deleteComment(IN pIdUser INT, IN pIdProduct INT);
-	PROCEDURE deleteReview(IN pIdUser INT, IN pIdProduct INT);
-	PROCEDURE deleteFavorite(IN pIdUser INT, IN pIdProduct INT);
-	PROCEDURE insertCard(IN pIdUser INT, IN pCardNumber INT,
-	    IN pExpiration DATE, IN pCcv INT, IN pOwnerName VARCHAR(20));
-	PROCEDURE removeCard(IN pIdUser INT, IN pIdCard INT);
-	FUNCTION getPaymentMethods(pIdUser INT) RETURN SYS_REFCURSOR;
-  	
-END;
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE OR REPLACE PACKAGE BODY pkgEnd_user
-
-	CREATE OR REPLACE PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
+CREATE OR REPLACE PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
 	    IN pSecondName VARCHAR(20), IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20),
 	    IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername VARCHAR(20), IN pIdentification INT,
 	    IN pPhoneNumber INT, IN pEmail VARCHAR(50), IN pPswd VARCHAR(20), IN pIdTypeIdent INT,
 	    OUT pidOut INT)
-	    BEGIN
-	    	DECLARE pOutId INT;
-
-	    	START TRANSACTION;
-
-	    	CALL insertPerson(pSex, pFirstName, pSecondName, pFirstSurname,
-	    	pSecondSurname, pDatebirth, pPhoto, @pOutId);
-
-	    	SET pOutId = @pOutId;
-
-	    	CALL insertSystemUser(pOutId, pUsername, pPhoneNumber,
-	    	pIdentification, pEmail, pPswd, pIdTypeIdent);
-
-	    	INSERT INTO end_user (idUser)
-	    	VALUES (pOutId);
-
-	    	SET pidOut = pOutId;
-
-	    	COMMIT;
-	    END;
-	--//
+	BEGIN
+	    DECLARE pOutId INT;
+	
+	    START TRANSACTION;
+	
+	    CALL insertPerson(pSex, pFirstName, pSecondName, pFirstSurname,
+	                      pSecondSurname, pDatebirth, pPhoto, @pOutId);
+	
+	    SET pOutId = @pOutId;
+	
+	    CALL insertSystemUser(pOutId, pUsername, pPhoneNumber,
+	                          pIdentification, pEmail, pPswd, pIdTypeIdent);
+	
+	    INSERT INTO end_user (idUser)
+	    VALUES (pOutId);
+	
+	    SET pidOut = pOutId;
+	
+	    COMMIT;
+	end; //
 
 
 	CREATE OR REPLACE PROCEDURE deleteUser(IN pIdUser INT)
@@ -111,8 +68,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    WHERE idPerson = pIdUser;
 		    
 		    COMMIT;
-		END;
-	--//
+		END//
 
 
 	CREATE OR REPLACE PROCEDURE buyProduct(IN pIdUser INT, IN pIdProduct INT, IN pIdPayment INT)
@@ -121,8 +77,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    VALUES (pIdUser, pIdProduct, pIdPayment, NOW());
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
 
 	CREATE OR REPLACE PROCEDURE commentProduct(IN pIdUser INT, IN pIdProduct INT, IN pDescription VARCHAR(500))
@@ -131,8 +86,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    VALUES (pIdProduct, pIdUser, pDescription);
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
 	CREATE OR REPLACE PROCEDURE updateComment(IN pIdUser INT, IN pIdProduct INT, IN pDescription VARCHAR(500))
 		BEGIN
@@ -147,8 +101,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    WHERE idUser = pIdUser AND idProduct = pIdProduct;
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
 	CREATE OR REPLACE PROCEDURE reviewProduct(IN pIdUser INT, IN pIdProduct INT, IN pStars INT)
 		BEGIN
@@ -162,8 +115,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    VALUES (pIdProduct, pIdUser, pStars);
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
 	CREATE OR REPLACE PROCEDURE updateReview(IN pIdUser INT, IN pIdProduct INT, IN pStars INT)
 		BEGIN
@@ -178,8 +130,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    WHERE idUser = pIdUser AND idProduct = pIdProduct;
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
 	CREATE OR REPLACE PROCEDURE insertFavorite(IN pIdUser INT, IN pIdProduct INT)
 		BEGIN
@@ -187,10 +138,10 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    VALUES (pIdProduct, pIdUser);
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
-	--###**Cursor**###
+	/*###**Cursor**###*/
+	/*
 	CREATE OR REPLACE FUNCTION getWishlist(pIdUser INT) RETURNS CURSOR READS SQL DATA
 		BEGIN
 		    DECLARE vWishlistCursor CURSOR FOR
@@ -209,8 +160,8 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    OPEN vWishlistCursor;
 
 		    RETURN vWishlistCursor;
-		END;
-	--//
+		END//
+		*/
 
 	CREATE OR REPLACE PROCEDURE deleteComment(IN pIdUser INT, IN pIdProduct INT)
 		BEGIN
@@ -218,8 +169,7 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    WHERE idUser = pIdUser AND idProduct = pIdProduct;
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
 
 	CREATE OR REPLACE PROCEDURE deleteReview(IN pIdUser INT, IN pIdProduct INT)
@@ -228,16 +178,14 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    WHERE idUser = pIdUser AND idProduct = pIdProduct;
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
 	CREATE OR REPLACE PROCEDURE deleteFavorite(IN pIdUser INT, IN pIdProduct INT)
 		BEGIN
 			DELETE FROM wishlist
 			WHERE idUser = pIdUser AND idProduct = pIdProduct;
 			COMMIT;
-	    END;
-	--//
+	    END//
 
 	CREATE OR REPLACE PROCEDURE insertCard(IN pIdUser INT, IN pCardNumber INT,
 	    IN pExpiration DATE, IN pCcv INT, IN pOwnerName VARCHAR(20))
@@ -253,10 +201,9 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    VALUES (@paymentId, pCardNumber, pExpiration, pCcv, pOwnerName);
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
-	--### Payment used pIdCard before for some reason
+	/*### Payment used pIdCard before for some reason*/
 	CREATE OR REPLACE PROCEDURE removeCard(IN pIdUser INT, IN pIdCard INT)
 		BEGIN
 			START TRANSACTION;
@@ -268,10 +215,10 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    WHERE idPayment = pIdUser;
 
 		    COMMIT;
-		END;
-	--//
+		END//
 
-	--###**Cursor**###
+	/*###**Cursor**###*/
+	/*
 	CREATE OR REPLACE FUNCTION getPaymentMethods(pIdUser INT) RETURNS CURSOR READS SQL DATA
 		BEGIN
 		    DECLARE vMethods CURSOR FOR
@@ -282,12 +229,8 @@ CREATE OR REPLACE PACKAGE BODY pkgEnd_user
 		    OPEN vMethods;
 
 		    RETURN vMethods;
-		END;
+		END//
+		*/
 
-
-END;
-
-
-//
 
 DELIMITER ;

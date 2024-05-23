@@ -2,7 +2,7 @@
 DELIMITER //
 
 
-CREATE OR REPLACE PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
+	CREATE OR REPLACE PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
 	    IN pSecondName VARCHAR(20), IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20),
 	    IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername VARCHAR(20), IN pIdentification INT,
 	    IN pPhoneNumber INT, IN pEmail VARCHAR(50), IN pPswd VARCHAR(20), IN pIdTypeIdent INT,
@@ -26,7 +26,34 @@ CREATE OR REPLACE PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
 	    SET pidOut = pOutId;
 	
 	    COMMIT;
-	end; //
+	END; //
+	
+	CREATE OR REPLACE PROCEDURE updateUser(IN pIdUser INT, IN pSex INT, IN pFirstName VARCHAR(20),
+	    IN pSecondName VARCHAR(20), IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20),
+	    IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername VARCHAR(20),
+	    IN pPhoneNumber INT, IN pEmail VARCHAR(50), IN pPswd VARCHAR(20))
+	    BEGIN
+		    START TRANSACTION;
+		  
+		    UPDATE Person
+		    SET idSex = pSex,
+		    	firstName = pFirstName,
+		    	secondName = pSecondName,
+		    	firstSurname = pFirstSurname,
+		    	secondSurname = pSecondSurname,
+		    	datebirth = pDatebirth,
+		    	photo = pPhoto
+		    WHERE idPerson = pIdUser;
+		   
+		    UPDATE systemUser
+		    SET username = pUsername,
+		    	phoneNumber = pPhoneNumber,
+		    	email = pEmail,
+		    	pswd = pPswd
+		    WHERE idSystemUser = pIdUser;
+		   
+	        COMMIT;
+		END//
 
 
 	CREATE OR REPLACE PROCEDURE deleteUser(IN pIdUser INT)
@@ -140,28 +167,24 @@ CREATE OR REPLACE PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
 		    COMMIT;
 		END//
 
-	/*###**Cursor**###*/
-	/*
-	CREATE OR REPLACE FUNCTION getWishlist(pIdUser INT) RETURNS CURSOR READS SQL DATA
+		
+	CREATE OR REPLACE PROCEDURE getWishlist(pIdUser INT)
 		BEGIN
-		    DECLARE vWishlistCursor CURSOR FOR
-		        SELECT wl.idProduct, pd.Title, ph.image
-		        FROM Wishlist wl
-		        INNER JOIN Product pd ON wl.idProduct = pd.idProduct AND wl.idUser = pIdUser
-		        INNER JOIN (
-		            SELECT idProduct, image
-		            FROM (
-		                SELECT ph.idProduct, ph.image, ROW_NUMBER() OVER (PARTITION BY ph.idProduct ORDER BY ph.idProduct) AS rn
-		                FROM Photo ph
-		            ) AS ph_temp
-		            WHERE rn = 1
-		        ) AS ph ON ph.idProduct = pd.idProduct;
-
-		    OPEN vWishlistCursor;
-
-		    RETURN vWishlistCursor;
+			SELECT wl.idProduct, pd.Title, ph.image
+			FROM Wishlist wl
+			INNER JOIN Product pd ON wl.idProduct = pd.idProduct AND wl.idUser = pIdUser
+			INNER join
+			(
+	            SELECT idProduct, image
+	            FROM (
+	                SELECT ph.idProduct, ph.image, ROW_NUMBER() OVER (PARTITION BY ph.idProduct ORDER BY ph.idProduct) AS rn
+	                FROM Photo ph
+	            ) AS pho
+	            WHERE rn = 1
+	        ) AS ph
+	       ON ph.idProduct = pd.idProduct;
 		END//
-		*/
+	
 
 	CREATE OR REPLACE PROCEDURE deleteComment(IN pIdUser INT, IN pIdProduct INT)
 		BEGIN
@@ -203,7 +226,7 @@ CREATE OR REPLACE PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
 		    COMMIT;
 		END//
 
-	/*### Payment used pIdCard before for some reason*/
+
 	CREATE OR REPLACE PROCEDURE removeCard(IN pIdUser INT, IN pIdCard INT)
 		BEGIN
 			START TRANSACTION;
@@ -217,20 +240,14 @@ CREATE OR REPLACE PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
 		    COMMIT;
 		END//
 
-	/*###**Cursor**###*/
-	/*
-	CREATE OR REPLACE FUNCTION getPaymentMethods(pIdUser INT) RETURNS CURSOR READS SQL DATA
+		
+	CREATE OR REPLACE PROCEDURE getPaymentMethods(IN pIdUser INT)
 		BEGIN
-		    DECLARE vMethods CURSOR FOR
-		        SELECT idCard, cardNumber, expiration, ccv, ownerName
-		        FROM card
-		        INNER JOIN Payment pay ON card.idCard = pay.idPayment AND pay.idUser = pIdUser;
-		        
-		    OPEN vMethods;
-
-		    RETURN vMethods;
+		    SELECT idCard, cardNumber, expiration, ccv, ownerName
+		    FROM card
+		    INNER JOIN Payment pay
+		    ON idCard = idPayment AND idUser = pIdUser;
 		END//
-		*/
 
 
 DELIMITER ;

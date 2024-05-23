@@ -88,70 +88,48 @@ DELIMITER //
 
 
 	/*
-	--###**Cursor**###
 	--old: getParticipant [PROCEDURE]
 	--new: getParticipantInfo [FUNCTION] -AND- getParticipantNat [FUNCTION]
 	*/
-	/*
-	CREATE OR REPLACE FUNCTION getParticipantInfo(IN pIdParticipant INT) RETURNS CURSOR READS SQL DATA
+	CREATE OR REPLACE PROCEDURE getParticipantInfo(IN pIdParticipant INT)
 		BEGIN
-			DECLARE vParticipantInfoCursor CURSOR FOR
-	            SELECT pe.idPerson, pe.firstName, pe.secondName, pe.firstSurname, pe.secondSurname, 
-	            	pe.datebirth, pe.photo, ci.idCity, pa.biography, pa.height,
-	            	pa.trivia, pe.idSex
-	            FROM person pe
-	            INNER JOIN participant pa
-	            ON pe.idPerson = pIdParticipant AND pa.idParticipant = pe.idPerson
-	            INNER JOIN city ci
-	            ON ci.idCity = pa.idCity
-	            INNER JOIN country co
-	            ON ci.idCountry = co.idCountry;
-
-	        OPEN vParticipantInfoCursor;
-
-		    RETURN vParticipantInfoCursor;
+            SELECT pe.idPerson, pe.firstName, pe.secondName, pe.firstSurname, pe.secondSurname, 
+            	pe.datebirth, pe.photo, ci.idCity, pa.biography, pa.height,
+            	pa.trivia, pe.idSex
+            FROM person pe
+            INNER JOIN participant pa
+            ON pe.idPerson = pIdParticipant AND pa.idParticipant = pe.idPerson
+            INNER JOIN city ci
+            ON ci.idCity = pa.idCity
+            INNER JOIN country co
+            ON ci.idCountry = co.idCountry;
+           
 		END;
 	//
-	*/
 
-	
-	/*
-	CREATE OR REPLACE FUNCTION getParticipantNat(IN pIdParticipant INT) RETURNS CURSOR READS SQL DATA
+
+	CREATE OR REPLACE PROCEDURE getParticipantNat(IN pIdParticipant INT)
 		BEGIN
-			DECLARE vParticipantNatCursor CURSOR FOR
-				SELECT na.idNationality
-	            FROM nationalityPerson na
-	            INNER JOIN participant pa
-	            ON idPerson = pIdParticipant;
-
-			OPEN vParticipantNatCursor;
-
-		    RETURN vParticipantNatCursor;
+			SELECT na.idNationality
+            FROM nationalityPerson na
+            INNER JOIN participant pa
+            ON idPerson = pIdParticipant;
 		END;
 	//
-	*/
 
 
-	/*
-	CREATE OR REPLACE FUNCTION getInfoParticipants() RETURNS CURSOR READS SQL DATA
-		BEGIN
-		    DECLARE vParticipantsCursor CURSOR FOR
-		        SELECT idPerson, 
-		               CONCAT_WS(' ', firstName, secondName, firstSurname, secondSurname) AS fullName, 
-		               photo
-		        FROM Person pe
-		        INNER JOIN Participant pa
-		        ON pe.idPerson = pa.idParticipant;
-
-		    DECLARE CONTINUE HANDLER FOR NOT FOUND
-		        RETURN NULL;
-
-		    OPEN vParticipantsCursor;
-
-		    RETURN vParticipantsCursor;
+	CREATE OR REPLACE PROCEDURE getInfoParticipants()
+		begin
+			
+	        SELECT idPerson, 
+	               CONCAT_WS(' ', firstName, secondName, firstSurname, secondSurname) AS fullName, 
+	               photo
+	        FROM Person pe
+	        INNER JOIN Participant pa
+	        ON pe.idPerson = pa.idParticipant;
 		END;
 	//
-	*/
+
 
 
 

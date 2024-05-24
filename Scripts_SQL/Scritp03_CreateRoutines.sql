@@ -345,7 +345,7 @@ CREATE OR REPLACE PROCEDURE insertUser(IN pSex int UNSIGNED, IN pFirstName varch
 	IN pSecondName varchar(20), IN pFirstSurname varchar(20), IN pSecondSurname varchar(20),
 	IN pDatebirth DATE, IN pPhoto LONGBLOB, IN pUsername varchar(20), IN pIdentification int,
     IN pPhoneNumber int, IN pEmail varchar(20), IN pPswd varchar(20), IN pIdTypeIdent int UNSIGNED,
-    pidOut int UNSIGNED)
+    OUT pidOut int UNSIGNED)
     BEGIN
 	    DECLARE pOutId int;
         CALL insertPerson(pSex, pFirstName, pSecondName, pFirstSurname, pSecondSurname,

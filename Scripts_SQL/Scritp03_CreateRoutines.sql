@@ -603,4 +603,28 @@ CREATE OR REPLACE PROCEDURE getProductsXGenre()
 
     END;
 //    
+CREATE OR REPLACE PROCEDURE visitProduct(IN pIdUser INT, IN pIdProduct INT)
+BEGIN
+ 	DECLARE oldest DATETIME;
+ 	DECLARE visits INT;
+ 
+	IF (SELECT idUser FROM userxproduct WHERE idUser = pIdUser AND idProduct = pIdProduct) 
+	IS NULL THEN
+	 	INSERT INTO userxproduct(idUser,idProduct,visitDate)
+	 	VALUES(pIdUser,pIdProduct,NOW());
+	END IF;
+ 	
+ 	SELECT COUNT(*) INTO visits FROM userxproduct;
+	SELECT MIN(visitDate) INTO oldest FROM userxproduct;
+  	
+  	IF visits >10 THEN 
+  	DELETE FROM userxproduct WHERE oldest = visitDate;
+   END IF; 
+ END;
+//
+CREATE OR REPLACE PROCEDURE getRecentlyVisited(IN pIdUser INT)
+ BEGIN
+	SELECT idProduct FROM userxproduct WHERE idUser = pIdUser;
+ END;
+//
 DELIMITER ;

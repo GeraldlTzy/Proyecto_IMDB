@@ -448,7 +448,7 @@ CREATE OR REPLACE TABLE commentary (
 CREATE OR REPLACE TABLE UserXProduct (
 	idUser						INT UNSIGNED,
 	idProduct					INT UNSIGNED,
-	visitDate					DATE NOT NULL,
+	visitDate					DATETIME NOT NULL,
 	CONSTRAINT fk_userxproduct_user FOREIGN KEY (idUser)
 	REFERENCES end_user(idUser) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT fk_userxproduct_product FOREIGN KEY (idProduct)

@@ -5,7 +5,7 @@ DELIMITER //
 	CREATE OR REPLACE PROCEDURE insertParticipant(IN pSex INT, IN pFirstName VARCHAR(20), IN pSecondName VARCHAR(20),
 	    IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20), IN pDatebirth DATE,
 	    IN pCity INT, IN pBiography VARCHAR(500), IN pHeight INT, 
-	    IN pTrivia VARCHAR(500), IN pPhoto BLOB, OUT pIdParticipant INT)
+	    IN pTrivia VARCHAR(500), IN pPhoto LONGBLOB, OUT pIdParticipant INT)
 		BEGIN
 			DECLARE pOutId INT;
 
@@ -61,7 +61,7 @@ DELIMITER //
 		IN pSex INT, IN pFirstName VARCHAR(20), IN pSecondName VARCHAR(20),
 	    IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20), IN pDatebirth DATE,
 	    IN pCity INT, IN pBiography VARCHAR(500), IN pHeight INT, 
-	    IN pTrivia VARCHAR(500), IN pPhoto BLOB)
+	    IN pTrivia VARCHAR(500), IN pPhoto LONGBLOB)
 		BEGIN
 			START TRANSACTION;
 

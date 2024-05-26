@@ -251,7 +251,7 @@ CREATE OR REPLACE TABLE Episode(
 CREATE OR REPLACE TABLE Photo(
     idPhoto                     INT UNSIGNED AUTO_INCREMENT,
     idProduct                   INT UNSIGNED,
-    image                       BLOB,
+    image                       LONGBLOB,
     created_by 					VARCHAR(15),
     creation_date 				DATE,
     updated_by 					VARCHAR(15),

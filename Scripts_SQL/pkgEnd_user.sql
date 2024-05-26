@@ -4,7 +4,7 @@ DELIMITER //
 
 	CREATE OR REPLACE PROCEDURE insertUser(IN pSex INT, IN pFirstName VARCHAR(20),
 	    IN pSecondName VARCHAR(20), IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20),
-	    IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername VARCHAR(20), IN pIdentification INT,
+	    IN pDatebirth DATE, IN pPhoto LONGBLOB, IN pUsername VARCHAR(20), IN pIdentification INT,
 	    IN pPhoneNumber INT, IN pEmail VARCHAR(50), IN pPswd VARCHAR(20), IN pIdTypeIdent INT,
 	    OUT pidOut INT)
 	BEGIN
@@ -30,7 +30,7 @@ DELIMITER //
 	
 	CREATE OR REPLACE PROCEDURE updateUser(IN pIdUser INT, IN pSex INT, IN pFirstName VARCHAR(20),
 	    IN pSecondName VARCHAR(20), IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20),
-	    IN pDatebirth DATE, IN pPhoto BLOB, IN pUsername VARCHAR(20),
+	    IN pDatebirth DATE, IN pPhoto LONGBLOB, IN pUsername VARCHAR(20),
 	    IN pPhoneNumber INT, IN pEmail VARCHAR(50), IN pPswd VARCHAR(20))
 	    BEGIN
 		    START TRANSACTION;

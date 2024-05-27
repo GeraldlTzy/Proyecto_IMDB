@@ -631,4 +631,10 @@ CREATE OR REPLACE PROCEDURE getRecentlyVisited(IN pIdUser INT)
 	SELECT idProduct FROM userxproduct WHERE idUser = pIdUser;
  END;
 //
+CREATE OR REPLACE PROCEDURE insertKindship(IN pName varchar(30))
+BEGIN
+	INSERT INTO `relative`(kindship)
+	VALUES (pName);
+	COMMIT;
+END//
 DELIMITER ;

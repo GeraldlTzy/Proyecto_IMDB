@@ -220,7 +220,7 @@ DELIMITER //
 
 		    SET @paymentId = LAST_INSERT_ID();
 
-		    INSERT INTO Card(idPayment, cardNumber, expiration, ccv, ownerName)
+		    INSERT INTO Card(idCard, cardNumber, expiration, ccv, ownerName)
 		    VALUES (@paymentId, pCardNumber, pExpiration, pCcv, pOwnerName);
 
 		    COMMIT;

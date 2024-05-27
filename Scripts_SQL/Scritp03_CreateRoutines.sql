@@ -196,8 +196,12 @@ CREATE OR REPLACE PROCEDURE getInfoInsertParticipant()
 //
 CREATE OR REPLACE PROCEDURE getParticipants()
     BEGIN
-        SELECT idPerson, CONCAT(firstName, ' ', secondName, ' ', firstSurname,
-        ' ', secondSurname) fullname, photo
+        SELECT idPerson, CONCAT(
+	        pe.firstName, ' ',
+	        COALESCE(pe.secondName, ''), ' ', 
+	        pe.firstSurname, ' ',
+	        COALESCE(pe.secondSurname, '')
+    	) fullname, photo
         FROM Person pe
         INNER JOIN Participant pa
         ON pe.idPerson = pa.idParticipant;

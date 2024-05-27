@@ -637,4 +637,11 @@ BEGIN
 	VALUES (pName);
 	COMMIT;
 END//
+CREATE OR REPLACE PROCEDURE setKindship(IN pidRelative int UNSIGNED, IN pKindship varchar(30))
+BEGIN 
+	UPDATE `relative`
+    SET kindship = pKindship
+WHERE idRelative = pidRelative;
+COMMIT;
+END//
 DELIMITER ;

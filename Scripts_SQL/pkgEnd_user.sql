@@ -242,12 +242,12 @@ DELIMITER //
 
 		
 	CREATE OR REPLACE PROCEDURE getPaymentMethods(IN pIdUser INT)
-		BEGIN
-		    SELECT idCard, cardNumber, expiration, ccv, ownerName
-		    FROM card
-		    INNER JOIN Payment pay
-		    ON idCard = idPayment AND idUser = pIdUser;
-		END//
+	BEGIN
+	    SELECT ca.idCard, ca.cardNumber, ca.expiration, ca.ccv, ca.ownerName
+	    FROM card ca
+	    INNER JOIN Payment pay
+	    ON ca.idCard = pay.idPayment AND pay.idUser = pIdUser;
+	END//
 
 
 DELIMITER ;

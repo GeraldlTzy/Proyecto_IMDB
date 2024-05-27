@@ -129,7 +129,16 @@ DELIMITER //
 	        ON pe.idPerson = pa.idParticipant;
 		END;
 	//
-
+	CREATE OR REPLACE PROCEDURE getParticipantRelatives(IN pIdParticipant INT unsigned)
+	BEGIN 
+		SELECT 
+	    CASE
+	        WHEN idParticipant = pIdParticipant THEN idParticipant2
+	        ELSE idParticipant
+	    END AS relatedParticipant
+		FROM participantxrelative
+		WHERE idParticipant = pIdParticipant OR idParticipant2 = pIdParticipant;
+	END//
 
 
 

@@ -30,3 +30,10 @@ CALL insertCatalog('Comedia');
 CALL insertCatalog('Terror');
 CALL insertCatalog('Romance');
 CALL insertCatalog('Animado');
+/******************************************************************************/
+CALL insertKindship('Padre');
+CALL insertKindship('Hijo, ja');
+CALL insertKindship('Madre');
+CALL insertKindship('Hermano, na');
+CALL insertKindship('Abuelo, la');
+CALL insertKindship('Sobrino');

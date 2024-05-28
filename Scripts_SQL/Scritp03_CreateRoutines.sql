@@ -564,14 +564,16 @@ CREATE OR REPLACE PROCEDURE addPlatform (IN pIdProduct INT, IN pIdPlatform INT)
 //
 CREATE OR REPLACE PROCEDURE getProductStatistics()
    BEGIN 
-      	SELECT @vTotalProducts := COUNT(*) FROM Product;
-      	SELECT c.genre AS genre, 100*COUNT(*)/@vTotalProducts AS percentage, count(*) AS ProductsByGenre
+	DECLARE vTotalProducts INT;
+
+      	SELECT COUNT(*) INTO vTotalProducts FROM Product;
+      	SELECT c.genre AS genre, CAST(100*COUNT(*)/@vTotalProducts AS Float) AS percentage, count(*) AS ProductsByGenre
          FROM CatalogXProduct cxp
          INNER JOIN Catalog c
          ON c.idCatalog = cxp.idCatalog
          GROUP BY cxp.idCatalog,c.genre
          UNION SELECT 'Total',@vTotalProducts,null FROM dual;
-   END;
+   END
 //
 CREATE OR REPLACE PROCEDURE getUsersStatisticsByAge()
 	BEGIN

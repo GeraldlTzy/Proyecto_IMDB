@@ -100,9 +100,11 @@ DELIMITER //
 
 	CREATE OR REPLACE PROCEDURE buyProduct(IN pIdUser INT, IN pIdProduct INT, IN pIdPayment INT)
 		BEGIN
-		    INSERT INTO Purchase(idUser, idProduct, idPayment, history)
+		   IF (SELECT idUser FROM Purchase WHERE idUser = pIdUser AND idProduct = pIdProduct) 
+				IS NULL THEN
+			 INSERT INTO Purchase(idUser, idProduct, idPayment, history)
 		    VALUES (pIdUser, pIdProduct, pIdPayment, NOW());
-
+			END IF;
 		    COMMIT;
 		END//
 

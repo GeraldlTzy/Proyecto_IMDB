@@ -474,7 +474,7 @@ CREATE OR REPLACE PROCEDURE removePhoto (IN pIdPhoto INT)
 //
 CREATE OR REPLACE PROCEDURE getProducts()
     BEGIN
-         SELECT pro.idProduct, pro.title, pho.image
+         SELECT pro.idProduct, pro.title, pho.image, pro.price
          FROM product pro
          LEFT JOIN photo pho
          ON pro.idProduct = pho.idProduct;

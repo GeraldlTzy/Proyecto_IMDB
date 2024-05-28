@@ -28,10 +28,10 @@ DELIMITER //
 
 
 	CREATE OR REPLACE PROCEDURE insertRelative(IN pIdParticipant INT,
-		IN pIdRelative INT, IN pIdKinship INT)
+		IN pIdParticipant2 INT, IN pIdKinship INT)
 		BEGIN
-			INSERT INTO ParticipantXRelative(idParticipant,idParticipant2,idRelative)
-	        VALUES (pIdParticipant,pIdRelative,pIdKinship);
+			INSERT INTO ParticipantXRelative(idParticipant, idParticipant2, idRelative)
+	        VALUES (pIdParticipant, pIdParticipant2, pIdKinship);
 	        COMMIT;
 		END;
 	//

@@ -84,4 +84,3 @@ BEGIN
 END;
 //
 delimiter ;
-delimiter ;

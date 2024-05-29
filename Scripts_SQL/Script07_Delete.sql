@@ -66,8 +66,22 @@ BEGIN
     
     DELETE FROM Participant
     WHERE idParticipant = pIdParticipant;
+    
+    DELETE FROM Person
+    WHERE idPerson = pIdParticipant;
 
 	COMMIT;
 END;
 //
+CREATE OR REPLACE PROCEDURE deleteProduct(IN pIdProduct INT UNSIGNED)
+BEGIN
+	START TRANSACTION;
+
+	DELETE FROM Product
+    WHERE idProduct = pIdProduct;
+
+	COMMIT;
+END;
+//
+delimiter ;
 delimiter ;

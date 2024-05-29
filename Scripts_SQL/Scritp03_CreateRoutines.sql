@@ -577,7 +577,7 @@ CREATE OR REPLACE PROCEDURE getProductStatistics()
 //
 CREATE OR REPLACE PROCEDURE getUsersStatisticsByAge()
 	BEGIN
-         SELECT su.username,p.datebirth,p.idSex,TRUNC((SYSDATE - DATEBIRTH)/365) AS age
+         SELECT su.username,p.datebirth,p.idSex,CAST(TIMESTAMPDIFF(YEAR, p.datebirth, SYSDATE()) AS UNSIGNED) AS age
          FROM Person p
          INNER JOIN End_user u
          ON p.idPerson = u.idUser

@@ -599,7 +599,7 @@ CREATE OR REPLACE PROCEDURE getUsersStatisticsBySex()
 //
 CREATE OR REPLACE PROCEDURE getProductsXGenre()
 	BEGIN
-            SELECT p.title, c.genre, p.idProduct
+            SELECT p.title, c.genre, p.idProduct, c.idCatalog
             FROM Product p
             INNER JOIN CatalogXProduct cxp
             ON p.idProduct = cxp.idProduct

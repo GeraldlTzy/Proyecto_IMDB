@@ -458,7 +458,7 @@ CREATE OR REPLACE PROCEDURE removeEpisode(IN pIdEpisode INT)
         COMMIT;
     END;
 //
-CREATE OR REPLACE PROCEDURE addPhoto(IN pIdProduct INT, IN pImage BLOB)
+CREATE OR REPLACE PROCEDURE addPhoto(IN pIdProduct INT, IN pImage LONGBLOB)
     BEGIN
         INSERT INTO photo(idProduct, image)
         VALUES (pIdProduct, pImage);

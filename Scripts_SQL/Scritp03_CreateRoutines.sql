@@ -646,4 +646,12 @@ BEGIN
 WHERE idRelative = pidRelative;
 COMMIT;
 END//
+CREATE OR REPLACE PROCEDURE getPersonNationalities(IN pIdPerson int UNSIGNED)
+BEGIN 
+	SELECT nat.idNationality, nat.name
+	FROM nationalityPerson np
+	JOIN nationality nat
+	ON np.idNationality = nat.idNationality
+	AND np.idPerson = pIdPerson;
+END//
 DELIMITER ;

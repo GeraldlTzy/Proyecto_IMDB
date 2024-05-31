@@ -28,11 +28,11 @@ DELIMITER //
 	    COMMIT;
 	END; //
 	
-	CREATE OR REPLACE PROCEDURE updateUser(IN pIdUser INT, IN pSex INT, IN pFirstName VARCHAR(20),
+	CREATE DEFINER=`su`@`localhost` PROCEDURE `su`.`updateUser`(IN pIdUser INT, IN pSex INT, IN pFirstName VARCHAR(20),
 	    IN pSecondName VARCHAR(20), IN pFirstSurname VARCHAR(20), IN pSecondSurname VARCHAR(20),
 	    IN pDatebirth DATE, IN pPhoto LONGBLOB, IN pUsername VARCHAR(20),
-	    IN pPhoneNumber INT, IN pEmail VARCHAR(50), IN pPswd VARCHAR(20))
-	    BEGIN
+	    IN pPhoneNumber INT, IN pEmail VARCHAR(50), IN pPswd VARCHAR(40))
+	BEGIN
 		    START TRANSACTION;
 		  
 		    UPDATE Person
@@ -49,11 +49,11 @@ DELIMITER //
 		    SET username = pUsername,
 		    	phoneNumber = pPhoneNumber,
 		    	email = pEmail,
-		    	pswd = pPswd
+		    	pswd = SHA1(pPswd)
 		    WHERE idSystemUser = pIdUser;
 		   
 	        COMMIT;
-		END//
+	END
 
 
 	CREATE OR REPLACE PROCEDURE deleteUser(IN pIdUser INT)

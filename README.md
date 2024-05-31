@@ -1,2 +1,2 @@
 # Proyecto_IMDB
-Repositorio del primer proyecto del curso Bases de Datos 1
+Repositorio del proyecto 2 del curso Bases de Datos 1

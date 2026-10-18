@@ -38,6 +38,12 @@ Proyecto_IMDB/
 └── README.md
 ```
 
+## Modelo lógico
+<img width="1260" height="1240" alt="ModeloLogico" src="https://github.com/user-attachments/assets/9cdbbbf2-718d-44b9-aff3-b6f94a166c8b" />
+
+## Modelo conceptual
+<img width="2020" height="773" alt="ModeloConceptual" src="https://github.com/user-attachments/assets/ae8dfc83-d1bb-4cb9-a0f1-eeba53ca381c" />
+
 ## Requisitos previos
 
 - Oracle Database instalado y en ejecución.
@@ -55,8 +61,6 @@ Clona el repositorio:
 git clone https://github.com/GeraldlTzy/Proyecto_IMDB.git
 cd Proyecto_IMDB
 ```
-<img width="1260" height="1240" alt="ModeloLogico" src="https://github.com/user-attachments/assets/9cdbbbf2-718d-44b9-aff3-b6f94a166c8b" />
-<img width="2020" height="773" alt="ModeloConceptual" src="https://github.com/user-attachments/assets/ae8dfc83-d1bb-4cb9-a0f1-eeba53ca381c" />
 
 ### 2. Crear el esquema en Oracle
 
